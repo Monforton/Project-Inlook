@@ -12,10 +12,12 @@
         android:theme="@style/Theme.ProjectInlook"
         tools:targetApi="31">
         <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.ProjectInlook.NoActionBar">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
