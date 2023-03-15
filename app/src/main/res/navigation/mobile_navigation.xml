@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_day">
+
+    <fragment
+        android:id="@+id/navigation_day"
+        android:name="uab.cs422.projectinlook.ui.day.DayFragment"
+        android:label="@string/title_day"
+        tools:layout="@layout/fragment_day" />
+
+    <fragment
+        android:id="@+id/navigation_week"
+        android:name="uab.cs422.projectinlook.ui.week.WeekFragment"
+        android:label="@string/title_week"
+        tools:layout="@layout/fragment_week" />
+
+    <fragment
+        android:id="@+id/navigation_month"
+        android:name="uab.cs422.projectinlook.ui.month.MonthFragment"
+        android:label="@string/title_month"
+        tools:layout="@layout/fragment_month" />
+</navigation>
