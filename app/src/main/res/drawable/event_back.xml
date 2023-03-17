@@ -4,18 +4,18 @@
 
     <!-- View background color -->
     <solid
-        android:color="@color/event_color_red_transparent" >
+        android:color="@color/md_theme_light_primaryContainer" >
     </solid>
 
     <!-- View border color and width -->
-    <stroke
-        android:width="3dp"
-        android:color="@color/event_color_red" >
-    </stroke>
+<!--    <stroke-->
+<!--        android:width="3dp"-->
+<!--        android:color="@color/cardview_dark_background" >-->
+<!--    </stroke>-->
 
     <!-- The radius makes the corners rounded -->
     <corners
-        android:radius="3dp"   >
+        android:radius="10dp"   >
     </corners>
 
 </shape>

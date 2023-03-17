@@ -3,5 +3,17 @@
     <string name="title_day">Day</string>
     <string name="title_week">Week</string>
     <string name="title_month">Month</string>
+
+    <string name="excess_events">+%1$d Events</string>
+
     <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="localities_header">Locality</string>
+    <string name="theme_header">Theme</string>
+
+    <!-- Locality Preferences -->
+    <string name="hour_format_title">Hour Format</string>
+
 </resources>

@@ -5,10 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import uab.cs422.projectinlook.adapters.DayHourAdapter
 import uab.cs422.projectinlook.databinding.FragmentDayBinding
 import uab.cs422.projectinlook.entities.CalEvent
+import java.time.LocalDateTime
 
 class DayFragment : Fragment() {
 
@@ -23,8 +22,8 @@ class DayFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dayViewModel =
-            ViewModelProvider(this).get(DayViewModel::class.java)
+//        val dayViewModel =
+//            ViewModelProvider(this)[DayViewModel::class.java]
 
         _binding = FragmentDayBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -33,15 +32,12 @@ class DayFragment : Fragment() {
         hourRecyclerView.adapter =
             DayHourAdapter(
                 listOf(
-                    CalEvent(time = "8:00 AM", title = "event 1"),
-                    CalEvent(time = "9:00 AM", title = "event 2")
+                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 8, 0),  title = "event 1"),
+                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 8, 0),  title = "event 2"),
+                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 9, 0),  title = "event 2"),
+                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 10, 0), title = "event 3")
                 )
             )
-
-//        val textView: TextView = binding.textDay
-//        dayViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
         return root
     }
 
