@@ -1,7 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
+    <!-- TODO: Make the toolbar again in here, including only the title and a left back button -->
     <FrameLayout
         android:id="@+id/settings"
         android:layout_width="match_parent"

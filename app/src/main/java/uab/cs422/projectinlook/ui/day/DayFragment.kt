@@ -32,12 +32,17 @@ class DayFragment : Fragment() {
         hourRecyclerView.adapter =
             DayHourAdapter(
                 listOf(
-                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 8, 0),  title = "event 1"),
+                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 7, 0),  title = "event 1"),
                     CalEvent(time = LocalDateTime.of(2023, 3, 16, 8, 0),  title = "event 2"),
-                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 9, 0),  title = "event 2"),
-                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 10, 0), title = "event 3")
+                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 8, 0),  title = "event 2"),
+                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 8, 0),  title = "event 2"),
+                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 8, 0),  title = "event 2"),
+                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 9, 0),  title = "event 3"),
+                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 10, 0), title = "event 4")
                 )
             )
+
+        binding.hourRecycler.scrollToPosition(LocalDateTime.now().hour)
         return root
     }
 

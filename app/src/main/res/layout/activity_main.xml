@@ -1,62 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_container"
+    android:id="@+id/main_drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/main_appbar_layout"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_coordinator_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/main_toolbar"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/main_appbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll" />
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true">
 
-    </com.google.android.material.appbar.AppBarLayout>
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/main_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_scrollFlags="noScroll"
+                app:titleCentered="true"
+                app:navigationIcon="@drawable/ic_menu_24"
+                app:contentInsetStart="10dp">
 
-    <fragment
-        android:id="@+id/nav_host_fragment_activity_main"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/main_appbar_layout"
-        app:navGraph="@navigation/mobile_navigation" />
+                <ImageButton
+                    android:id="@+id/btn_today"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_today_24"
+                    android:paddingEnd="16dp"
+                    android:background="#0000"
+                    android:layout_gravity="end"
+                    android:contentDescription="today button"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:clickable="true"
-        android:contentDescription="addEvent"
-        android:src="@drawable/ic_add_24"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"
-        app:layout_constraintEnd_toEndOf="parent" />
+            </com.google.android.material.appbar.MaterialToolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:background="?android:attr/windowBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        <fragment
+            android:id="@+id/nav_host_fragment_activity_main"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:navGraph="@navigation/mobile_navigation" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="@dimen/fab_margin"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:clickable="true"
+            android:contentDescription="addEvent"
+            android:src="@drawable/ic_add_24" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_drawer_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/menu_nav_drawer" />
+
+</androidx.drawerlayout.widget.DrawerLayout>
