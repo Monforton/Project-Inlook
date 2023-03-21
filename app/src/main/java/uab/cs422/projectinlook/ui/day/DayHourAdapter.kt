@@ -2,6 +2,7 @@ package uab.cs422.projectinlook.ui.day
 
 import android.app.ActionBar.LayoutParams
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Typeface
 import android.text.TextUtils
 import android.util.TypedValue
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.ColorUtils
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -43,12 +45,15 @@ class DayHourAdapter(val eventData: List<CalEvent>) :
                 .getString("hour_format", "")) {
                 "clock_time_format" -> DateTimeFormatter.ofPattern("h a")
                 "day_time_format" -> DateTimeFormatter.ofPattern("H:mm")
-                else -> DateTimeFormatter.ofPattern("HH:mm a")
+                else -> DateTimeFormatter.ofPattern("h a")
             }
         val positionAsHour = LocalDateTime.of(LocalDate.now(), LocalTime.of(position, 0))
         holder.hourTextView.text = positionAsHour.format(timeFormat)
-        if (LocalDateTime.now().hour == position) {
-            val typedValue = TypedValue()
+        println("posAsHr=${positionAsHour.hour}, text = ${holder.hourTextView.text}")
+
+        val typedValue = TypedValue()
+        if (positionAsHour.hour == LocalDateTime.now().hour) {
+            println("thinks it is now")
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorTertiaryContainer,
                 typedValue,
@@ -57,6 +62,14 @@ class DayHourAdapter(val eventData: List<CalEvent>) :
             holder.hourTextView.setBackgroundColor(typedValue.data)
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorOnTertiaryContainer,
+                typedValue,
+                true
+            )
+            holder.hourTextView.setTextColor(typedValue.data)
+        } else { // I don't know why this else is necessary, but otherwise it will highlight if (hour - 16) > 0
+            holder.hourTextView.setBackgroundColor(Color.valueOf(0f,0f,0f,0f).toArgb())
+            hourTVContext.theme.resolveAttribute(
+                com.google.android.material.R.attr.colorOnBackground,
                 typedValue,
                 true
             )
@@ -93,6 +106,15 @@ class DayHourAdapter(val eventData: List<CalEvent>) :
             true
         )
         textView.background.setTint(typedValue.data)
+
+        textView.setTextColor(
+            ColorUtils.blendARGB(
+                typedValue.data,
+                if (Color.luminance(typedValue.data) > 0.5) Color.BLACK else Color.WHITE,
+                0.95f
+            )
+        )
+
         textView.ellipsize = TextUtils.TruncateAt.END
         textView.gravity = Gravity.CENTER
         textView.maxLines = 1
@@ -102,13 +124,6 @@ class DayHourAdapter(val eventData: List<CalEvent>) :
             0,
             ScreenConversion.dpToPx(textView.context, 2)
         )
-
-        context.theme.resolveAttribute(
-            com.google.android.material.R.attr.colorOnPrimaryContainer,
-            typedValue,
-            true
-        )
-        textView.setTextColor(typedValue.data)
 
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
         textView.typeface = Typeface.DEFAULT_BOLD

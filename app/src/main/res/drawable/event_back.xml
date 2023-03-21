@@ -4,7 +4,7 @@
 
     <!-- View background color -->
     <solid
-        android:color="@color/md_theme_light_primaryContainer" >
+        android:color="@color/white" >
     </solid>
 
     <!-- View border color and width -->
