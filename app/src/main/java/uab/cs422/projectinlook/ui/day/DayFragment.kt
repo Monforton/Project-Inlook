@@ -29,16 +29,44 @@ class DayFragment : Fragment() {
         val root: View = binding.root
 
         val hourRecyclerView = binding.hourRecycler
-        hourRecyclerView.adapter =
+        hourRecyclerView.adapter = // Temp list
             DayHourAdapter(
                 listOf(
-                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 7, 0),  title = "event 1"),
-                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 8, 0),  title = "event 2"),
-                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 8, 0),  title = "event 2"),
-                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 8, 0),  title = "event 2"),
-                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 8, 0),  title = "event 2"),
-                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 9, 0),  title = "event 3"),
-                    CalEvent(time = LocalDateTime.of(2023, 3, 16, 10, 0), title = "event 4")
+                    CalEvent(
+                        startTime = LocalDateTime.of(2023, 3, 16, 7, 0),
+                        endTime = LocalDateTime.of(2023, 3, 16, 7, 0),
+                        title = "event 1"
+                    ),
+                    CalEvent(
+                        startTime = LocalDateTime.of(2023, 3, 16, 8, 0),
+                        endTime = LocalDateTime.of(2023, 3, 16, 9, 0),
+                        title = "event 2"
+                    ),
+                    CalEvent(
+                        startTime = LocalDateTime.of(2023, 3, 16, 8, 0),
+                        endTime = LocalDateTime.of(2023, 3, 16, 9, 0),
+                        title = "event 2"
+                    ),
+                    CalEvent(
+                        startTime = LocalDateTime.of(2023, 3, 16, 8, 0),
+                        endTime = LocalDateTime.of(2023, 3, 16, 9, 0),
+                        title = "event 2"
+                    ),
+                    CalEvent(
+                        startTime = LocalDateTime.of(2023, 3, 16, 8, 0),
+                        endTime = LocalDateTime.of(2023, 3, 16, 9, 0),
+                        title = "event 2"
+                    ),
+                    CalEvent(
+                        startTime = LocalDateTime.of(2023, 3, 16, 9, 0),
+                        endTime = LocalDateTime.of(2023, 3, 16, 10, 0),
+                        title = "event 3"
+                    ),
+                    CalEvent(
+                        startTime = LocalDateTime.of(2023, 3, 16, 10, 0),
+                        endTime = LocalDateTime.of(2023, 3, 16, 11, 0),
+                        title = "event 4"
+                    )
                 )
             )
 

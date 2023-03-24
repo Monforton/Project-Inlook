@@ -28,8 +28,8 @@ import java.time.format.DateTimeFormatter
 class DayHourAdapter(val eventData: List<CalEvent>) :
     RecyclerView.Adapter<DayHourAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val hourTextView = view.findViewById<TextView>(R.id.hourText)
-        val eventsLayout = view.findViewById<LinearLayout>(R.id.eventsLayout)
+        val hourTextView: TextView = view.findViewById(R.id.hourText)
+        val eventsLayout: LinearLayout = view.findViewById(R.id.eventsLayout)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
@@ -49,11 +49,9 @@ class DayHourAdapter(val eventData: List<CalEvent>) :
             }
         val positionAsHour = LocalDateTime.of(LocalDate.now(), LocalTime.of(position, 0))
         holder.hourTextView.text = positionAsHour.format(timeFormat)
-        println("posAsHr=${positionAsHour.hour}, text = ${holder.hourTextView.text}")
 
         val typedValue = TypedValue()
         if (positionAsHour.hour == LocalDateTime.now().hour) {
-            println("thinks it is now")
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorTertiaryContainer,
                 typedValue,
@@ -78,7 +76,7 @@ class DayHourAdapter(val eventData: List<CalEvent>) :
 
         var eventTextView: TextView
         for ((count, j) in eventData.withIndex()) {
-            if (j.time.hour == positionAsHour.hour) {
+            if (j.startHour == positionAsHour.hour) {
                 if (holder.eventsLayout.childCount > 2) {
                     (holder.eventsLayout.getChildAt(2) as TextView).text =
                         holder.eventsLayout.context.getString(R.string.excess_events, count - 2)
