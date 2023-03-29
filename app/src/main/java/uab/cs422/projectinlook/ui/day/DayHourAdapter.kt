@@ -19,13 +19,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import uab.cs422.projectinlook.R
 import uab.cs422.projectinlook.entities.CalEvent
-import uab.cs422.projectinlook.util.ScreenConversion
+import uab.cs422.projectinlook.util.dpToPx
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class DayHourAdapter(val eventData: List<CalEvent>) :
+class DayHourAdapter(private val eventData: List<CalEvent>) :
     RecyclerView.Adapter<DayHourAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val hourTextView: TextView = view.findViewById(R.id.hourText)
@@ -117,10 +117,10 @@ class DayHourAdapter(val eventData: List<CalEvent>) :
         textView.gravity = Gravity.CENTER
         textView.maxLines = 1
         textView.setPaddingRelative(
-            ScreenConversion.dpToPx(textView.context, 3),
+            dpToPx(textView.context, 3),
             0,
             0,
-            ScreenConversion.dpToPx(textView.context, 2)
+            dpToPx(textView.context, 2)
         )
 
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)

@@ -6,18 +6,13 @@ import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
 import com.google.android.material.navigation.NavigationView
 import uab.cs422.projectinlook.databinding.ActivityMainBinding
 import java.time.LocalDateTime
-import java.time.MonthDay
-import java.time.format.TextStyle
-import java.util.*
+import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,17 +21,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Set up Toolbar as ActionBar
         setSupportActionBar(binding.mainToolbar)
 
         val navView = binding.navDrawerView
         val drawerLayout = binding.mainDrawerLayout
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_day, R.id.navigation_week, R.id.navigation_month
-            )
-        )
 
         binding.mainToolbar.setNavigationOnClickListener {
             drawerLayout.open()
@@ -61,7 +52,8 @@ class MainActivity : AppCompatActivity() {
         checkCurrentDestination()
 
         supportActionBar?.title =
-            LocalDateTime.now().month.getDisplayName(TextStyle.FULL, Locale.US)
+            LocalDateTime.now().format(DateTimeFormatter.ofPattern("LLLL d"))
+
     }
 
     /**
@@ -99,15 +91,13 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    // TODO Find non-deprecated way of doing this?
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         super.onBackPressed()
         checkCurrentDestination()
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
 
     override fun onRestart() {
         super.onRestart()
