@@ -35,13 +35,53 @@ class DayFragment : Fragment() {
         // Set up adapter
         dao = EventDatabase.getInstance(this.requireContext()).eventDao
         var events: List<CalEvent> = listOf()
+        val today = LocalDateTime.now()
         runOnIO {
-            events = dao.getAllEvents()
-            // !!IF DEBUGGING!! put dao.insert() statement(s) below to add events temporarily
-        }
-        hourRecyclerView.adapter = DayHourAdapter(events)
+            events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
+//          Debug command, just uncomment block to add events
+            /*
+            dao.insertEvent(
+            CalEvent(
+            startTime = LocalDateTime.of(2023, 3, 16, 7, 0),
+            endTime = LocalDateTime.of(2023, 3, 16, 7, 0),
+            title = "event 1"
+            ),
+            CalEvent(
+            startTime = LocalDateTime.of(2023, 3, 16, 8, 0),
+            endTime = LocalDateTime.of(2023, 3, 16, 9, 0),
+            title = "event 2"
+            ),
+            CalEvent(
+            startTime = LocalDateTime.of(2023, 3, 16, 8, 0),
+            endTime = LocalDateTime.of(2023, 3, 16, 9, 0),
+            title = "event 2"
+            ),
+            CalEvent(
+            startTime = LocalDateTime.of(2023, 3, 16, 8, 0),
+            endTime = LocalDateTime.of(2023, 3, 16, 9, 0),
+            title = "event 2"
+            ),
+            CalEvent(
+            startTime = LocalDateTime.of(2023, 3, 16, 8, 0),
+            endTime = LocalDateTime.of(2023, 3, 16, 9, 0),
+            title = "event 2"
+            ),
+            CalEvent(
+            startTime = LocalDateTime.of(2023, 3, 16, 9, 0),
+            endTime = LocalDateTime.of(2023, 3, 16, 10, 0),
+            title = "event 3"
+            ),
+            CalEvent(
+            startTime = LocalDateTime.of(2023, 3, 16, 10, 0),
+            endTime = LocalDateTime.of(2023, 3, 16, 11, 0),
+            title = "event 4"
+            )
+            )
+            */
+            hourRecyclerView.adapter = DayHourAdapter(events)
 
-        binding.hourRecycler.scrollToPosition(LocalDateTime.now().hour)
+            binding.hourRecycler.scrollToPosition(LocalDateTime.now().hour)
+        }
         return root
     }
 

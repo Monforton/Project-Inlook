@@ -21,6 +21,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.fabAdd.setOnClickListener {
+
+        }
+
         // Set up Toolbar as ActionBar
         setSupportActionBar(binding.mainToolbar)
 

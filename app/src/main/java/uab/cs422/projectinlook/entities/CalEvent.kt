@@ -16,7 +16,7 @@ data class CalEvent(
     var startMinute: Int,
     var endYear: Int,
     var endMonth: Int,
-    var endDay: Int,
+    var endDayOfMonth: Int,
     var endHour: Int,
     var endMinute: Int,
     var title: String,

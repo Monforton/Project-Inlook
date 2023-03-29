@@ -82,6 +82,9 @@ class DayHourAdapter(private val eventData: List<CalEvent>) :
                         holder.eventsLayout.context.getString(R.string.excess_events, count - 2)
                 } else {
                     eventTextView = eventBox(j.title, holder.eventsLayout.context)
+                    eventTextView.setOnClickListener {
+                        Snackbar.make(it, "Day: ${j.startDayOfMonth}", 5000).show()
+                    }
                     holder.eventsLayout.addView(eventTextView)
                 }
             }
@@ -125,9 +128,7 @@ class DayHourAdapter(private val eventData: List<CalEvent>) :
 
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
         textView.typeface = Typeface.DEFAULT_BOLD
-        textView.setOnClickListener {
-            Snackbar.make(it, "Clicked on event", 5000).show()
-        }
+
         return textView
     }
 

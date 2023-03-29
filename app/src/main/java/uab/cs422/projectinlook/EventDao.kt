@@ -18,5 +18,12 @@ interface EventDao {
     @Query("SELECT * FROM CalEvent")
     suspend fun getAllEvents(): List<CalEvent>
 
-    // TODO: Add queries for specific events
+    @Transaction
+    @Query("SELECT * FROM CalEvent " +
+            "WHERE startYear <= :year  AND :year <= endYear " +
+            "AND startMonth <= :month AND :month<= endMonth " +
+            "AND startDayOfMonth <= :dayOfMonth AND :dayOfMonth <= endDayOfMonth")
+    suspend fun getEventsOfDay(dayOfMonth: Int, month: Int, year: Int): List<CalEvent>
+
+    // TODO: Add queries for events of month, of year, of range of days
 }
