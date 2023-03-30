@@ -6,14 +6,18 @@ import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.navigation.NavigationView
 import uab.cs422.projectinlook.databinding.ActivityMainBinding
+import uab.cs422.projectinlook.entities.CalEvent
+import uab.cs422.projectinlook.ui.CalendarInterface
+import uab.cs422.projectinlook.util.runOnIO
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    lateinit var dao: EventDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,9 +25,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.fabAdd.setOnClickListener {
+        dao = EventDatabase.getInstance(this).eventDao
 
-        }
 
         // Set up Toolbar as ActionBar
         setSupportActionBar(binding.mainToolbar)
@@ -55,9 +58,30 @@ class MainActivity : AppCompatActivity() {
         }
         checkCurrentDestination()
 
-        supportActionBar?.title =
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern("LLLL d"))
-
+        binding.fabAdd.setOnClickListener {
+            runOnIO {
+                dao.insertEvent(
+                    CalEvent(
+                        startTime = LocalDateTime.of(
+                            2023,
+                            LocalDateTime.now().month,
+                            LocalDateTime.now().dayOfMonth,
+                            12,
+                            0
+                        ),
+                        endTime = LocalDateTime.of(
+                            2023,
+                            LocalDateTime.now().month,
+                            LocalDateTime.now().dayOfMonth,
+                            14,
+                            0
+                        ),
+                        title = "event 1"
+                    )
+                )
+            }
+            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment).childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
+        }
     }
 
     /**

@@ -3,6 +3,7 @@ package uab.cs422.projectinlook.ui.day
 import android.app.ActionBar.LayoutParams
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.text.TextUtils
 import android.util.TypedValue
@@ -25,7 +26,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class DayHourAdapter(private val eventData: List<CalEvent>) :
+class DayHourAdapter(private var eventData: List<CalEvent>) :
     RecyclerView.Adapter<DayHourAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val hourTextView: TextView = view.findViewById(R.id.hourText)
@@ -49,7 +50,12 @@ class DayHourAdapter(private val eventData: List<CalEvent>) :
             }
         val positionAsHour = LocalDateTime.of(LocalDate.now(), LocalTime.of(position, 0))
         holder.hourTextView.text = positionAsHour.format(timeFormat)
-
+        holder.hourTextView.layoutParams = ViewGroup.LayoutParams(
+            Math.max(
+                (hourTVContext.resources.displayMetrics.widthPixels / 5).toFloat(),
+                Paint().measureText(holder.hourTextView.text.toString())
+            ).toInt(), ViewGroup.LayoutParams.MATCH_PARENT
+        )
         val typedValue = TypedValue()
         if (positionAsHour.hour == LocalDateTime.now().hour) {
             hourTVContext.theme.resolveAttribute(
@@ -65,7 +71,7 @@ class DayHourAdapter(private val eventData: List<CalEvent>) :
             )
             holder.hourTextView.setTextColor(typedValue.data)
         } else { // I don't know why this else is necessary, but otherwise it will highlight if (hour - 16) > 0
-            holder.hourTextView.setBackgroundColor(Color.valueOf(0f,0f,0f,0f).toArgb())
+            holder.hourTextView.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorOnBackground,
                 typedValue,
@@ -132,5 +138,9 @@ class DayHourAdapter(private val eventData: List<CalEvent>) :
         return textView
     }
 
+    fun updateData(newData: List<CalEvent>) {
+        eventData = newData
+        notifyDataSetChanged()
+    }
 
 }

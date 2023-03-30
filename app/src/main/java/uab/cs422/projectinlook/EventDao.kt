@@ -19,11 +19,42 @@ interface EventDao {
     suspend fun getAllEvents(): List<CalEvent>
 
     @Transaction
-    @Query("SELECT * FROM CalEvent " +
-            "WHERE startYear <= :year  AND :year <= endYear " +
-            "AND startMonth <= :month AND :month<= endMonth " +
-            "AND startDayOfMonth <= :dayOfMonth AND :dayOfMonth <= endDayOfMonth")
+    @Query(
+        "SELECT * FROM CalEvent " +
+                "WHERE startYear <= :year  AND :year <= endYear " +
+                "AND startMonth <= :month AND :month<= endMonth " +
+                "AND startDayOfMonth <= :dayOfMonth AND :dayOfMonth <= endDayOfMonth"
+    )
     suspend fun getEventsOfDay(dayOfMonth: Int, month: Int, year: Int): List<CalEvent>
 
-    // TODO: Add queries for events of month, of year, of range of days
+    @Transaction
+    @Query(
+        "SELECT * FROM CalEvent " +
+                "WHERE startYear <= :year  AND :year <= endYear " +
+                "AND startMonth <= :month AND :month<= endMonth "
+    )
+    suspend fun getEventsOfMonth(month: Int, year: Int): List<CalEvent>
+
+    @Transaction
+    @Query(
+        "SELECT * FROM CalEvent " +
+                "WHERE startYear <= :year  AND :year <= endYear "
+    )
+    suspend fun getEventsOfYear(year: Int): List<CalEvent>
+
+    @Transaction
+    @Query(
+        "SELECT * FROM CalEvent " +
+                "WHERE startDayOfMonth <= :startDayOfMonth  AND :endDayOfMonth <= endDayOfMonth " +
+                "AND startYear <= :startYear  AND :endYear <= endYear " +
+                "AND startMonth <= :startMonth AND :endMonth <= endMonth"
+    )
+    suspend fun getEventsInRange(
+        startDayOfMonth: Int,
+        startMonth: Int,
+        startYear: Int,
+        endDayOfMonth: Int,
+        endMonth: Int,
+        endYear: Int
+    ): List<CalEvent>
 }
