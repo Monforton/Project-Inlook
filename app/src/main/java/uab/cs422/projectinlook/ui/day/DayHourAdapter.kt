@@ -3,6 +3,7 @@ package uab.cs422.projectinlook.ui.day
 import android.app.ActionBar.LayoutParams
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.text.TextUtils
 import android.util.TypedValue
@@ -19,17 +20,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import uab.cs422.projectinlook.R
 import uab.cs422.projectinlook.entities.CalEvent
-import uab.cs422.projectinlook.util.ScreenConversion
+import uab.cs422.projectinlook.util.dpToPx
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-class DayHourAdapter(val eventData: List<CalEvent>) :
+class DayHourAdapter(private var eventData: List<CalEvent>) :
     RecyclerView.Adapter<DayHourAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val hourTextView = view.findViewById<TextView>(R.id.hourText)
-        val eventsLayout = view.findViewById<LinearLayout>(R.id.eventsLayout)
+        val hourTextView: TextView = view.findViewById(R.id.hourText)
+        val eventsLayout: LinearLayout = view.findViewById(R.id.eventsLayout)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
@@ -49,11 +50,14 @@ class DayHourAdapter(val eventData: List<CalEvent>) :
             }
         val positionAsHour = LocalDateTime.of(LocalDate.now(), LocalTime.of(position, 0))
         holder.hourTextView.text = positionAsHour.format(timeFormat)
-        println("posAsHr=${positionAsHour.hour}, text = ${holder.hourTextView.text}")
-
+        holder.hourTextView.layoutParams = ViewGroup.LayoutParams(
+            Math.max(
+                (hourTVContext.resources.displayMetrics.widthPixels / 5).toFloat(),
+                Paint().measureText(holder.hourTextView.text.toString())
+            ).toInt(), ViewGroup.LayoutParams.MATCH_PARENT
+        )
         val typedValue = TypedValue()
         if (positionAsHour.hour == LocalDateTime.now().hour) {
-            println("thinks it is now")
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorTertiaryContainer,
                 typedValue,
@@ -67,7 +71,7 @@ class DayHourAdapter(val eventData: List<CalEvent>) :
             )
             holder.hourTextView.setTextColor(typedValue.data)
         } else { // I don't know why this else is necessary, but otherwise it will highlight if (hour - 16) > 0
-            holder.hourTextView.setBackgroundColor(Color.valueOf(0f,0f,0f,0f).toArgb())
+            holder.hourTextView.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorOnBackground,
                 typedValue,
@@ -78,12 +82,15 @@ class DayHourAdapter(val eventData: List<CalEvent>) :
 
         var eventTextView: TextView
         for ((count, j) in eventData.withIndex()) {
-            if (j.time.hour == positionAsHour.hour) {
+            if (j.startHour == positionAsHour.hour) {
                 if (holder.eventsLayout.childCount > 2) {
                     (holder.eventsLayout.getChildAt(2) as TextView).text =
                         holder.eventsLayout.context.getString(R.string.excess_events, count - 2)
                 } else {
                     eventTextView = eventBox(j.title, holder.eventsLayout.context)
+                    eventTextView.setOnClickListener {
+                        Snackbar.make(it, "Day: ${j.startDayOfMonth}", 5000).show()
+                    }
                     holder.eventsLayout.addView(eventTextView)
                 }
             }
@@ -119,19 +126,21 @@ class DayHourAdapter(val eventData: List<CalEvent>) :
         textView.gravity = Gravity.CENTER
         textView.maxLines = 1
         textView.setPaddingRelative(
-            ScreenConversion.dpToPx(textView.context, 3),
+            dpToPx(textView.context, 3),
             0,
             0,
-            ScreenConversion.dpToPx(textView.context, 2)
+            dpToPx(textView.context, 2)
         )
 
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
         textView.typeface = Typeface.DEFAULT_BOLD
-        textView.setOnClickListener {
-            Snackbar.make(it, "Clicked on event", 5000).show()
-        }
+
         return textView
     }
 
+    fun updateData(newData: List<CalEvent>) {
+        eventData = newData
+        notifyDataSetChanged()
+    }
 
 }

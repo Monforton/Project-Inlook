@@ -6,18 +6,18 @@ import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.navigation.NavigationView
 import uab.cs422.projectinlook.databinding.ActivityMainBinding
+import uab.cs422.projectinlook.entities.CalEvent
+import uab.cs422.projectinlook.ui.CalendarInterface
+import uab.cs422.projectinlook.util.runOnIO
 import java.time.LocalDateTime
-import java.time.format.TextStyle
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    lateinit var dao: EventDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,17 +25,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        dao = EventDatabase.getInstance(this).eventDao
+
+
+        // Set up Toolbar as ActionBar
         setSupportActionBar(binding.mainToolbar)
 
         val navView = binding.navDrawerView
         val drawerLayout = binding.mainDrawerLayout
 
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_day, R.id.navigation_week, R.id.navigation_month
-            )
-        )
 
         binding.mainToolbar.setNavigationOnClickListener {
             drawerLayout.open()
@@ -59,8 +58,30 @@ class MainActivity : AppCompatActivity() {
         }
         checkCurrentDestination()
 
-        supportActionBar?.title =
-            LocalDateTime.now().month.getDisplayName(TextStyle.FULL, Locale.US)
+        binding.fabAdd.setOnClickListener {
+            runOnIO {
+                dao.insertEvent(
+                    CalEvent(
+                        startTime = LocalDateTime.of(
+                            2023,
+                            LocalDateTime.now().month,
+                            LocalDateTime.now().dayOfMonth,
+                            12,
+                            0
+                        ),
+                        endTime = LocalDateTime.of(
+                            2023,
+                            LocalDateTime.now().month,
+                            LocalDateTime.now().dayOfMonth,
+                            14,
+                            0
+                        ),
+                        title = "event 1"
+                    )
+                )
+            }
+            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment).childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
+        }
     }
 
     /**
@@ -98,15 +119,13 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    // TODO Find non-deprecated way of doing this?
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         super.onBackPressed()
         checkCurrentDestination()
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
 
     override fun onRestart() {
         super.onRestart()
