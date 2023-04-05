@@ -28,10 +28,10 @@ class WeekFragment : Fragment() {
         _binding = FragmentWeekBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textWeek
-        weekViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        //val textView: TextView = binding.weekView
+        //weekViewModel.text.observe(viewLifecycleOwner) {
+        //    textView.text = it
+        //}
         return root
     }
 
