@@ -2,8 +2,10 @@ package uab.cs422.projectinlook
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.toColor
 import androidx.core.view.forEach
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -59,6 +61,12 @@ class MainActivity : AppCompatActivity() {
         checkCurrentDestination()
 
         binding.fabAdd.setOnClickListener {
+            val typedValue = TypedValue()
+            theme.resolveAttribute(
+                com.google.android.material.R.attr.colorPrimaryContainer,
+                typedValue,
+                true
+            )
             runOnIO {
                 dao.insertEvent(
                     CalEvent(
@@ -67,16 +75,17 @@ class MainActivity : AppCompatActivity() {
                             LocalDateTime.now().month,
                             LocalDateTime.now().dayOfMonth,
                             12,
-                            0
+                            0,
                         ),
                         endTime = LocalDateTime.of(
                             2023,
                             LocalDateTime.now().month,
                             LocalDateTime.now().dayOfMonth,
                             14,
-                            0
+                            0,
                         ),
-                        title = "event 1"
+                        title = "event 1",
+                        color = typedValue.data.toColor()
                     )
                 )
             }

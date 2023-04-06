@@ -1,9 +1,8 @@
 package uab.cs422.projectinlook.entities
 
+import android.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import android.graphics.Color
-import androidx.core.graphics.toColor
 import java.time.LocalDateTime
 
 @Entity
@@ -31,7 +30,7 @@ data class CalEvent(
         endTime: LocalDateTime,
         title: String,
         desc: String = "",
-        color: Color = Color.RED.toColor()
+        color: Color
     ) : this(
         0,
         startTime.year,
