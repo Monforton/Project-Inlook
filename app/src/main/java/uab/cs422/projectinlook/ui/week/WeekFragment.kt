@@ -37,6 +37,18 @@ class WeekFragment : Fragment(), CalendarInterface {
         //weekViewModel.text.observe(viewLifecycleOwner) {
         //    textView.text = it
         //}
+        binding.previousWeekBtn.setOnClickListener {
+
+        }
+
+        binding.todayBtn.setOnClickListener {
+
+        }
+
+        binding.nextWeekBtn.setOnClickListener {
+
+        }
+
         return root
     }
 
