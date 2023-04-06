@@ -1,9 +1,15 @@
 <resources>
+    <!--  Titles  -->
     <string name="app_name">Project Inlook</string>
     <string name="title_views">Views</string>
     <string name="title_day">Day</string>
     <string name="title_week">Week</string>
     <string name="title_month">Month</string>
+
+    <!--  Dialog Text   -->
+    <string name="dialog_title_edit_event">Edit Event</string>
+    <string name="dialog_neutral_button">OK</string>
+    <string name="dialog_delete_button">Delete</string>
 
     <string name="excess_events">+%1$d Events</string>
 
