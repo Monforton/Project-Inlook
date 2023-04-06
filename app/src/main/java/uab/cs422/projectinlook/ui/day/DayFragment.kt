@@ -23,7 +23,7 @@ class DayFragment : Fragment(), CalendarInterface {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private lateinit var dao: EventDao
+    lateinit var dao: EventDao
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,7 +82,7 @@ class DayFragment : Fragment(), CalendarInterface {
             )
             )
             */
-            hourRecyclerView.adapter = DayHourAdapter(events)
+            hourRecyclerView.adapter = DayHourAdapter(this, events)
 
             binding.hourRecycler.scrollToPosition(LocalDateTime.now().hour)
         }
@@ -115,6 +115,6 @@ class DayFragment : Fragment(), CalendarInterface {
         runOnIO {
             events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
         }
-        (binding.hourRecycler.adapter as DayHourAdapter).updateData(events)
+        (binding.hourRecycler.adapter as DayHourAdapter).updateDisplayedData(events)
     }
 }
