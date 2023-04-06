@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
 
         dao = EventDatabase.getInstance(this).eventDao
 
-
         // Set up Toolbar as ActionBar
         setSupportActionBar(binding.mainToolbar)
 
@@ -47,6 +46,7 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
                     true
                 }
+                R.id.navigation_item_today -> navController.navigate(R.id.navigation_today)
                 R.id.navigation_item_day -> navController.navigate(R.id.navigation_day)
                 R.id.navigation_item_week -> navController.navigate(R.id.navigation_week)
                 R.id.navigation_item_month -> navController.navigate(R.id.navigation_month)
