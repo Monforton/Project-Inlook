@@ -1,9 +1,12 @@
 package uab.cs422.projectinlook
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.Menu
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColor
 import androidx.core.view.forEach
@@ -61,13 +64,25 @@ class MainActivity : AppCompatActivity() {
         checkCurrentDestination()
 
         binding.fabAdd.setOnClickListener {
+
+
+
             val typedValue = TypedValue()
             theme.resolveAttribute(
                 com.google.android.material.R.attr.colorPrimaryContainer,
                 typedValue,
                 true
+
             )
             runOnIO {
+                AlertDialog.Builder(it.context)
+                    .setTitle("New Event")
+                    .setMessage("")
+                    .setPositiveButton("Edit") { dialogInterface: DialogInterface, i: Int ->
+                        val editableTitle = EditText(it.context)
+                        val editableBody = EditText(it.context)
+                    }
+
                 dao.insertEvent(
                     CalEvent(
                         startTime = LocalDateTime.of(
