@@ -7,9 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import uab.cs422.projectinlook.EventDao
+import uab.cs422.projectinlook.EventDatabase
 import uab.cs422.projectinlook.R
 import uab.cs422.projectinlook.databinding.FragmentTodayBinding
+import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.ui.CalendarInterface
+import uab.cs422.projectinlook.util.runOnIO
+import java.time.LocalDateTime
 
 class TodayFragment : Fragment(), CalendarInterface {
 
@@ -18,6 +23,7 @@ class TodayFragment : Fragment(), CalendarInterface {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    lateinit var dao: EventDao
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,6 +33,15 @@ class TodayFragment : Fragment(), CalendarInterface {
         _binding = FragmentTodayBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        val eventsRecyclerView = binding.eventsRecycler
+
+        dao = EventDatabase.getInstance(this.requireContext()).eventDao
+        var events: List<CalEvent>
+        val today = LocalDateTime.now()
+        runOnIO {
+            events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
+            eventsRecyclerView.adapter = TodayEventsAdapter(this, events)
+        }
 
         return root
     }
@@ -50,6 +65,11 @@ class TodayFragment : Fragment(), CalendarInterface {
     }
 
     override fun updateEvents() {
-        TODO("Not yet implemented")
+        var events: List<CalEvent> = listOf()
+        val today = LocalDateTime.now()
+        runOnIO {
+            events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
+        }
+        (binding.eventsRecycler.adapter as TodayEventsAdapter).updateDisplayedData(events)
     }
 }

@@ -16,16 +16,15 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.ColorUtils
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import uab.cs422.projectinlook.R
 import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.util.dpToPx
 import uab.cs422.projectinlook.util.runOnIO
+import uab.cs422.projectinlook.util.hourFormatter
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 class DayHourAdapter(private val fragment: DayFragment, private var eventData: List<CalEvent>) :
     RecyclerView.Adapter<DayHourAdapter.ViewHolder>() {
@@ -42,15 +41,8 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val hourTVContext = holder.hourTextView.context
-        val timeFormat: DateTimeFormatter =
-            when (PreferenceManager.getDefaultSharedPreferences(hourTVContext)
-                .getString("hour_format", "")) {
-                "clock_time_format" -> DateTimeFormatter.ofPattern("h a")
-                "day_time_format" -> DateTimeFormatter.ofPattern("H:mm")
-                else -> DateTimeFormatter.ofPattern("h a")
-            }
         val positionAsHour = LocalDateTime.of(LocalDate.now(), LocalTime.of(position, 0))
-        holder.hourTextView.text = positionAsHour.format(timeFormat)
+        holder.hourTextView.text = positionAsHour.format(hourFormatter(hourTVContext))
         holder.hourTextView.layoutParams = ViewGroup.LayoutParams(
             (hourTVContext.resources.displayMetrics.widthPixels / 5).toFloat()
                 .coerceAtLeast(Paint().measureText(holder.hourTextView.text.toString())).toInt(),
