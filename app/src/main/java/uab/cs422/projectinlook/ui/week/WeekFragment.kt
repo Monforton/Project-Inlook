@@ -5,15 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import uab.cs422.projectinlook.databinding.FragmentWeekBinding
 import uab.cs422.projectinlook.ui.CalendarInterface
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+@Suppress("DEPRECATION")
 class WeekFragment : Fragment(), CalendarInterface {
 
     private var _binding: FragmentWeekBinding? = null
@@ -27,21 +26,11 @@ class WeekFragment : Fragment(), CalendarInterface {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val weekViewModel =
-            ViewModelProvider(this).get(WeekViewModel::class.java)
 
         _binding = FragmentWeekBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        //val textView: TextView = binding.weekView
-        //weekViewModel.text.observe(viewLifecycleOwner) {
-        //    textView.text = it
-        //}
         binding.previousWeekBtn.setOnClickListener {
-
-        }
-
-        binding.todayBtn.setOnClickListener {
 
         }
 
