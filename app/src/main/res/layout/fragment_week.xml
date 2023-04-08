@@ -11,16 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:padding="10dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Current Month"
-            android:textSize="24sp"
-            android:gravity="center"
-            android:layout_marginBottom="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,13 +28,6 @@
                 android:layout_marginHorizontal="10dp"/>
 
             <Button
-                android:id="@+id/today_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Today"/>
-
-            <Button
                 android:id="@+id/next_week_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -49,6 +35,7 @@
                 android:text="Next"
                 android:layout_marginHorizontal="10dp"/>
         </LinearLayout>
+<!--    All of the above will be handled by swipe actions   -->
 
         <LinearLayout
             android:id="@+id/weekDayNames"
@@ -60,7 +47,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Sun"
+                android:text="@string/short_sunday"
                 android:textAlignment="center"
                 android:textSize="16sp"/>
 
@@ -68,7 +55,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Mon"
+                android:text="@string/short_monday"
                 android:textAlignment="center"
                 android:textSize="16sp"/>
 
@@ -76,7 +63,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Tue"
+                android:text="@string/short_tuesday"
                 android:textAlignment="center"
                 android:textSize="16sp"/>
 
@@ -84,7 +71,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Wed"
+                android:text="@string/short_wednesday"
                 android:textAlignment="center"
                 android:textSize="16sp"/>
 
@@ -92,7 +79,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Thu"
+                android:text="@string/short_thursday"
                 android:textAlignment="center"
                 android:textSize="16sp"/>
 
@@ -100,7 +87,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Fri"
+                android:text="@string/short_friday"
                 android:textAlignment="center"
                 android:textSize="16sp"/>
 
@@ -108,7 +95,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Sat"
+                android:text="@string/short_saturday"
                 android:textAlignment="center"
                 android:textSize="16sp"/>
         </LinearLayout>

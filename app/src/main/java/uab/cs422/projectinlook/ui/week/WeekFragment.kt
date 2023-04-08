@@ -19,6 +19,7 @@ import uab.cs422.projectinlook.util.runOnIO
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+@Suppress("DEPRECATION")
 class WeekFragment : Fragment(), CalendarInterface {
 
     private var _binding: FragmentWeekBinding? = null
@@ -67,7 +68,7 @@ class WeekFragment : Fragment(), CalendarInterface {
         }
 
         binding.date1.setOnClickListener {
-            
+
         }
 
         binding.date2.setOnClickListener {
