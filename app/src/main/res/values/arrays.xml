@@ -9,4 +9,18 @@
         <item>clock_time_format</item>
         <item>day_time_format</item>
     </string-array>
+
+    <string-array name="view_start_destination_entries">
+        <item>Today</item>
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+    </string-array>
+
+    <string-array name="view_start_destination_values">
+        <item>today</item>
+        <item>day</item>
+        <item>week</item>
+        <item>month</item>
+    </string-array>
 </resources>

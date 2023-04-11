@@ -42,52 +42,25 @@ class DayFragment : Fragment(), CalendarInterface {
         val today = LocalDateTime.now()
         runOnIO {
             events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
-//          Debug command, just uncomment block to add events
-            /*
-            dao.insertEvent(
-            CalEvent(
-            startTime = LocalDateTime.of(2023, 3, 16, 7, 0),
-            endTime = LocalDateTime.of(2023, 3, 16, 7, 0),
-            title = "event 1"
-            ),
-            CalEvent(
-            startTime = LocalDateTime.of(2023, 3, 16, 8, 0),
-            endTime = LocalDateTime.of(2023, 3, 16, 9, 0),
-            title = "event 2"
-            ),
-            CalEvent(
-            startTime = LocalDateTime.of(2023, 3, 16, 8, 0),
-            endTime = LocalDateTime.of(2023, 3, 16, 9, 0),
-            title = "event 2"
-            ),
-            CalEvent(
-            startTime = LocalDateTime.of(2023, 3, 16, 8, 0),
-            endTime = LocalDateTime.of(2023, 3, 16, 9, 0),
-            title = "event 2"
-            ),
-            CalEvent(
-            startTime = LocalDateTime.of(2023, 3, 16, 8, 0),
-            endTime = LocalDateTime.of(2023, 3, 16, 9, 0),
-            title = "event 2"
-            ),
-            CalEvent(
-            startTime = LocalDateTime.of(2023, 3, 16, 9, 0),
-            endTime = LocalDateTime.of(2023, 3, 16, 10, 0),
-            title = "event 3"
-            ),
-            CalEvent(
-            startTime = LocalDateTime.of(2023, 3, 16, 10, 0),
-            endTime = LocalDateTime.of(2023, 3, 16, 11, 0),
-            title = "event 4"
-            )
-            )
-            */
+
             hourRecyclerView.adapter = DayHourAdapter(this, events)
 
             binding.hourRecycler.scrollToPosition(LocalDateTime.now().hour)
         }
 
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val today = LocalDateTime.now()
+        runOnIO {
+            val events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
+
+            binding.hourRecycler.adapter = DayHourAdapter(this, events)
+
+            binding.hourRecycler.scrollToPosition(LocalDateTime.now().hour)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
