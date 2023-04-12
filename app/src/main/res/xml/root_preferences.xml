@@ -12,6 +12,16 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/interface_header">
+        <ListPreference
+            app:defaultValue="view_start_destination"
+            app:entries="@array/view_start_destination_entries"
+            app:entryValues="@array/view_start_destination_values"
+            app:key="start_destination"
+            app:title="@string/default_view_title"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/theme_header">
 
     </PreferenceCategory>

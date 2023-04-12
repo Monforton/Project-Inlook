@@ -6,6 +6,12 @@
     app:startDestination="@+id/navigation_day">
 
     <fragment
+        android:id="@+id/navigation_today"
+        android:name="uab.cs422.projectinlook.ui.today.TodayFragment"
+        android:label="@string/title_today"
+        android:layout="@layout/fragment_today" />
+
+    <fragment
         android:id="@+id/navigation_day"
         android:name="uab.cs422.projectinlook.ui.day.DayFragment"
         android:label="@string/title_day"

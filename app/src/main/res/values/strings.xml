@@ -2,11 +2,12 @@
     <!--  Titles  -->
     <string name="app_name">Project Inlook</string>
     <string name="title_views">Views</string>
+    <string name="title_today">Today</string>
     <string name="title_day">Day</string>
     <string name="title_week">Week</string>
     <string name="title_month">Month</string>
 
-    <!--  Dialog Text   -->
+    <!--  Dialog   -->
     <string name="dialog_title_edit_event">Edit Event</string>
     <string name="dialog_neutral_button">OK</string>
     <string name="dialog_delete_button">Delete</string>
@@ -23,12 +24,14 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">SettingsActivity</string>
 
-    <!-- Preference Titles -->
+    <!-- Settings -->
     <string name="localities_header">Locality</string>
     <string name="theme_header">Theme</string>
-
-    <!-- Locality Preferences -->
+    <string name="interface_header">Interface</string>
     <string name="hour_format_title">Hour Format</string>
+    <string name="default_view_title">Default View</string>
+    <string name="today_button">Today Button</string>
+    <string name="add_event">Add an event</string>
 
     <!--  Day names  -->
     <string name="short_sunday">Sun</string>
