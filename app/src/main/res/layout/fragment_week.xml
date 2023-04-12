@@ -15,6 +15,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/currentMonth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Current Month"
@@ -127,7 +128,8 @@
                 android:layout_weight="1"
                 android:text="1"
                 android:textAlignment="center"
-                android:textSize="24sp"/>
+                android:textSize="24sp"
+                android:background="@color/white"/>
 
             <TextView
                 android:id="@+id/date2"
@@ -136,7 +138,8 @@
                 android:layout_weight="1"
                 android:text="2"
                 android:textAlignment="center"
-                android:textSize="24sp"/>
+                android:textSize="24sp"
+                android:background="@color/white"/>
 
             <TextView
                 android:id="@+id/date3"
@@ -145,7 +148,8 @@
                 android:layout_weight="1"
                 android:text="3"
                 android:textAlignment="center"
-                android:textSize="24sp"/>
+                android:textSize="24sp"
+                android:background="@color/white"/>
 
             <TextView
                 android:id="@+id/date4"
@@ -154,7 +158,8 @@
                 android:layout_weight="1"
                 android:text="4"
                 android:textAlignment="center"
-                android:textSize="24sp"/>
+                android:textSize="24sp"
+                android:background="@color/white"/>
 
             <TextView
                 android:id="@+id/date5"
@@ -163,7 +168,8 @@
                 android:layout_weight="1"
                 android:text="5"
                 android:textAlignment="center"
-                android:textSize="24sp"/>
+                android:textSize="24sp"
+                android:background="@color/white"/>
 
             <TextView
                 android:id="@+id/date6"
@@ -172,7 +178,8 @@
                 android:layout_weight="1"
                 android:text="6"
                 android:textAlignment="center"
-                android:textSize="24sp"/>
+                android:textSize="24sp"
+                android:background="@color/white"/>
 
             <TextView
                 android:id="@+id/date7"
@@ -181,7 +188,8 @@
                 android:layout_weight="1"
                 android:text="7"
                 android:textAlignment="center"
-                android:textSize="24sp"/>
+                android:textSize="24sp"
+                android:background="@color/white"/>
         </LinearLayout>
 
     </LinearLayout>
