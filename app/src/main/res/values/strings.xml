@@ -23,5 +23,7 @@
     <string name="interface_header">Interface</string>
     <string name="hour_format_title">Hour Format</string>
     <string name="default_view_title">Default View</string>
+    <string name="today_button">Today Button</string>
+    <string name="add_event">Add an event</string>
 
 </resources>

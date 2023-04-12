@@ -81,4 +81,8 @@ class TodayFragment : Fragment(), CalendarInterface {
         }
         (binding.eventsRecycler.adapter as TodayEventsAdapter).updateDisplayedData(events)
     }
+
+    override fun onTodayButtonClicked() {
+
+    }
 }

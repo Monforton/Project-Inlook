@@ -90,4 +90,8 @@ class DayFragment : Fragment(), CalendarInterface {
         }
         (binding.hourRecycler.adapter as DayHourAdapter).updateDisplayedData(events)
     }
+
+    override fun onTodayButtonClicked() {
+
+    }
 }
