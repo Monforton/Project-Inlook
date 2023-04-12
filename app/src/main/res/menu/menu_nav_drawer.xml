@@ -7,6 +7,11 @@
         android:title="@string/title_views">
         <menu>
             <item
+                android:id="@+id/navigation_item_today"
+                android:icon="@drawable/ic_list_24"
+                android:title="@string/title_today"
+                android:checkable="true"/>
+            <item
                 android:id="@+id/navigation_item_day"
                 android:icon="@drawable/ic_calendar_view_day_24"
                 android:title="@string/title_day"

@@ -1,4 +1,4 @@
-package uab.cs422.projectinlook.ui.day
+package uab.cs422.projectinlook.ui.today
 
 import android.content.Context
 import android.os.Bundle
@@ -9,16 +9,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import uab.cs422.projectinlook.EventDao
 import uab.cs422.projectinlook.EventDatabase
-import uab.cs422.projectinlook.databinding.FragmentDayBinding
+import uab.cs422.projectinlook.R
+import uab.cs422.projectinlook.databinding.FragmentTodayBinding
 import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.ui.CalendarInterface
 import uab.cs422.projectinlook.util.runOnIO
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
-class DayFragment : Fragment(), CalendarInterface {
+class TodayFragment : Fragment(), CalendarInterface {
 
-    private var _binding: FragmentDayBinding? = null
+    private var _binding: FragmentTodayBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -30,22 +30,17 @@ class DayFragment : Fragment(), CalendarInterface {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        _binding = FragmentDayBinding.inflate(inflater, container, false)
+        _binding = FragmentTodayBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Set up adapter
-        val hourRecyclerView = binding.hourRecycler
+        val eventsRecyclerView = binding.eventsRecycler
 
         dao = EventDatabase.getInstance(this.requireContext()).eventDao
         var events: List<CalEvent>
         val today = LocalDateTime.now()
         runOnIO {
             events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
-
-            hourRecyclerView.adapter = DayHourAdapter(this, events)
-
-            binding.hourRecycler.scrollToPosition(LocalDateTime.now().hour)
+            eventsRecyclerView.adapter = TodayEventsAdapter(this, events)
         }
 
         return root
@@ -56,26 +51,22 @@ class DayFragment : Fragment(), CalendarInterface {
         val today = LocalDateTime.now()
         runOnIO {
             val events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
-
-            binding.hourRecycler.adapter = DayHourAdapter(this, events)
-
-            binding.hourRecycler.scrollToPosition(LocalDateTime.now().hour)
+            binding.eventsRecycler.adapter = TodayEventsAdapter(this, events)
         }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        (context as AppCompatActivity).supportActionBar?.title =
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern("LLLL d"))
+        (context as AppCompatActivity).supportActionBar?.title = getString(R.string.title_today)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        (context as AppCompatActivity).supportActionBar?.title =
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern("LLLL d"))
+        (context as AppCompatActivity).supportActionBar?.title = getString(R.string.title_today)
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -88,6 +79,6 @@ class DayFragment : Fragment(), CalendarInterface {
         runOnIO {
             events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
         }
-        (binding.hourRecycler.adapter as DayHourAdapter).updateDisplayedData(events)
+        (binding.eventsRecycler.adapter as TodayEventsAdapter).updateDisplayedData(events)
     }
 }
