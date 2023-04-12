@@ -15,7 +15,6 @@ import uab.cs422.projectinlook.EventDatabase
 import uab.cs422.projectinlook.databinding.FragmentWeekBinding
 import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.ui.CalendarInterface
-import uab.cs422.projectinlook.ui.day.DayHourAdapter
 import uab.cs422.projectinlook.util.runOnIO
 import java.time.DayOfWeek
 import java.time.LocalDateTime
@@ -30,6 +29,7 @@ class WeekFragment : Fragment(), CalendarInterface {
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var dao: EventDao
+    private var events: MutableList<CalEvent> = mutableListOf()
     private val today = LocalDateTime.now()
     private lateinit var day1: LocalDateTime
     private lateinit var day2: LocalDateTime
@@ -51,16 +51,20 @@ class WeekFragment : Fragment(), CalendarInterface {
         val root: View = binding.root
 
         val weekRecyclerView = binding.weeklyRecycler
-
         dao = EventDatabase.getInstance(this.requireContext()).eventDao
-        var events: List<CalEvent>
-        runOnIO {
-            events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
-
-            weekRecyclerView.adapter = WeekEventAdapter(this, events)
-        }
 
         getCurrentWeek()
+
+        runOnIO {
+            events = dao.getEventsOfDay(day1.dayOfMonth, day1.monthValue, day1.year).toMutableList()
+            events += dao.getEventsOfDay(day2.dayOfMonth, day2.monthValue, day2.year).toMutableList()
+            events += dao.getEventsOfDay(day3.dayOfMonth, day3.monthValue, day3.year).toMutableList()
+            events += dao.getEventsOfDay(day4.dayOfMonth, day4.monthValue, day4.year).toMutableList()
+            events += dao.getEventsOfDay(day5.dayOfMonth, day5.monthValue, day5.year).toMutableList()
+            events += dao.getEventsOfDay(day6.dayOfMonth, day6.monthValue, day6.year).toMutableList()
+            events += dao.getEventsOfDay(day7.dayOfMonth, day7.monthValue, day7.year).toMutableList()
+        }
+        weekRecyclerView.adapter = WeekEventAdapter(this, events)
 
         binding.previousWeekBtn.setOnClickListener {
         previousWeek()
@@ -125,7 +129,17 @@ class WeekFragment : Fragment(), CalendarInterface {
     }
 
     override fun updateEvents() {
-
+        var events: MutableList<CalEvent> = mutableListOf()
+        runOnIO {
+            events = dao.getEventsOfDay(day1.dayOfMonth, day1.monthValue, day1.year).toMutableList()
+            events += dao.getEventsOfDay(day2.dayOfMonth, day2.monthValue, day2.year).toMutableList()
+            events += dao.getEventsOfDay(day3.dayOfMonth, day3.monthValue, day3.year).toMutableList()
+            events += dao.getEventsOfDay(day4.dayOfMonth, day4.monthValue, day4.year).toMutableList()
+            events += dao.getEventsOfDay(day5.dayOfMonth, day5.monthValue, day5.year).toMutableList()
+            events += dao.getEventsOfDay(day6.dayOfMonth, day6.monthValue, day6.year).toMutableList()
+            events += dao.getEventsOfDay(day7.dayOfMonth, day7.monthValue, day7.year).toMutableList()
+        }
+        (binding.weeklyRecycler.adapter as? WeekEventAdapter)?.updateWeekRecView(events)
     }
 
     private fun getCurrentWeek() {
@@ -242,18 +256,30 @@ class WeekFragment : Fragment(), CalendarInterface {
         binding.date5.text = "${day5.dayOfMonth}"
         binding.date6.text = "${day6.dayOfMonth}"
         binding.date7.text = "${day7.dayOfMonth}"
-        binding.date1.setBackgroundColor(Color.parseColor("#00000000"))
+        resetDateBackgroundColors()
         determineMonth()
+        updateEvents()
     }
 
     private fun resetDateBackgroundColors() {
-        binding.date1.setBackgroundColor(Color.parseColor("#00000000"))
-        binding.date2.setBackgroundColor(Color.parseColor("#00000000"))
-        binding.date3.setBackgroundColor(Color.parseColor("#00000000"))
-        binding.date4.setBackgroundColor(Color.parseColor("#00000000"))
-        binding.date5.setBackgroundColor(Color.parseColor("#00000000"))
-        binding.date6.setBackgroundColor(Color.parseColor("#00000000"))
-        binding.date7.setBackgroundColor(Color.parseColor("#00000000"))
+        if (day1 != today && day2 != today && day3 != today && day4 != today && day5 != today && day6 != today && day7!= today) {
+            binding.date1.setBackgroundColor(Color.parseColor("#00000000"))
+            binding.date2.setBackgroundColor(Color.parseColor("#00000000"))
+            binding.date3.setBackgroundColor(Color.parseColor("#00000000"))
+            binding.date4.setBackgroundColor(Color.parseColor("#00000000"))
+            binding.date5.setBackgroundColor(Color.parseColor("#00000000"))
+            binding.date6.setBackgroundColor(Color.parseColor("#00000000"))
+            binding.date7.setBackgroundColor(Color.parseColor("#00000000"))
+        }
+        else {
+            if (day1 == today) binding.date1.setBackgroundColor(Color.parseColor("#C84EBD72"))
+            else if (day2 == today) binding.date2.setBackgroundColor(Color.parseColor("#C84EBD72"))
+            else if (day3 == today) binding.date3.setBackgroundColor(Color.parseColor("#C84EBD72"))
+            else if (day4 == today) binding.date4.setBackgroundColor(Color.parseColor("#C84EBD72"))
+            else if (day5 == today) binding.date5.setBackgroundColor(Color.parseColor("#C84EBD72"))
+            else if (day6 == today) binding.date6.setBackgroundColor(Color.parseColor("#C84EBD72"))
+            else if (day7 == today) binding.date7.setBackgroundColor(Color.parseColor("#C84EBD72"))
+        }
     }
 
     private fun determineMonth() {

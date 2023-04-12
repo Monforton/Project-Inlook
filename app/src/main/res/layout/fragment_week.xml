@@ -32,7 +32,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Previous"
+                android:text="@string/week_previous_button"
                 android:layout_marginHorizontal="10dp"/>
 
             <Button
@@ -40,14 +40,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Today"/>
+                android:text="@string/week_current_button"/>
 
             <Button
                 android:id="@+id/next_week_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Next"
+                android:text="@string/week_next_button"
                 android:layout_marginHorizontal="10dp"/>
         </LinearLayout>
 <!--    All of the above will be handled by swipe actions   -->
@@ -193,6 +193,15 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerColor="@color/md_theme_dark_background"
+        app:dividerInsetStart="10dp"
+        app:dividerInsetEnd="10dp"
+        app:dividerThickness="1dp"
+        app:layout_constraintTop_toBottomOf="@+id/week_view"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/weekly_recycler"
