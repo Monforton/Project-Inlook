@@ -14,15 +14,6 @@
         android:padding="10dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/currentMonth"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Current Month"
-            android:textSize="24sp"
-            android:gravity="center"
-            android:layout_marginBottom="10dp"/>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -32,22 +23,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Previous"
+                android:text="@string/previous_button"
                 android:layout_marginHorizontal="10dp"/>
-
-            <Button
-                android:id="@+id/today_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Today"/>
 
             <Button
                 android:id="@+id/next_week_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Next"
+                android:text="@string/next_button"
                 android:layout_marginHorizontal="10dp"/>
         </LinearLayout>
 <!--    All of the above will be handled by swipe actions   -->
@@ -129,7 +113,7 @@
                 android:text="1"
                 android:textAlignment="center"
                 android:textSize="24sp"
-                android:background="@color/white"/>
+                />
 
             <TextView
                 android:id="@+id/date2"
@@ -139,7 +123,7 @@
                 android:text="2"
                 android:textAlignment="center"
                 android:textSize="24sp"
-                android:background="@color/white"/>
+                />
 
             <TextView
                 android:id="@+id/date3"
@@ -148,8 +132,7 @@
                 android:layout_weight="1"
                 android:text="3"
                 android:textAlignment="center"
-                android:textSize="24sp"
-                android:background="@color/white"/>
+                android:textSize="24sp"/>
 
             <TextView
                 android:id="@+id/date4"
@@ -158,8 +141,7 @@
                 android:layout_weight="1"
                 android:text="4"
                 android:textAlignment="center"
-                android:textSize="24sp"
-                android:background="@color/white"/>
+                android:textSize="24sp"/>
 
             <TextView
                 android:id="@+id/date5"
@@ -168,8 +150,7 @@
                 android:layout_weight="1"
                 android:text="5"
                 android:textAlignment="center"
-                android:textSize="24sp"
-                android:background="@color/white"/>
+                android:textSize="24sp"/>
 
             <TextView
                 android:id="@+id/date6"
@@ -178,8 +159,7 @@
                 android:layout_weight="1"
                 android:text="6"
                 android:textAlignment="center"
-                android:textSize="24sp"
-                android:background="@color/white"/>
+                android:textSize="24sp"/>
 
             <TextView
                 android:id="@+id/date7"
@@ -188,8 +168,7 @@
                 android:layout_weight="1"
                 android:text="7"
                 android:textAlignment="center"
-                android:textSize="24sp"
-                android:background="@color/white"/>
+                android:textSize="24sp"/>
         </LinearLayout>
 
     </LinearLayout>

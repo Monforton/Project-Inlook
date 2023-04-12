@@ -2,23 +2,23 @@ package uab.cs422.projectinlook.ui.week
 
 import android.content.Context
 import android.graphics.Color
+import java.util.Calendar
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import uab.cs422.projectinlook.EventDao
 import uab.cs422.projectinlook.EventDatabase
 import uab.cs422.projectinlook.databinding.FragmentWeekBinding
 import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.ui.CalendarInterface
-import uab.cs422.projectinlook.ui.day.DayHourAdapter
 import uab.cs422.projectinlook.util.runOnIO
 import java.time.DayOfWeek
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Suppress("DEPRECATION")
@@ -31,22 +31,13 @@ class WeekFragment : Fragment(), CalendarInterface {
     private val binding get() = _binding!!
     private lateinit var dao: EventDao
     private val today = LocalDateTime.now()
-    private lateinit var day1: LocalDateTime
-    private lateinit var day2: LocalDateTime
-    private lateinit var day3: LocalDateTime
-    private lateinit var day4: LocalDateTime
-    private lateinit var day5: LocalDateTime
-    private lateinit var day6: LocalDateTime
-    private lateinit var day7: LocalDateTime
+    private var weekDays = (Array(7) { today }).toMutableList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val weekViewModel =
-            ViewModelProvider(this).get(WeekViewModel::class.java)
-
         _binding = FragmentWeekBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -60,46 +51,15 @@ class WeekFragment : Fragment(), CalendarInterface {
             weekRecyclerView.adapter = WeekEventAdapter(this, events)
         }
 
+
         getCurrentWeek()
 
         binding.previousWeekBtn.setOnClickListener {
-        previousWeek()
-        }
-
-        binding.todayBtn.setOnClickListener {
-        getCurrentWeek()
+            previousWeek()
         }
 
         binding.nextWeekBtn.setOnClickListener {
-        nextWeek()
-        }
-
-        binding.date1.setOnClickListener {
-
-        }
-
-        binding.date2.setOnClickListener {
-
-        }
-
-        binding.date3.setOnClickListener {
-
-        }
-
-        binding.date4.setOnClickListener {
-
-        }
-
-        binding.date5.setOnClickListener {
-
-        }
-
-        binding.date6.setOnClickListener {
-
-        }
-
-        binding.date7.setOnClickListener {
-
+            nextWeek()
         }
 
         return root
@@ -125,146 +85,140 @@ class WeekFragment : Fragment(), CalendarInterface {
     }
 
     override fun updateEvents() {
+        var events: List<CalEvent> = listOf()
+        val today = LocalDateTime.now()
+        runOnIO {
+            events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
+        }
+        (binding.weeklyRecycler.adapter as WeekEventAdapter).updateWeekRecView(events)
+    }
 
+    override fun onTodayButtonClicked() {
+        getCurrentWeek()
     }
 
     private fun getCurrentWeek() {
-        if (today.dayOfWeek == DayOfWeek.valueOf("SUNDAY")) {
-            day1 = today
-            binding.date1.setBackgroundColor(Color.parseColor("#C84EBD72"))
-            day2 = today.plusDays(1)
-            day3 = today.plusDays(2)
-            day4 = today.plusDays(3)
-            day5 = today.plusDays(4)
-            day6 = today.plusDays(5)
-            day7 = today.plusDays(6)
-            updateDisplayedDates()
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
+        weekDays[0] = calendar.time.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+        for (i in 1..6) {
+            weekDays[i] = weekDays[0].plusDays(i.toLong())
         }
-        else if (today.dayOfWeek == DayOfWeek.valueOf("MONDAY")) {
-            day1 = today.minusDays(1)
-            day2 = today
-            binding.date2.setBackgroundColor(Color.parseColor("#C84EBD72"))
-            day3 = today.plusDays(1)
-            day4 = today.plusDays(2)
-            day5 = today.plusDays(3)
-            day6 = today.plusDays(4)
-            day7 = today.plusDays(5)
-            updateDisplayedDates()
-        }
-
-        else if (today.dayOfWeek == DayOfWeek.valueOf("TUESDAY")) {
-            day1 = today.minusDays(2)
-            day2 = today.minusDays(1)
-            day3 = today
-            binding.date3.setBackgroundColor(Color.parseColor("#C84EBD72"))
-            day4 = today.plusDays(1)
-            day5 = today.plusDays(2)
-            day6 = today.plusDays(3)
-            day7 = today.plusDays(4)
-            updateDisplayedDates()
-        }
-
-        else if (today.dayOfWeek == DayOfWeek.valueOf("WEDNESDAY")) {
-            day1 = today.minusDays(3)
-            day2 = today.minusDays(2)
-            day3 = today.minusDays(1)
-            day4 = today
-            binding.date4.setBackgroundColor(Color.parseColor("#C84EBD72"))
-            day5 = today.plusDays(1)
-            day6 = today.plusDays(2)
-            day7 = today.plusDays(3)
-            updateDisplayedDates()
-        }
-
-        else if (today.dayOfWeek == DayOfWeek.valueOf("THURSDAY")) {
-            day1 = today.minusDays(4)
-            day2 = today.minusDays(3)
-            day3 = today.minusDays(2)
-            day4 = today.minusDays(1)
-            day5 = today
-            binding.date5.setBackgroundColor(Color.parseColor("#C84EBD72"))
-            day6 = today.plusDays(1)
-            day7 = today.plusDays(2)
-            updateDisplayedDates()
-        }
-
-        else if (today.dayOfWeek == DayOfWeek.valueOf("FRIDAY")) {
-            day1 = today.minusDays(5)
-            day2 = today.minusDays(4)
-            day3 = today.minusDays(3)
-            day4 = today.minusDays(2)
-            day5 = today.minusDays(1)
-            day6 = today
-            binding.date6.setBackgroundColor(Color.parseColor("#C84EBD72"))
-            day7 = today.plusDays(1)
-            updateDisplayedDates()
-        }
-
-        else if (today.dayOfWeek == DayOfWeek.valueOf("SATURDAY")) {
-            day1 = today.minusDays(6)
-            day2 = today.minusDays(5)
-            day3 = today.minusDays(4)
-            day4 = today.minusDays(3)
-            day5 = today.minusDays(2)
-            day6 = today.minusDays(1)
-            day7 = today
-            binding.date7.setBackgroundColor(Color.parseColor("#C84EBD72"))
-            updateDisplayedDates()
-        }
+        updateDisplayedDates()
     }
+
+
     private fun previousWeek() {
-        day1 = day1.minusDays(7)
-        day2 = day2.minusDays(7)
-        day3 = day3.minusDays(7)
-        day4 = day4.minusDays(7)
-        day5 = day5.minusDays(7)
-        day6 = day6.minusDays(7)
-        day7 = day7.minusDays(7)
+        for (i in 0..6) {
+            weekDays[i] = weekDays[i].minusDays(7)
+        }
         updateDisplayedDates()
     }
 
     private fun nextWeek() {
-        day1 = day1.plusDays(7)
-        day2 = day2.plusDays(7)
-        day3 = day3.plusDays(7)
-        day4 = day4.plusDays(7)
-        day5 = day5.plusDays(7)
-        day6 = day6.plusDays(7)
-        day7 = day7.plusDays(7)
+        for (i in 0..6) {
+            weekDays[i] = weekDays[i].plusDays(7)
+        }
         updateDisplayedDates()
     }
 
     private fun updateDisplayedDates() {
-        binding.date1.text = "${day1.dayOfMonth}"
-        binding.date2.text = "${day2.dayOfMonth}"
-        binding.date3.text = "${day3.dayOfMonth}"
-        binding.date4.text = "${day4.dayOfMonth}"
-        binding.date5.text = "${day5.dayOfMonth}"
-        binding.date6.text = "${day6.dayOfMonth}"
-        binding.date7.text = "${day7.dayOfMonth}"
-        binding.date1.setBackgroundColor(Color.parseColor("#00000000"))
+        binding.date1.text = "${weekDays[0].dayOfMonth}"
+        binding.date2.text = "${weekDays[1].dayOfMonth}"
+        binding.date3.text = "${weekDays[2].dayOfMonth}"
+        binding.date4.text = "${weekDays[3].dayOfMonth}"
+        binding.date5.text = "${weekDays[4].dayOfMonth}"
+        binding.date6.text = "${weekDays[5].dayOfMonth}"
+        binding.date7.text = "${weekDays[6].dayOfMonth}"
+
+        // Set color of the day if it is today
+        resetColors()
+        if ((today.isAfter(weekDays[0]) || today.isEqual(weekDays[0])) &&
+            (today.isBefore(weekDays[6]) || today.isEqual(weekDays[6]))
+        ) {
+            val typedValue = TypedValue()
+            binding.weekDayDates.context.theme.resolveAttribute(
+                com.google.android.material.R.attr.colorOnTertiaryContainer,
+                typedValue,
+                true
+            )
+            val textColor = typedValue.data
+            binding.weekDayDates.context.theme.resolveAttribute(
+                com.google.android.material.R.attr.colorTertiaryContainer,
+                typedValue,
+                true
+            )
+            val backgroundColor = typedValue.data
+            when (today.dayOfWeek) {
+                DayOfWeek.SUNDAY -> {
+                    binding.date1.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
+                    binding.date1.setTextColor(Color.valueOf(textColor).toArgb())
+                }
+                DayOfWeek.MONDAY -> {
+                    binding.date2.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
+                    binding.date2.setTextColor(Color.valueOf(textColor).toArgb())
+                }
+                DayOfWeek.TUESDAY -> {
+                    binding.date3.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
+                    binding.date3.setTextColor(Color.valueOf(textColor).toArgb())
+                }
+                DayOfWeek.WEDNESDAY -> {
+                    binding.date4.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
+                    binding.date4.setTextColor(Color.valueOf(textColor).toArgb())
+                }
+                DayOfWeek.THURSDAY -> {
+                    binding.date5.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
+                    binding.date5.setTextColor(Color.valueOf(textColor).toArgb())
+                }
+                DayOfWeek.FRIDAY -> {
+                    binding.date6.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
+                    binding.date6.setTextColor(Color.valueOf(textColor).toArgb())
+                }
+                DayOfWeek.SATURDAY -> {
+                    binding.date7.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
+                    binding.date7.setTextColor(Color.valueOf(textColor).toArgb())
+                }
+                else -> {}
+            }
+        }
+
         determineMonth()
     }
 
-    private fun resetDateBackgroundColors() {
-        binding.date1.setBackgroundColor(Color.parseColor("#00000000"))
-        binding.date2.setBackgroundColor(Color.parseColor("#00000000"))
-        binding.date3.setBackgroundColor(Color.parseColor("#00000000"))
-        binding.date4.setBackgroundColor(Color.parseColor("#00000000"))
-        binding.date5.setBackgroundColor(Color.parseColor("#00000000"))
-        binding.date6.setBackgroundColor(Color.parseColor("#00000000"))
-        binding.date7.setBackgroundColor(Color.parseColor("#00000000"))
+    private fun resetColors() {
+        val typedValue = TypedValue()
+        binding.weekDayDates.context.theme.resolveAttribute(
+            com.google.android.material.R.attr.colorOnBackground,
+            typedValue,
+            true
+        )
+        binding.date1.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
+        binding.date2.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
+        binding.date3.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
+        binding.date4.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
+        binding.date5.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
+        binding.date6.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
+        binding.date7.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
+
+        binding.date1.setTextColor(typedValue.data)
+        binding.date2.setTextColor(typedValue.data)
+        binding.date3.setTextColor(typedValue.data)
+        binding.date4.setTextColor(typedValue.data)
+        binding.date5.setTextColor(typedValue.data)
+        binding.date6.setTextColor(typedValue.data)
+        binding.date7.setTextColor(typedValue.data)
     }
 
     private fun determineMonth() {
-        if (day1.month == day7.month) binding.currentMonth.text = "${day7.month}"
-        else {
-            if (day1.month != day2.month) binding.currentMonth.text = "${day2.month}"
-            else if (day1.month != day3.month) binding.currentMonth.text = "${day3.month}"
-            else if (day1.month != day4.month) binding.currentMonth.text = "${day4.month}"
-            else {
-                binding.currentMonth.text = "${day1.month}"
+        (context as AppCompatActivity).supportActionBar?.title =
+            weekDays[0].format(DateTimeFormatter.ofPattern("LLLL"))
+        var prevDayMonth = weekDays[0].month
+        for (day in weekDays) {
+            if (prevDayMonth != day.month) {
+                (context as AppCompatActivity).supportActionBar?.title =
+                    day.format(DateTimeFormatter.ofPattern("LLLL"))
             }
+            prevDayMonth = day.month
         }
     }
 }
