@@ -60,10 +60,14 @@ class MonthFragment : Fragment(), CalendarInterface {
     }
 
     override fun updateEvents() {
-        TODO("Not yet implemented")
     }
 
     override fun onTodayButtonClicked() {
-        TODO("Not yet implemented")
+    }
+
+    override fun leftSwipe() {
+    }
+
+    override fun rightSwipe() {
     }
 }

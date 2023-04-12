@@ -3,10 +3,13 @@ package uab.cs422.projectinlook
 import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.GestureDetector
 import android.view.Menu
+import android.view.MotionEvent
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColor
+import androidx.core.view.GravityCompat
 import androidx.core.view.forEach
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -17,6 +20,7 @@ import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.ui.CalendarInterface
 import uab.cs422.projectinlook.util.runOnIO
 import java.time.LocalDateTime
+import kotlin.math.abs
 
 class MainActivity : AppCompatActivity() {
 
@@ -80,6 +84,15 @@ class MainActivity : AppCompatActivity() {
         }
         checkCurrentDestination()
 
+        val gestureDetector = GestureDetector(supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)?.context, SwipeGestureListener())
+        supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)?.view?.setOnTouchListener { view, event ->
+            if (!gestureDetector.onTouchEvent(event)) {
+                view.performClick()
+            }
+
+            false
+        }
+
         binding.fabAdd.setOnClickListener {
             val typedValue = TypedValue()
             theme.resolveAttribute(
@@ -109,7 +122,8 @@ class MainActivity : AppCompatActivity() {
                     )
                 )
             }
-            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment).childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
+            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
+                .childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
         }
     }
 
@@ -149,6 +163,28 @@ class MainActivity : AppCompatActivity() {
                 it.isChecked = it.title == currentDest?.label
             }
 
+        }
+    }
+
+    private inner class SwipeGestureListener : GestureDetector.SimpleOnGestureListener() {
+        override fun onFling(
+            e1: MotionEvent,
+            e2: MotionEvent,
+            velocityX: Float,
+            velocityY: Float
+        ): Boolean {
+            val swipeThreshold = 200
+            if (!binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                if (e1?.x ?: 0f > e2?.x ?: 0f && abs(velocityX) > swipeThreshold) { // If left swipe
+                    ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
+                        .childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
+                } else if (e1?.x ?: 0f < e2?.x ?: 0f && abs(velocityX) > swipeThreshold) {
+                    ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
+                        .childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
+                }
+                return true
+            }
+            return false
         }
     }
 }

@@ -66,4 +66,10 @@ class WeekFragment : Fragment(), CalendarInterface {
     override fun onTodayButtonClicked() {
 
     }
+
+    override fun leftSwipe() {
+    }
+
+    override fun rightSwipe() {
+    }
 }
