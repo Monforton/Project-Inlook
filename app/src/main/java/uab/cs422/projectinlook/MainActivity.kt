@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.Menu
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColor
 import androidx.core.view.forEach
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.preference.PreferenceManager
 import com.google.android.material.navigation.NavigationView
 import uab.cs422.projectinlook.databinding.ActivityMainBinding
 import uab.cs422.projectinlook.entities.CalEvent
@@ -19,7 +21,7 @@ import java.time.LocalDateTime
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    lateinit var dao: EventDao
+    private lateinit var dao: EventDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,16 +29,33 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        dao = EventDatabase.getInstance(this).eventDao
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                onNavigateUp()
+                checkCurrentDestination()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
 
+        dao = EventDatabase.getInstance(this).eventDao
 
         // Set up Toolbar as ActionBar
         setSupportActionBar(binding.mainToolbar)
 
         val navView = binding.navDrawerView
         val drawerLayout = binding.mainDrawerLayout
-
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        val navGraph = navController.navInflater.inflate(R.navigation.mobile_navigation)
+
+        when (PreferenceManager.getDefaultSharedPreferences(this)
+            .getString("start_destination", "")) {
+            "today" -> navGraph.setStartDestination(R.id.navigation_today)
+            "day" -> navGraph.setStartDestination(R.id.navigation_day)
+            "week" -> navGraph.setStartDestination(R.id.navigation_week)
+            "month" -> navGraph.setStartDestination(R.id.navigation_month)
+            else -> navGraph.setStartDestination(R.id.navigation_today)
+        }
+        navController.graph = navGraph
 
         binding.mainToolbar.setNavigationOnClickListener {
             drawerLayout.open()
@@ -49,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
                     true
                 }
+                R.id.navigation_item_today -> navController.navigate(R.id.navigation_today)
                 R.id.navigation_item_day -> navController.navigate(R.id.navigation_day)
                 R.id.navigation_item_week -> navController.navigate(R.id.navigation_week)
                 R.id.navigation_item_month -> navController.navigate(R.id.navigation_month)
@@ -93,6 +113,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        checkCurrentDestination()
+    }
+
     /**
      * Unchecks all menu items for given menu (only depth of 2)
      *
@@ -125,19 +150,5 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-    }
-
-
-    // TODO Find non-deprecated way of doing this?
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        super.onBackPressed()
-        checkCurrentDestination()
-    }
-
-
-    override fun onRestart() {
-        super.onRestart()
-        recreate()
     }
 }
