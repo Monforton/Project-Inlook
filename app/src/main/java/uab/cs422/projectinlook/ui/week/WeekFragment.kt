@@ -1,5 +1,6 @@
 package uab.cs422.projectinlook.ui.week
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import java.util.Calendar
@@ -15,6 +16,7 @@ import uab.cs422.projectinlook.EventDatabase
 import uab.cs422.projectinlook.databinding.FragmentWeekBinding
 import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.ui.CalendarInterface
+import uab.cs422.projectinlook.ui.SwipeListener
 import uab.cs422.projectinlook.util.runOnIO
 import java.time.DayOfWeek
 import java.time.LocalDateTime
@@ -33,6 +35,7 @@ class WeekFragment : Fragment(), CalendarInterface {
     private val today = LocalDateTime.now()
     private var weekDays = (Array(7) { today }).toMutableList()
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,41 +57,20 @@ class WeekFragment : Fragment(), CalendarInterface {
 
         getCurrentWeek()
 
-        binding.previousWeekBtn.setOnClickListener {
-            previousWeek()
-        }
 
-        binding.nextWeekBtn.setOnClickListener {
-            nextWeek()
-        }
-
-        binding.date1.setOnClickListener {
-
-        }
-
-        binding.date2.setOnClickListener {
-
-        }
-
-        binding.date3.setOnClickListener {
-
-        }
-
-        binding.date4.setOnClickListener {
-
-        }
-
-        binding.date5.setOnClickListener {
-
-        }
-
-        binding.date6.setOnClickListener {
-
-        }
-
-        binding.date7.setOnClickListener {
-
-        }
+        weekRecyclerView.setOnTouchListener( @SuppressLint("ClickableViewAccessibility")
+        object : SwipeListener(this@WeekFragment.context) {
+            override fun onSwipeLeft() {
+                super.onSwipeLeft()
+                nextWeek()
+                updateEvents()
+            }
+            override fun onSwipeRight() {
+                super.onSwipeRight()
+                previousWeek()
+                updateEvents()
+            }
+        })
 
         return root
     }
@@ -113,17 +95,22 @@ class WeekFragment : Fragment(), CalendarInterface {
     }
 
     override fun updateEvents() {
-        var events: MutableList<CalEvent> = mutableListOf()
+        var events: List<CalEvent> = listOf()
         runOnIO {
-            events = dao.getEventsOfDay(day1.dayOfMonth, day1.monthValue, day1.year).toMutableList()
-            events += dao.getEventsOfDay(day2.dayOfMonth, day2.monthValue, day2.year).toMutableList()
-            events += dao.getEventsOfDay(day3.dayOfMonth, day3.monthValue, day3.year).toMutableList()
-            events += dao.getEventsOfDay(day4.dayOfMonth, day4.monthValue, day4.year).toMutableList()
-            events += dao.getEventsOfDay(day5.dayOfMonth, day5.monthValue, day5.year).toMutableList()
-            events += dao.getEventsOfDay(day6.dayOfMonth, day6.monthValue, day6.year).toMutableList()
-            events += dao.getEventsOfDay(day7.dayOfMonth, day7.monthValue, day7.year).toMutableList()
+            events = dao.getEventsInRange(
+                weekDays[0].dayOfMonth,
+                weekDays[0].monthValue,
+                weekDays[0].year,
+                weekDays[6].dayOfMonth,
+                weekDays[6].monthValue,
+                weekDays[6].year
+            )
         }
-        (binding.weeklyRecycler.adapter as? WeekEventAdapter)?.updateWeekRecView(events)
+        (binding.weeklyRecycler.adapter as WeekEventAdapter).updateWeekRecView(events)
+    }
+
+    override fun onTodayButtonClicked() {
+        getCurrentWeek()
     }
 
     private fun getCurrentWeek() {
@@ -210,8 +197,9 @@ class WeekFragment : Fragment(), CalendarInterface {
                 else -> {}
             }
         }
-
         determineMonth()
+
+        updateEvents()
     }
 
     private fun resetColors() {
