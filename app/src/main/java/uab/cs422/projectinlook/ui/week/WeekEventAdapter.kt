@@ -35,7 +35,6 @@ class WeekEventAdapter(private val fragment: WeekFragment, private var eventData
     }
 
     fun updateWeekRecView(newData: List<CalEvent>) {
-        data.clear()
         data.addAll(newData)
         notifyDataSetChanged()
     }
