@@ -120,7 +120,6 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
                 0.95f
             )
         )
-
         textView.ellipsize = TextUtils.TruncateAt.END
         textView.gravity = Gravity.CENTER
         textView.maxLines = 1
