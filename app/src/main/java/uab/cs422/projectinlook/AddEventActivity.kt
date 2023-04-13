@@ -19,8 +19,12 @@ class AddEventActivity : AppCompatActivity() {
             0, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
         )
 
-        binding.cancelButton.setOnClickListener {
-            this@AddEventActivity.finish()
+        binding.addBtnSave.setOnClickListener {
+//            dao.insertEvent()
+        }
+
+        binding.addBtnCancel.setOnClickListener {
+            finish()
         }
     }
 

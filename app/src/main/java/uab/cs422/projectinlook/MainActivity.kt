@@ -2,23 +2,18 @@ package uab.cs422.projectinlook
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.GestureDetector
 import android.view.Menu
 import android.view.MotionEvent
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.toColor
 import androidx.core.view.forEach
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.preference.PreferenceManager
 import com.google.android.material.navigation.NavigationView
 import uab.cs422.projectinlook.databinding.ActivityMainBinding
-import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.ui.CalendarInterface
-import uab.cs422.projectinlook.util.runOnIO
-import java.time.LocalDateTime
 
 class MainActivity : AppCompatActivity() {
 
@@ -123,6 +118,12 @@ class MainActivity : AppCompatActivity() {
 //            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
 //                .childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
+                .childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
