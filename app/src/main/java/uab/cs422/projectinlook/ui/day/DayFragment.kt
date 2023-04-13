@@ -42,22 +42,22 @@ class DayFragment : Fragment(), CalendarInterface {
         val hourRecyclerView = binding.hourRecycler
 
         dao = EventDatabase.getInstance(this.requireContext()).eventDao
-        var events: List<CalEvent>
+        var events: List<CalEvent> = listOf()
         day = LocalDateTime.now()
         runOnIO {
             events = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
-
-            hourRecyclerView.adapter = DayHourAdapter(this, events)
-
-            hourRecyclerView.scrollToPosition(LocalDateTime.now().hour)
         }
-        hourRecyclerView.setOnTouchListener( @SuppressLint("ClickableViewAccessibility")
+        hourRecyclerView.adapter = DayHourAdapter(this, events)
+        hourRecyclerView.scrollToPosition(LocalDateTime.now().hour)
+
+        hourRecyclerView.setOnTouchListener(@SuppressLint("ClickableViewAccessibility")
         object : SwipeListener(this@DayFragment.context) {
             override fun onSwipeLeft() {
                 super.onSwipeLeft()
                 day = day.plusDays(1)
                 updateEvents()
             }
+
             override fun onSwipeRight() {
                 super.onSwipeRight()
                 day = day.minusDays(1)
@@ -69,13 +69,12 @@ class DayFragment : Fragment(), CalendarInterface {
 
     override fun onResume() {
         super.onResume()
+        var events: List<CalEvent> = listOf()
         runOnIO {
-            val events = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
-
-            binding.hourRecycler.adapter = DayHourAdapter(this, events)
-
-            binding.hourRecycler.scrollToPosition(LocalDateTime.now().hour)
+            events = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
         }
+        binding.hourRecycler.adapter = DayHourAdapter(this, events)
+        binding.hourRecycler.scrollToPosition(LocalDateTime.now().hour)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
