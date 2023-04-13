@@ -80,6 +80,11 @@ class MainActivity : AppCompatActivity() {
         }
         checkCurrentDestination()
 
+        binding.btnToday.setOnClickListener {
+            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
+                .childFragmentManager.fragments[0] as CalendarInterface).onTodayButtonClicked()
+        }
+
         binding.fabAdd.setOnClickListener {
             val typedValue = TypedValue()
             theme.resolveAttribute(
@@ -109,7 +114,8 @@ class MainActivity : AppCompatActivity() {
                     )
                 )
             }
-            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment).childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
+            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
+                .childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
         }
     }
 

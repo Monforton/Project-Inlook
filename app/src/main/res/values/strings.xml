@@ -7,10 +7,12 @@
     <string name="title_week">Week</string>
     <string name="title_month">Month</string>
 
-    <!--  Dialog   -->
+    <!--  Buttons   -->
     <string name="dialog_title_edit_event">Edit Event</string>
     <string name="dialog_neutral_button">OK</string>
     <string name="dialog_delete_button">Delete</string>
+    <string name="next_button">Next</string>
+    <string name="previous_button">Previous</string>
 
     <string name="week_previous_button">Previous</string>
     <string name="week_current_button">Today</string>
