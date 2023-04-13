@@ -3,7 +3,9 @@ package uab.cs422.projectinlook
 import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.GestureDetector
 import android.view.Menu
+import android.view.MotionEvent
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColor
@@ -21,6 +23,7 @@ import java.time.LocalDateTime
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var gestureDetector: GestureDetector
     private lateinit var dao: EventDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +83,11 @@ class MainActivity : AppCompatActivity() {
         }
         checkCurrentDestination()
 
+        binding.btnToday.setOnClickListener {
+            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
+                .childFragmentManager.fragments[0] as CalendarInterface).onTodayButtonClicked()
+        }
+
         binding.fabAdd.setOnClickListener {
             val typedValue = TypedValue()
             theme.resolveAttribute(
@@ -109,8 +117,13 @@ class MainActivity : AppCompatActivity() {
                     )
                 )
             }
-            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment).childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
+            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
+                .childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
         }
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        return gestureDetector.onTouchEvent(event!!)
     }
 
     override fun onRestart() {
@@ -145,10 +158,9 @@ class MainActivity : AppCompatActivity() {
         val currentDest = findNavController(R.id.nav_host_fragment_activity_main).currentDestination
         navView.menu.forEach { menuItem ->
             menuItem.subMenu?.forEach {
-                println("${it.title}, ${currentDest?.label}")
                 it.isChecked = it.title == currentDest?.label
             }
-
         }
     }
+
 }

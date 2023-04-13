@@ -22,20 +22,20 @@
                 android:id="@+id/main_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:contentInsetStart="10dp"
                 app:layout_scrollFlags="noScroll"
-                app:titleCentered="true"
                 app:navigationIcon="@drawable/ic_menu_24"
-                app:contentInsetStart="10dp">
+                app:titleCentered="true">
 
                 <ImageButton
                     android:id="@+id/btn_today"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_today_24"
-                    android:padding="16dp"
-                    android:background="?attr/selectableItemBackground"
                     android:layout_gravity="end"
-                    android:contentDescription="@string/today_button"/>
+                    android:background="?attr/selectableItemBackground"
+                    android:contentDescription="@string/today_button"
+                    android:padding="16dp"
+                    android:src="@drawable/ic_today_24" />
 
             </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
