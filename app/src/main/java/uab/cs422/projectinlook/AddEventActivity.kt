@@ -1,5 +1,6 @@
 package uab.cs422.projectinlook
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -47,6 +48,15 @@ class AddEventActivity : AppCompatActivity() {
             })
         }
     private var color: Int = 0
+        set(value) {
+            field = value
+            addEventViewModel.setEventColor(value)
+        }
+    private var title: String = "Title"
+        set(value) {
+            field = value
+            addEventViewModel.setTitleText("  $value")
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +82,15 @@ class AddEventActivity : AppCompatActivity() {
         }
         addEventViewModel.endDateText.observe(this) {
             binding.addEndDateTextView.text = it
+        }
+        addEventViewModel.titleText.observe(this) {
+            binding.addEventPreview.text = it
+        }
+        addEventViewModel.eventColor.observe(this) {
+            binding.addEventPreview.backgroundTintList = ColorStateList.valueOf(it)
+            binding.addEventPreview.setTextColor(
+                if (Color.luminance(it) > 0.5) Color.BLACK else Color.WHITE
+            )
         }
         startDateTime = LocalDateTime.now().withMinute(0)
         endDateTime = startDateTime.plusHours(1)
@@ -181,6 +200,10 @@ class AddEventActivity : AppCompatActivity() {
             }
 
             datePicker.show(supportFragmentManager, "datePicker")
+        }
+
+        binding.addTitleEditText.setOnFocusChangeListener { view, b ->
+            title = binding.addTitleEditText.text.toString()
         }
 
         val typedValue = TypedValue()

@@ -158,12 +158,29 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/add_btnCancel"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/add_EventPreview"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/add_descriptionTextLayout" />
+
+    <TextView
+        android:id="@+id/add_EventPreview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="64dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center|start"
+        android:textSize="24sp"
+        android:background="@drawable/event_back"
+        android:backgroundTint="?attr/colorPrimaryContainer"
+        app:layout_constraintBottom_toTopOf="@id/add_btnCancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/add_HSLColorPicker"
+        app:layout_constraintTop_toBottomOf="@id/add_descriptionTextLayout"
+        />
 
     <Button
         android:id="@+id/add_btnSave"
