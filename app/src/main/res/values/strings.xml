@@ -7,10 +7,19 @@
     <string name="title_week">Week</string>
     <string name="title_month">Month</string>
 
-    <!--  Dialog   -->
-    <string name="dialog_title_edit_event">Edit Event</string>
+    <!--  Buttons   -->
     <string name="dialog_neutral_button">OK</string>
     <string name="dialog_delete_button">Delete</string>
+    <string name="dialog_positive_button">Edit</string>
+    <string name="next_button">Next</string>
+    <string name="previous_button">Previous</string>
+
+    <string name="week_previous_button">Previous</string>
+    <string name="week_current_button">Today</string>
+    <string name="week_next_button">Next</string>
+
+    <string name="weekly_event_date_title">Date</string>
+    <string name="weekly_event_desc_title">Details</string>
 
     <string name="excess_events">+%1$d Events</string>
 
@@ -25,5 +34,14 @@
     <string name="default_view_title">Default View</string>
     <string name="today_button">Today Button</string>
     <string name="add_event">Add an event</string>
+
+    <!--  Day names  -->
+    <string name="short_sunday">Sun</string>
+    <string name="short_monday">Mon</string>
+    <string name="short_tuesday">Tue</string>
+    <string name="short_wednesday">Wed</string>
+    <string name="short_thursday">Thu</string>
+    <string name="short_friday">Fri</string>
+    <string name="short_saturday">Sat</string>
 
 </resources>

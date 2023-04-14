@@ -1,10 +1,9 @@
-package uab.cs422.projectinlook.ui.day
+package uab.cs422.projectinlook.ui.week
 
-import android.app.ActionBar.LayoutParams
+import android.app.ActionBar
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Typeface
 import android.text.TextUtils
 import android.util.TypedValue
@@ -27,61 +26,70 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
+class WeekEventAdapter(
+    private val fragment: WeekFragment,
+    private var eventData: List<List<CalEvent>>,
+    private val weekDays: List<LocalDateTime>
+) :
+    RecyclerView.Adapter<WeekEventAdapter.ViewHolder>() {
 
-class DayHourAdapter(private val fragment: DayFragment, private var eventData: List<CalEvent>) :
-    RecyclerView.Adapter<DayHourAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val hourTextView: TextView = view.findViewById(R.id.hourText)
-        val eventsLayout: LinearLayout = view.findViewById(R.id.eventsLayout)
+        val hourTV: TextView = view.findViewById(R.id.week_timeText)
+        val frames: List<LinearLayout> = listOf(
+            view.findViewById(R.id.week_frame1),
+            view.findViewById(R.id.week_frame2),
+            view.findViewById(R.id.week_frame3),
+            view.findViewById(R.id.week_frame4),
+            view.findViewById(R.id.week_frame5),
+            view.findViewById(R.id.week_frame6),
+            view.findViewById(R.id.week_frame7)
+        )
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.cell_hour, parent, false)
+        LayoutInflater.from(parent.context).inflate(R.layout.cell_weekday, parent, false)
     )
 
     override fun getItemCount() = 24
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val hourTVContext = holder.hourTextView.context
+        val today = LocalDateTime.now()
+        val hourTVContext = holder.hourTV.context
         val positionAsHour = LocalDateTime.of(LocalDate.now(), LocalTime.of(position, 0))
-        holder.hourTextView.text = positionAsHour.format(hourFormatter(hourTVContext))
-        holder.hourTextView.layoutParams = ViewGroup.LayoutParams(
-            (hourTVContext.resources.displayMetrics.widthPixels / 5).toFloat()
-                .coerceAtLeast(Paint().measureText(holder.hourTextView.text.toString())).toInt(),
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
+        holder.hourTV.text = positionAsHour.format(hourFormatter(holder.hourTV.context))
         val typedValue = TypedValue()
-        if (positionAsHour.hour == LocalDateTime.now().hour) {
-            hourTVContext.theme.resolveAttribute(
-                com.google.android.material.R.attr.colorTertiaryContainer,
-                typedValue,
-                true
-            )
-            holder.hourTextView.setBackgroundColor(typedValue.data)
-            hourTVContext.theme.resolveAttribute(
-                com.google.android.material.R.attr.colorOnTertiaryContainer,
-                typedValue,
-                true
-            )
-            holder.hourTextView.setTextColor(typedValue.data)
+        if ((today.isAfter(weekDays[0]) || today.isEqual(weekDays[0])) &&
+            (today.isBefore(weekDays[6]) || today.isEqual(weekDays[6]))
+        ) {
+            if (positionAsHour.hour == today.hour) {
+                hourTVContext.theme.resolveAttribute(
+                    com.google.android.material.R.attr.colorTertiaryContainer,
+                    typedValue,
+                    true
+                )
+                holder.hourTV.setBackgroundColor(typedValue.data)
+                hourTVContext.theme.resolveAttribute(
+                    com.google.android.material.R.attr.colorOnTertiaryContainer,
+                    typedValue,
+                    true
+                )
+                holder.hourTV.setTextColor(typedValue.data)
+            }
         } else { // I don't know why this else is necessary, but otherwise it will highlight if (hour - 16) > 0
-            holder.hourTextView.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
+            holder.hourTV.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorOnBackground,
                 typedValue,
                 true
             )
-            holder.hourTextView.setTextColor(typedValue.data)
+            holder.hourTV.setTextColor(typedValue.data)
         }
-
         var eventTextView: TextView
-        for ((count, event) in eventData.withIndex()) {
-            if (event.startHour <= positionAsHour.hour && event.endHour >= positionAsHour.hour) {
-                if (holder.eventsLayout.childCount > 2) { // Event box for more than 3 events
-                    (holder.eventsLayout.getChildAt(2) as TextView).text =
-                        holder.eventsLayout.context.getString(R.string.excess_events, count - 2)
-                } else { // Event box for singular event
-                    eventTextView = eventBox(event, holder.eventsLayout.context)
+
+        for ((i, day) in eventData.withIndex()) { // This is the count for each day's data
+            for (event in day) {// This is the count for each event of the current day
+                if (event.startHour <= positionAsHour.hour && event.endHour >= positionAsHour.hour) {
+                    eventTextView = eventBox(event, holder.frames[i].context)
                     val eventTVContext = eventTextView.context
                     eventTextView.setOnClickListener {
                         val builder = AlertDialog.Builder(eventTVContext)
@@ -97,10 +105,11 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
                         builder.setNeutralButton(eventTVContext.getString(R.string.dialog_neutral_button)) { dialog, _ -> dialog.dismiss() }
                         builder.setPositiveButton(eventTVContext.getString(R.string.dialog_positive_button)) { dialog, _ ->
                             showEditDialog(eventTVContext, event)
-                            dialog.dismiss() }
+                            dialog.dismiss()
+                        }
                         builder.show()
                     }
-                    holder.eventsLayout.addView(eventTextView)
+                    holder.frames[i].addView(eventTextView)
                 }
             }
         }
@@ -120,13 +129,12 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
             .setCustomTitle(editTitle)
             .setView(editDesc)
 
-            .setNeutralButton("Cancel") { dialog,_ ->
+            .setNeutralButton("Cancel") { dialog, _ ->
                 dialog.dismiss()
             }
-            .setPositiveButton("Done") { dialog,_ ->
+            .setPositiveButton("Done") { dialog, _ ->
                 position.title = editTitle.text.toString()
                 position.desc = editDesc.text.toString()
-                //notifyItemChanged()
                 runOnIO {
                     fragment.dao.updateEvent(position)
                 }
@@ -137,29 +145,32 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
         alert.show()
     }
 
-
     private fun eventBox(event: CalEvent, context: Context): TextView {
         val textView = TextView(context)
         textView.text = event.title
         textView.layoutParams =
-            LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1f)
+            LinearLayout.LayoutParams(
+                ActionBar.LayoutParams.MATCH_PARENT,
+                ActionBar.LayoutParams.MATCH_PARENT,
+                1f
+            )
         textView.background = AppCompatResources.getDrawable(
             textView.context,
             R.drawable.event_back
         )
-        val backgroundColor: Int = Color.valueOf(event.colorR, event.colorG, event.colorB, event.colorA).toArgb()
+        val backgroundColor: Int =
+            Color.valueOf(event.colorR, event.colorG, event.colorB, event.colorA).toArgb()
         textView.background.setTint(backgroundColor)
-        val typedValue = TypedValue()
         textView.setTextColor(
             ColorUtils.blendARGB(
-                typedValue.data,
+                backgroundColor,
                 if (Color.luminance(backgroundColor) > 0.5) Color.BLACK else Color.WHITE,
                 0.95f
             )
         )
         textView.ellipsize = TextUtils.TruncateAt.END
         textView.gravity = Gravity.CENTER
-        textView.maxLines = 1
+        textView.maxLines = 2
         textView.setPaddingRelative(
             dpToPx(textView.context, 3),
             0,
@@ -167,15 +178,14 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
             dpToPx(textView.context, 2)
         )
 
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
         textView.typeface = Typeface.DEFAULT_BOLD
 
         return textView
     }
 
-    fun updateDisplayedData(newData: List<CalEvent>) {
+    fun updateWeekRecView(newData: List<List<CalEvent>>) {
         eventData = newData
         notifyDataSetChanged()
     }
-
 }

@@ -18,6 +18,7 @@ import uab.cs422.projectinlook.util.runOnIO
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+@Suppress("DEPRECATION")
 class DayFragment : Fragment(), CalendarInterface {
 
     private var _binding: FragmentDayBinding? = null
@@ -42,22 +43,21 @@ class DayFragment : Fragment(), CalendarInterface {
         val hourRecyclerView = binding.hourRecycler
 
         dao = EventDatabase.getInstance(this.requireContext()).eventDao
-        var events: List<CalEvent>
+        var events: List<CalEvent> = listOf()
         day = LocalDateTime.now()
         runOnIO {
             events = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
-
-            hourRecyclerView.adapter = DayHourAdapter(this, events)
-
-            hourRecyclerView.scrollToPosition(LocalDateTime.now().hour)
         }
-        hourRecyclerView.setOnTouchListener( @SuppressLint("ClickableViewAccessibility")
+        hourRecyclerView.adapter = DayHourAdapter(this, events)
+        hourRecyclerView.scrollToPosition(LocalDateTime.now().hour)
+        hourRecyclerView.setOnTouchListener(@SuppressLint("ClickableViewAccessibility")
         object : SwipeListener(this@DayFragment.context) {
             override fun onSwipeLeft() {
                 super.onSwipeLeft()
                 day = day.plusDays(1)
                 updateEvents()
             }
+
             override fun onSwipeRight() {
                 super.onSwipeRight()
                 day = day.minusDays(1)
@@ -67,15 +67,11 @@ class DayFragment : Fragment(), CalendarInterface {
         return root
     }
 
+
     override fun onResume() {
         super.onResume()
-        runOnIO {
-            val events = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
 
-            binding.hourRecycler.adapter = DayHourAdapter(this, events)
-
-            binding.hourRecycler.scrollToPosition(LocalDateTime.now().hour)
-        }
+        updateEvents()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -111,6 +107,5 @@ class DayFragment : Fragment(), CalendarInterface {
     override fun onTodayButtonClicked() {
         day = LocalDateTime.now()
         updateEvents()
-        print("helhgelo")
     }
 }
