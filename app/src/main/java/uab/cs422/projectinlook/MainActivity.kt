@@ -64,7 +64,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_item_settings -> {
                     drawerLayout.close()
                     startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
-                    true
                 }
                 R.id.navigation_item_today -> navController.navigate(R.id.navigation_today)
                 R.id.navigation_item_day -> navController.navigate(R.id.navigation_day)
@@ -86,37 +85,6 @@ class MainActivity : AppCompatActivity() {
         binding.fabAdd.setOnClickListener {
             val intent = Intent(this@MainActivity, AddEventActivity::class.java)
             startActivity(intent)
-//
-//            val typedValue = TypedValue()
-//            theme.resolveAttribute(
-//                com.google.android.material.R.attr.colorPrimaryContainer,
-//                typedValue,
-//                true
-//            )
-//            runOnIO {
-//                dao.insertEvent(
-//                    CalEvent(
-//                        startTime = LocalDateTime.of(
-//                            2023,
-//                            LocalDateTime.now().month,
-//                            LocalDateTime.now().dayOfMonth,
-//                            12,
-//                            0,
-//                        ),
-//                        endTime = LocalDateTime.of(
-//                            2023,
-//                            LocalDateTime.now().month,
-//                            LocalDateTime.now().dayOfMonth,
-//                            14,
-//                            0,
-//                        ),
-//                        title = "event 1",
-//                        color = typedValue.data.toColor()
-//                    )
-//                )
-//            }
-//            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
-//                .childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
         }
     }
 
