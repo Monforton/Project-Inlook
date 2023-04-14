@@ -24,7 +24,7 @@ class WeekEventAdapter(private val fragment: WeekFragment, private var eventData
         LayoutInflater.from(parent.context).inflate(R.layout.cell_daily, parent, false)
     )
 
-    override fun getItemCount() = eventData.size
+    override fun getItemCount() = 24
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val event = eventData[position]

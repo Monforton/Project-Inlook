@@ -227,15 +227,9 @@ class WeekFragment : Fragment(), CalendarInterface {
     }
 
     private fun determineMonth() {
+        print(today.dayOfWeek.value)
+
         (context as AppCompatActivity).supportActionBar?.title =
-            weekDays[0].format(DateTimeFormatter.ofPattern("LLLL"))
-        var prevDayMonth = weekDays[0].month
-        for (day in weekDays) {
-            if (prevDayMonth != day.month) {
-                (context as AppCompatActivity).supportActionBar?.title =
-                    day.format(DateTimeFormatter.ofPattern("LLLL"))
-            }
-            prevDayMonth = day.month
-        }
+            weekDays[today.dayOfWeek.value].format(DateTimeFormatter.ofPattern("LLLL"))
     }
 }
