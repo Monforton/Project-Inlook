@@ -184,15 +184,16 @@ class AddEventActivity : AppCompatActivity() {
         }
 
         val typedValue = TypedValue()
-            theme.resolveAttribute(
-                com.google.android.material.R.attr.colorPrimaryContainer,
-                typedValue,
-                true
-            )
+        theme.resolveAttribute(
+            com.google.android.material.R.attr.colorPrimaryContainer,
+            typedValue,
+            true
+        )
         color = typedValue.data
         binding.addHSLColorPicker.setColor(color)
 
-        binding.addHSLColorPicker.setColorSelectionListener(object : SimpleColorSelectionListener() {
+        binding.addHSLColorPicker.setColorSelectionListener(object :
+            SimpleColorSelectionListener() {
             override fun onColorSelected(color: Int) {
                 this@AddEventActivity.color = color
             }

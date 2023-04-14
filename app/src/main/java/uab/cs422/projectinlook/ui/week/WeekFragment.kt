@@ -70,14 +70,12 @@ class WeekFragment : Fragment(), CalendarInterface {
         object : SwipeListener(this@WeekFragment.context) {
             override fun onSwipeLeft() {
                 super.onSwipeLeft()
-                nextWeek()
-                updateEvents()
+                this@WeekFragment.onSwipeLeft()
             }
 
             override fun onSwipeRight() {
                 super.onSwipeRight()
-                previousWeek()
-                updateEvents()
+                this@WeekFragment.onSwipeRight()
             }
         })
 
@@ -124,6 +122,16 @@ class WeekFragment : Fragment(), CalendarInterface {
     override fun onTodayButtonClicked() {
         setWeekDays()
         updateDisplayedDates()
+    }
+
+    override fun onSwipeLeft() {
+        nextWeek()
+        updateEvents()
+    }
+
+    override fun onSwipeRight() {
+        previousWeek()
+        updateEvents()
     }
 
     private fun setWeekDays() {

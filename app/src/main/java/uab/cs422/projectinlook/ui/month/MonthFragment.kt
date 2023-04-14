@@ -64,4 +64,10 @@ class MonthFragment : Fragment(), CalendarInterface {
 
     override fun onTodayButtonClicked() {
     }
+
+    override fun onSwipeLeft() {
+    }
+
+    override fun onSwipeRight() {
+    }
 }

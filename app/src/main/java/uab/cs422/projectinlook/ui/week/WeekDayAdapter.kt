@@ -89,7 +89,12 @@ class WeekDayAdapter(
         for ((i, day) in eventData.withIndex()) { // This is the count for each day's data
             holder.frames[i].removeAllViews()
             for (event in day) {// This is the count for each event of the current day
-                if (event.startHour <= positionAsHour.hour && event.endHour >= positionAsHour.hour) {
+                val start = event.getStartAsLocalDateTime()
+                val end = event.getEndAsLocalDateTime()
+                val posHourRealTime = weekDays[i].withHour(position)
+                if ((start.isBefore(posHourRealTime) || start.isEqual(posHourRealTime)) &&
+                    (end.isAfter(posHourRealTime) || end.isEqual(posHourRealTime))
+                ) {
                     eventTextView = eventBox(event, holder.frames[i].context)
                     val eventTVContext = eventTextView.context
                     eventTextView.setOnClickListener {
