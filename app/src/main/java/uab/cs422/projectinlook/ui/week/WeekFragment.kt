@@ -1,5 +1,6 @@
 package uab.cs422.projectinlook.ui.week
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import java.util.Calendar
@@ -15,6 +16,7 @@ import uab.cs422.projectinlook.EventDatabase
 import uab.cs422.projectinlook.databinding.FragmentWeekBinding
 import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.ui.CalendarInterface
+import uab.cs422.projectinlook.ui.SwipeListener
 import uab.cs422.projectinlook.util.runOnIO
 import java.time.DayOfWeek
 import java.time.LocalDateTime
@@ -33,6 +35,7 @@ class WeekFragment : Fragment(), CalendarInterface {
     private val today = LocalDateTime.now()
     private var weekDays = (Array(7) { today }).toMutableList()
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,13 +57,20 @@ class WeekFragment : Fragment(), CalendarInterface {
 
         getCurrentWeek()
 
-        binding.previousWeekBtn.setOnClickListener {
-            previousWeek()
-        }
 
-        binding.nextWeekBtn.setOnClickListener {
-            nextWeek()
-        }
+        weekRecyclerView.setOnTouchListener( @SuppressLint("ClickableViewAccessibility")
+        object : SwipeListener(this@WeekFragment.context) {
+            override fun onSwipeLeft() {
+                super.onSwipeLeft()
+                nextWeek()
+                updateEvents()
+            }
+            override fun onSwipeRight() {
+                super.onSwipeRight()
+                previousWeek()
+                updateEvents()
+            }
+        })
 
         return root
     }
@@ -86,9 +96,15 @@ class WeekFragment : Fragment(), CalendarInterface {
 
     override fun updateEvents() {
         var events: List<CalEvent> = listOf()
-        val today = LocalDateTime.now()
         runOnIO {
-            events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
+            events = dao.getEventsInRange(
+                weekDays[0].dayOfMonth,
+                weekDays[0].monthValue,
+                weekDays[0].year,
+                weekDays[6].dayOfMonth,
+                weekDays[6].monthValue,
+                weekDays[6].year
+            )
         }
         (binding.weeklyRecycler.adapter as WeekEventAdapter).updateWeekRecView(events)
     }
@@ -181,8 +197,9 @@ class WeekFragment : Fragment(), CalendarInterface {
                 else -> {}
             }
         }
-
         determineMonth()
+
+        updateEvents()
     }
 
     private fun resetColors() {
@@ -210,15 +227,9 @@ class WeekFragment : Fragment(), CalendarInterface {
     }
 
     private fun determineMonth() {
+        print(today.dayOfWeek.value)
+
         (context as AppCompatActivity).supportActionBar?.title =
-            weekDays[0].format(DateTimeFormatter.ofPattern("LLLL"))
-        var prevDayMonth = weekDays[0].month
-        for (day in weekDays) {
-            if (prevDayMonth != day.month) {
-                (context as AppCompatActivity).supportActionBar?.title =
-                    day.format(DateTimeFormatter.ofPattern("LLLL"))
-            }
-            prevDayMonth = day.month
-        }
+            weekDays[today.dayOfWeek.value].format(DateTimeFormatter.ofPattern("LLLL"))
     }
 }

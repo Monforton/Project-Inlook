@@ -40,7 +40,7 @@ class TodayFragment : Fragment(), CalendarInterface {
         val today = LocalDateTime.now()
         runOnIO {
             events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
-            eventsRecyclerView.adapter = TodayEventsAdapter(this, events)
+            eventsRecyclerView.adapter = TodayEventsAdapter(events)
         }
 
         return root
@@ -51,7 +51,7 @@ class TodayFragment : Fragment(), CalendarInterface {
         val today = LocalDateTime.now()
         runOnIO {
             val events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
-            binding.eventsRecycler.adapter = TodayEventsAdapter(this, events)
+            binding.eventsRecycler.adapter = TodayEventsAdapter(events)
         }
     }
 

@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +19,6 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 
 class TodayEventsAdapter(
-    private val fragment: TodayFragment,
     private var eventData: List<CalEvent>
 ) :
     RecyclerView.Adapter<TodayEventsAdapter.ViewHolder>() {
@@ -26,6 +26,7 @@ class TodayEventsAdapter(
         val timeframeTV: TextView = view.findViewById(R.id.today_timeTV)
         val eventTV: TextView = view.findViewById(R.id.today_eventTV)
         val layout: LinearLayout = view.findViewById(R.id.today_cell_linear_layout)
+        val dot: ImageView = view.findViewById(R.id.today_dot)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
@@ -68,7 +69,20 @@ class TodayEventsAdapter(
                 event.colorA
             ).toArgb()
         )
-
+        val backgroundColor = Color.valueOf(
+            event.colorR,
+            event.colorG,
+            event.colorB,
+            event.colorA
+        ).toArgb()
+        holder.eventTV.setTextColor(
+            if (Color.luminance(backgroundColor) > 0.5) Color.BLACK else Color.WHITE
+        )
+        holder.timeframeTV.setTextColor(
+            if (Color.luminance(backgroundColor) > 0.5) Color.BLACK else Color.WHITE
+        )
+        holder.dot.imageTintList =
+            ColorStateList.valueOf(if (Color.luminance(backgroundColor) > 0.5) Color.BLACK else Color.WHITE)
     }
 
     fun updateDisplayedData(newData: List<CalEvent>) {
