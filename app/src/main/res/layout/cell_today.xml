@@ -12,7 +12,7 @@
         android:id="@+id/today_cell_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_rounded_corners"
+        android:background="@drawable/background_rounded_corners_large"
         android:orientation="horizontal"
         android:weightSum="11">
 

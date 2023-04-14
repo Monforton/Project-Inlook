@@ -49,10 +49,11 @@ class TodayFragment : Fragment(), CalendarInterface {
     override fun onResume() {
         super.onResume()
         val today = LocalDateTime.now()
+        var events:List<CalEvent> = listOf()
         runOnIO {
-            val events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
-            binding.eventsRecycler.adapter = TodayEventsAdapter(events)
+            events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
         }
+        binding.eventsRecycler.adapter = TodayEventsAdapter(events)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

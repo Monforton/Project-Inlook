@@ -22,9 +22,6 @@ import java.time.format.DateTimeFormatter
 class DayFragment : Fragment(), CalendarInterface {
 
     private var _binding: FragmentDayBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
     private var day = LocalDateTime.now()
     lateinit var dao: EventDao
