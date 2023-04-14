@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
@@ -29,11 +28,10 @@ import java.time.LocalTime
 
 class WeekEventAdapter(
     private val fragment: WeekFragment,
-    private val eventData: List<List<CalEvent>>,
+    private var eventData: List<List<CalEvent>>,
     private val weekDays: List<LocalDateTime>
 ) :
     RecyclerView.Adapter<WeekEventAdapter.ViewHolder>() {
-    private val data = eventData.toMutableList()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val hourTV: TextView = view.findViewById(R.id.week_timeText)
@@ -187,7 +185,7 @@ class WeekEventAdapter(
     }
 
     fun updateWeekRecView(newData: List<List<CalEvent>>) {
-        data.addAll(newData)
+        eventData = newData
         notifyDataSetChanged()
     }
 }

@@ -3,13 +3,12 @@ package uab.cs422.projectinlook.ui.week
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import java.util.Calendar
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import uab.cs422.projectinlook.EventDao
@@ -19,10 +18,10 @@ import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.ui.CalendarInterface
 import uab.cs422.projectinlook.ui.SwipeListener
 import uab.cs422.projectinlook.util.runOnIO
-import java.time.DayOfWeek
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 @Suppress("DEPRECATION")
 class WeekFragment : Fragment(), CalendarInterface {
@@ -35,6 +34,7 @@ class WeekFragment : Fragment(), CalendarInterface {
     lateinit var dao: EventDao
     private val today = LocalDateTime.now()
     private var weekDays = (Array(7) { today }).toMutableList()
+    private var dates: List<TextView> = listOf()
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
@@ -45,25 +45,35 @@ class WeekFragment : Fragment(), CalendarInterface {
         _binding = FragmentWeekBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val weekRecyclerView = binding.weeklyRecycler
+        dates = listOf(
+            binding.date1,
+            binding.date2,
+            binding.date3,
+            binding.date4,
+            binding.date5,
+            binding.date6,
+            binding.date7
+        )
 
         dao = EventDatabase.getInstance(this.requireContext()).eventDao
         setWeekDays()
-        var events: MutableList<List<CalEvent>> = MutableList(7) { listOf() }
+        val events: MutableList<List<CalEvent>> = MutableList(7) { listOf() }
         runOnIO {
             for ((i, day) in weekDays.withIndex()) {
                 events[i] = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
             }
         }
-        Log.d("TAG", "${events}")
         weekRecyclerView.adapter = WeekEventAdapter(this, events, weekDays)
+        weekRecyclerView.scrollToPosition(LocalDateTime.now().hour)
 
-        weekRecyclerView.setOnTouchListener( @SuppressLint("ClickableViewAccessibility")
+        weekRecyclerView.setOnTouchListener(@SuppressLint("ClickableViewAccessibility")
         object : SwipeListener(this@WeekFragment.context) {
             override fun onSwipeLeft() {
                 super.onSwipeLeft()
                 nextWeek()
                 updateEvents()
             }
+
             override fun onSwipeRight() {
                 super.onSwipeRight()
                 previousWeek()
@@ -75,6 +85,7 @@ class WeekFragment : Fragment(), CalendarInterface {
 
         return root
     }
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -90,13 +101,18 @@ class WeekFragment : Fragment(), CalendarInterface {
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("LLLL"))
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateEvents()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     override fun updateEvents() {
-        var events: MutableList<List<CalEvent>> = MutableList(7) { listOf() }
+        val events: MutableList<List<CalEvent>> = MutableList(7) { listOf() }
         runOnIO {
             for ((i, day) in weekDays.withIndex()) {
                 events[i] = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
@@ -135,13 +151,9 @@ class WeekFragment : Fragment(), CalendarInterface {
     }
 
     private fun updateDisplayedDates() {
-        binding.date1.text = "${weekDays[0].dayOfMonth}"
-        binding.date2.text = "${weekDays[1].dayOfMonth}"
-        binding.date3.text = "${weekDays[2].dayOfMonth}"
-        binding.date4.text = "${weekDays[3].dayOfMonth}"
-        binding.date5.text = "${weekDays[4].dayOfMonth}"
-        binding.date6.text = "${weekDays[5].dayOfMonth}"
-        binding.date7.text = "${weekDays[6].dayOfMonth}"
+        for ((count, date) in dates.withIndex()) {
+            date.text = "${weekDays[count].dayOfMonth}"
+        }
 
         // Set color of the day if it is today
         resetColors()
@@ -161,37 +173,9 @@ class WeekFragment : Fragment(), CalendarInterface {
                 true
             )
             val backgroundColor = typedValue.data
-            when (today.dayOfWeek) {
-                DayOfWeek.SUNDAY -> {
-                    binding.date1.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
-                    binding.date1.setTextColor(Color.valueOf(textColor).toArgb())
-                }
-                DayOfWeek.MONDAY -> {
-                    binding.date2.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
-                    binding.date2.setTextColor(Color.valueOf(textColor).toArgb())
-                }
-                DayOfWeek.TUESDAY -> {
-                    binding.date3.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
-                    binding.date3.setTextColor(Color.valueOf(textColor).toArgb())
-                }
-                DayOfWeek.WEDNESDAY -> {
-                    binding.date4.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
-                    binding.date4.setTextColor(Color.valueOf(textColor).toArgb())
-                }
-                DayOfWeek.THURSDAY -> {
-                    binding.date5.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
-                    binding.date5.setTextColor(Color.valueOf(textColor).toArgb())
-                }
-                DayOfWeek.FRIDAY -> {
-                    binding.date6.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
-                    binding.date6.setTextColor(Color.valueOf(textColor).toArgb())
-                }
-                DayOfWeek.SATURDAY -> {
-                    binding.date7.setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
-                    binding.date7.setTextColor(Color.valueOf(textColor).toArgb())
-                }
-                else -> {}
-            }
+
+            dates[today.dayOfWeek.value].setBackgroundColor(Color.valueOf(backgroundColor).toArgb())
+            dates[today.dayOfWeek.value].setTextColor(Color.valueOf(textColor).toArgb())
         }
         determineMonth()
 
@@ -205,21 +189,10 @@ class WeekFragment : Fragment(), CalendarInterface {
             typedValue,
             true
         )
-        binding.date1.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
-        binding.date2.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
-        binding.date3.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
-        binding.date4.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
-        binding.date5.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
-        binding.date6.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
-        binding.date7.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
-
-        binding.date1.setTextColor(typedValue.data)
-        binding.date2.setTextColor(typedValue.data)
-        binding.date3.setTextColor(typedValue.data)
-        binding.date4.setTextColor(typedValue.data)
-        binding.date5.setTextColor(typedValue.data)
-        binding.date6.setTextColor(typedValue.data)
-        binding.date7.setTextColor(typedValue.data)
+        for (date in dates) {
+            date.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
+            date.setTextColor(typedValue.data)
+        }
     }
 
     private fun determineMonth() {
