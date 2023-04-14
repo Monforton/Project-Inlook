@@ -18,6 +18,7 @@ import uab.cs422.projectinlook.util.runOnIO
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+@Suppress("DEPRECATION")
 class DayFragment : Fragment(), CalendarInterface {
 
     private var _binding: FragmentDayBinding? = null
@@ -49,7 +50,6 @@ class DayFragment : Fragment(), CalendarInterface {
         }
         hourRecyclerView.adapter = DayHourAdapter(this, events)
         hourRecyclerView.scrollToPosition(LocalDateTime.now().hour)
-
         hourRecyclerView.setOnTouchListener(@SuppressLint("ClickableViewAccessibility")
         object : SwipeListener(this@DayFragment.context) {
             override fun onSwipeLeft() {
@@ -67,14 +67,11 @@ class DayFragment : Fragment(), CalendarInterface {
         return root
     }
 
+
     override fun onResume() {
         super.onResume()
-        var events: List<CalEvent> = listOf()
-        runOnIO {
-            events = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
-        }
-        binding.hourRecycler.adapter = DayHourAdapter(this, events)
-        binding.hourRecycler.scrollToPosition(LocalDateTime.now().hour)
+
+        updateEvents()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -110,6 +107,5 @@ class DayFragment : Fragment(), CalendarInterface {
     override fun onTodayButtonClicked() {
         day = LocalDateTime.now()
         updateEvents()
-        print("helhgelo")
     }
 }
