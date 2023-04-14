@@ -63,7 +63,7 @@ class WeekFragment : Fragment(), CalendarInterface {
                 events[i] = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
             }
         }
-        weekRecyclerView.adapter = WeekEventAdapter(this, events, weekDays)
+        weekRecyclerView.adapter = WeekDayAdapter(this, events, weekDays)
         weekRecyclerView.scrollToPosition(LocalDateTime.now().hour)
 
         weekRecyclerView.setOnTouchListener(@SuppressLint("ClickableViewAccessibility")
@@ -118,7 +118,7 @@ class WeekFragment : Fragment(), CalendarInterface {
                 events[i] = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
             }
         }
-        (binding.weeklyRecycler.adapter as WeekEventAdapter).updateWeekRecView(events)
+        (binding.weeklyRecycler.adapter as WeekDayAdapter).updateWeekRecView(events)
     }
 
     override fun onTodayButtonClicked() {

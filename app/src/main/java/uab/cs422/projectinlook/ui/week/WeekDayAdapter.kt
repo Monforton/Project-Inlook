@@ -26,12 +26,12 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-class WeekEventAdapter(
+class WeekDayAdapter(
     private val fragment: WeekFragment,
     private var eventData: List<List<CalEvent>>,
     private val weekDays: List<LocalDateTime>
 ) :
-    RecyclerView.Adapter<WeekEventAdapter.ViewHolder>() {
+    RecyclerView.Adapter<WeekDayAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val hourTV: TextView = view.findViewById(R.id.week_timeText)
@@ -87,6 +87,7 @@ class WeekEventAdapter(
         var eventTextView: TextView
 
         for ((i, day) in eventData.withIndex()) { // This is the count for each day's data
+            holder.frames[i].removeAllViews()
             for (event in day) {// This is the count for each event of the current day
                 if (event.startHour <= positionAsHour.hour && event.endHour >= positionAsHour.hour) {
                     eventTextView = eventBox(event, holder.frames[i].context)

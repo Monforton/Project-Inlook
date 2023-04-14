@@ -73,7 +73,7 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
             )
             holder.hourTextView.setTextColor(typedValue.data)
         }
-
+        holder.eventsLayout.removeAllViews()
         var eventTextView: TextView
         for ((count, event) in eventData.withIndex()) {
             if (event.startHour <= positionAsHour.hour && event.endHour >= positionAsHour.hour) {
