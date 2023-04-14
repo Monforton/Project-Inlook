@@ -75,28 +75,28 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
         }
 
         var eventTextView: TextView
-        for ((count, j) in eventData.withIndex()) {
-            if (j.startHour <= positionAsHour.hour && j.endHour >= positionAsHour.hour) {
+        for ((count, event) in eventData.withIndex()) {
+            if (event.startHour <= positionAsHour.hour && event.endHour >= positionAsHour.hour) {
                 if (holder.eventsLayout.childCount > 2) { // Event box for more than 3 events
                     (holder.eventsLayout.getChildAt(2) as TextView).text =
                         holder.eventsLayout.context.getString(R.string.excess_events, count - 2)
                 } else { // Event box for singular event
-                    eventTextView = eventBox(j, holder.eventsLayout.context)
+                    eventTextView = eventBox(event, holder.eventsLayout.context)
                     val eventTVContext = eventTextView.context
                     eventTextView.setOnClickListener {
                         val builder = AlertDialog.Builder(eventTVContext)
-                        builder.setTitle(j.title)
-                        builder.setMessage("" + j.startHour + " - " + j.endHour + ": " + j.desc)
+                        builder.setTitle(event.title)
+                        builder.setMessage("" + event.startHour + " - " + event.endHour + ": " + event.desc)
                         builder.setNegativeButton(eventTVContext.getString(R.string.dialog_delete_button)) { dialog, _ ->
                             runOnIO {
-                                fragment.dao.deleteEvent(j)
+                                fragment.dao.deleteEvent(event)
                             }
                             fragment.updateEvents()
                             dialog.dismiss()
                         }
                         builder.setNeutralButton(eventTVContext.getString(R.string.dialog_neutral_button)) { dialog, _ -> dialog.dismiss() }
                         builder.setPositiveButton(eventTVContext.getString(R.string.dialog_positive_button)) { dialog, _ ->
-                            showEditDialog(eventTVContext, j)
+                            showEditDialog(eventTVContext, event)
                             dialog.dismiss() }
                         builder.show()
                     }

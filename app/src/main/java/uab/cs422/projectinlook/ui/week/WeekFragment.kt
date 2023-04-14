@@ -31,7 +31,7 @@ class WeekFragment : Fragment(), CalendarInterface {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private lateinit var dao: EventDao
+    lateinit var dao: EventDao
     private val today = LocalDateTime.now()
     private var weekDays = (Array(7) { today }).toMutableList()
 
@@ -43,20 +43,18 @@ class WeekFragment : Fragment(), CalendarInterface {
     ): View {
         _binding = FragmentWeekBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
         val weekRecyclerView = binding.weeklyRecycler
 
         dao = EventDatabase.getInstance(this.requireContext()).eventDao
-        var events: List<CalEvent>
+        var events: MutableList<List<CalEvent>> = MutableList(7) { listOf() }
         runOnIO {
-            events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
-
-            weekRecyclerView.adapter = WeekEventAdapter(this, events)
+            for ((i, day) in weekDays.withIndex()) {
+                events[i] = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
+            }
         }
-
+        weekRecyclerView.adapter = WeekEventAdapter(this, events, weekDays)
 
         getCurrentWeek()
-
 
         weekRecyclerView.setOnTouchListener( @SuppressLint("ClickableViewAccessibility")
         object : SwipeListener(this@WeekFragment.context) {
@@ -95,16 +93,11 @@ class WeekFragment : Fragment(), CalendarInterface {
     }
 
     override fun updateEvents() {
-        var events: List<CalEvent> = listOf()
+        var events: MutableList<List<CalEvent>> = MutableList(7) { listOf() }
         runOnIO {
-            events = dao.getEventsInRange(
-                weekDays[0].dayOfMonth,
-                weekDays[0].monthValue,
-                weekDays[0].year,
-                weekDays[6].dayOfMonth,
-                weekDays[6].monthValue,
-                weekDays[6].year
-            )
+            for ((i, day) in weekDays.withIndex()) {
+                events[i] = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
+            }
         }
         (binding.weeklyRecycler.adapter as WeekEventAdapter).updateWeekRecView(events)
     }
