@@ -45,20 +45,18 @@ class DayFragment : Fragment(), CalendarInterface {
         runOnIO {
             events = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
         }
-        hourRecyclerView.adapter = DayHourAdapter(this, events)
+        hourRecyclerView.adapter = DayHourAdapter(this, events, day)
         hourRecyclerView.scrollToPosition(LocalDateTime.now().hour)
         hourRecyclerView.setOnTouchListener(@SuppressLint("ClickableViewAccessibility")
         object : SwipeListener(this@DayFragment.context) {
             override fun onSwipeLeft() {
                 super.onSwipeLeft()
-                day = day.plusDays(1)
-                updateEvents()
+                this@DayFragment.onSwipeLeft()
             }
 
             override fun onSwipeRight() {
                 super.onSwipeRight()
-                day = day.minusDays(1)
-                updateEvents()
+                this@DayFragment.onSwipeRight()
             }
         })
         return root
@@ -95,7 +93,7 @@ class DayFragment : Fragment(), CalendarInterface {
         runOnIO {
             events = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
         }
-        (binding.hourRecycler.adapter as DayHourAdapter).updateDisplayedData(events)
+        (binding.hourRecycler.adapter as DayHourAdapter).updateDisplayedData(events, day)
 
         (context as AppCompatActivity).supportActionBar?.title =
             day.format(DateTimeFormatter.ofPattern("LLLL d"))
@@ -103,6 +101,16 @@ class DayFragment : Fragment(), CalendarInterface {
 
     override fun onTodayButtonClicked() {
         day = LocalDateTime.now()
+        updateEvents()
+    }
+
+    override fun onSwipeLeft() {
+        day = day.plusDays(1)
+        updateEvents()
+    }
+
+    override fun onSwipeRight() {
+        day = day.minusDays(1)
         updateEvents()
     }
 }

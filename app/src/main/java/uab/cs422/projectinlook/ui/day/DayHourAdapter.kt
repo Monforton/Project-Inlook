@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.text.TextUtils
+import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -23,12 +24,10 @@ import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.util.dpToPx
 import uab.cs422.projectinlook.util.hourFormatter
 import uab.cs422.projectinlook.util.runOnIO
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 
-class DayHourAdapter(private val fragment: DayFragment, private var eventData: List<CalEvent>) :
+class DayHourAdapter(private val fragment: DayFragment, private var eventData: List<CalEvent>, private var day: LocalDateTime) :
     RecyclerView.Adapter<DayHourAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val hourTextView: TextView = view.findViewById(R.id.hourText)
@@ -43,7 +42,7 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val hourTVContext = holder.hourTextView.context
-        val positionAsHour = LocalDateTime.of(LocalDate.now(), LocalTime.of(position, 0))
+        val positionAsHour = day.withHour(position).withMinute(0)
         holder.hourTextView.text = positionAsHour.format(hourFormatter(hourTVContext))
         holder.hourTextView.layoutParams = ViewGroup.LayoutParams(
             (hourTVContext.resources.displayMetrics.widthPixels / 5).toFloat()
@@ -51,7 +50,7 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         val typedValue = TypedValue()
-        if (positionAsHour.hour == LocalDateTime.now().hour) {
+        if (positionAsHour.hour == day.hour) {
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorTertiaryContainer,
                 typedValue,
@@ -73,10 +72,15 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
             )
             holder.hourTextView.setTextColor(typedValue.data)
         }
-
+        holder.eventsLayout.removeAllViews()
         var eventTextView: TextView
         for ((count, event) in eventData.withIndex()) {
-            if (event.startHour <= positionAsHour.hour && event.endHour >= positionAsHour.hour) {
+            val start = event.getStartAsLocalDateTime()
+            val end = event.getEndAsLocalDateTime()
+            Log.d("time", "start: ${start.hour} now: ${positionAsHour.hour}")
+            if ((start.isBefore(positionAsHour) || start.isEqual(positionAsHour)) &&
+                (end.isAfter(positionAsHour) || end.isEqual(positionAsHour))
+            ) {
                 if (holder.eventsLayout.childCount > 2) { // Event box for more than 3 events
                     (holder.eventsLayout.getChildAt(2) as TextView).text =
                         holder.eventsLayout.context.getString(R.string.excess_events, count - 2)
@@ -173,8 +177,9 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
         return textView
     }
 
-    fun updateDisplayedData(newData: List<CalEvent>) {
+    fun updateDisplayedData(newData: List<CalEvent>, day: LocalDateTime) {
         eventData = newData
+        this.day = day
         notifyDataSetChanged()
     }
 

@@ -83,7 +83,9 @@ class TodayFragment : Fragment(), CalendarInterface {
         (binding.eventsRecycler.adapter as TodayEventsAdapter).updateDisplayedData(events)
     }
 
-    override fun onTodayButtonClicked() {
+    override fun onTodayButtonClicked() {    }
 
-    }
+    override fun onSwipeLeft() {    }
+
+    override fun onSwipeRight() {    }
 }

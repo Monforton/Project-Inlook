@@ -22,16 +22,17 @@ open class SwipeListener(c: Context?) :
         override fun onDown(e: MotionEvent): Boolean {
             return true
         }
+
         override fun onFling(
             e1: MotionEvent,
             e2: MotionEvent,
             velocityX: Float,
             velocityY: Float
         ): Boolean {
-            val diffY = e2.y - e1.y
-            val diffX = e2.x - e1.x
+            val diffY = e2?.y?.minus((e1?.y ?: 0f)) ?: 0f
+            val diffX = e2?.x?.minus((e1?.x ?: 0f)) ?: 0f
             if (abs(diffX) > abs(diffY)) {
-                if (abs(diffX) > SWIPE_THRESHOLD && abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                if (abs(diffX) > SWIPE_THRESHOLD && abs(velocityX ?: 0f) > SWIPE_VELOCITY_THRESHOLD) {
                     if (diffX > 0) {
                         onSwipeRight()
                     } else {

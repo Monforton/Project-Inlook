@@ -49,6 +49,31 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:navGraph="@navigation/mobile_navigation" />
 
+
+        <ImageView
+            android:id="@+id/fab_left"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="left|center"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            android:background="@drawable/background_circle"
+            android:src="@drawable/ic_round_arrow_left_24"
+            android:alpha="0.5"
+            />
+
+        <ImageView
+            android:id="@+id/fab_right"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="right|center"
+            android:layout_margin="10dp"
+            android:clickable="true"
+            android:background="@drawable/background_circle"
+            android:src="@drawable/ic_round_arrow_right_24"
+            android:alpha="0.5"
+            />
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_add"
             android:layout_width="wrap_content"

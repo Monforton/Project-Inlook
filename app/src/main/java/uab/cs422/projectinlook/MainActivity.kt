@@ -86,6 +86,16 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity, AddEventActivity::class.java)
             startActivity(intent)
         }
+
+        binding.fabLeft.setOnClickListener {
+            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
+                .childFragmentManager.fragments[0] as CalendarInterface).onSwipeRight()
+        }
+
+        binding.fabRight.setOnClickListener {
+            ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
+                .childFragmentManager.fragments[0] as CalendarInterface).onSwipeLeft()
+        }
     }
 
     override fun onResume() {
