@@ -37,13 +37,15 @@ class WeekEventAdapter(
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val hourTV: TextView = view.findViewById(R.id.week_timeText)
-        val frame1: LinearLayout = view.findViewById(R.id.week_frame1)
-        val frame2: LinearLayout = view.findViewById(R.id.week_frame2)
-        val frame3: LinearLayout = view.findViewById(R.id.week_frame3)
-        val frame4: LinearLayout = view.findViewById(R.id.week_frame4)
-        val frame5: LinearLayout = view.findViewById(R.id.week_frame5)
-        val frame6: LinearLayout = view.findViewById(R.id.week_frame6)
-        val frame7: LinearLayout = view.findViewById(R.id.week_frame7)
+        val frames: List<LinearLayout> = listOf(
+            view.findViewById(R.id.week_frame1),
+            view.findViewById(R.id.week_frame2),
+            view.findViewById(R.id.week_frame3),
+            view.findViewById(R.id.week_frame4),
+            view.findViewById(R.id.week_frame5),
+            view.findViewById(R.id.week_frame6),
+            view.findViewById(R.id.week_frame7)
+        )
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
@@ -84,22 +86,12 @@ class WeekEventAdapter(
             )
             holder.hourTV.setTextColor(typedValue.data)
         }
-        var eventTV: TextView
         var eventTextView: TextView
-        val frames = listOf(
-            holder.frame1,
-            holder.frame2,
-            holder.frame3,
-            holder.frame4,
-            holder.frame5,
-            holder.frame6,
-            holder.frame7
-        )
-        for ((i, day) in eventData.withIndex()) { // This is the count for each day's data
-            for (event in day) // This is the count for each event of the current day
-                if (event.startHour <= positionAsHour.hour && event.endHour >= positionAsHour.hour) {
 
-                    eventTextView = eventBox(event, frames[i].context)
+        for ((i, day) in eventData.withIndex()) { // This is the count for each day's data
+            for (event in day) {// This is the count for each event of the current day
+                if (event.startHour <= positionAsHour.hour && event.endHour >= positionAsHour.hour) {
+                    eventTextView = eventBox(event, holder.frames[i].context)
                     val eventTVContext = eventTextView.context
                     eventTextView.setOnClickListener {
                         val builder = AlertDialog.Builder(eventTVContext)
@@ -118,10 +110,10 @@ class WeekEventAdapter(
                             dialog.dismiss()
                         }
                         builder.show()
-
-                        frames[i].addView(eventTextView)
                     }
+                    holder.frames[i].addView(eventTextView)
                 }
+            }
         }
     }
 
@@ -145,7 +137,6 @@ class WeekEventAdapter(
             .setPositiveButton("Done") { dialog, _ ->
                 position.title = editTitle.text.toString()
                 position.desc = editDesc.text.toString()
-                //notifyItemChanged()
                 runOnIO {
                     fragment.dao.updateEvent(position)
                 }
@@ -181,7 +172,7 @@ class WeekEventAdapter(
         )
         textView.ellipsize = TextUtils.TruncateAt.END
         textView.gravity = Gravity.CENTER
-        textView.maxLines = 1
+        textView.maxLines = 2
         textView.setPaddingRelative(
             dpToPx(textView.context, 3),
             0,
@@ -189,7 +180,7 @@ class WeekEventAdapter(
             dpToPx(textView.context, 2)
         )
 
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
         textView.typeface = Typeface.DEFAULT_BOLD
 
         return textView

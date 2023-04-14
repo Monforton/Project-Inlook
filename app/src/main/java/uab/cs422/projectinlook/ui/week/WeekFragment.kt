@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import java.util.Calendar
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -46,15 +47,15 @@ class WeekFragment : Fragment(), CalendarInterface {
         val weekRecyclerView = binding.weeklyRecycler
 
         dao = EventDatabase.getInstance(this.requireContext()).eventDao
+        setWeekDays()
         var events: MutableList<List<CalEvent>> = MutableList(7) { listOf() }
         runOnIO {
             for ((i, day) in weekDays.withIndex()) {
                 events[i] = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
             }
         }
+        Log.d("TAG", "${events}")
         weekRecyclerView.adapter = WeekEventAdapter(this, events, weekDays)
-
-        getCurrentWeek()
 
         weekRecyclerView.setOnTouchListener( @SuppressLint("ClickableViewAccessibility")
         object : SwipeListener(this@WeekFragment.context) {
@@ -69,6 +70,8 @@ class WeekFragment : Fragment(), CalendarInterface {
                 updateEvents()
             }
         })
+
+        updateDisplayedDates()
 
         return root
     }
@@ -103,17 +106,17 @@ class WeekFragment : Fragment(), CalendarInterface {
     }
 
     override fun onTodayButtonClicked() {
-        getCurrentWeek()
+        setWeekDays()
+        updateDisplayedDates()
     }
 
-    private fun getCurrentWeek() {
+    private fun setWeekDays() {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
         weekDays[0] = calendar.time.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
         for (i in 1..6) {
             weekDays[i] = weekDays[0].plusDays(i.toLong())
         }
-        updateDisplayedDates()
     }
 
 
