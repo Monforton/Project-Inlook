@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import uab.cs422.projectinlook.R
@@ -44,6 +45,7 @@ class WeekDayAdapter(
             view.findViewById(R.id.week_frame6),
             view.findViewById(R.id.week_frame7)
         )
+        val layout: ConstraintLayout = view.findViewById(R.id.week_cell_layout)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
@@ -56,18 +58,18 @@ class WeekDayAdapter(
         val today = LocalDateTime.now()
         val hourTVContext = holder.hourTV.context
         val positionAsHour = LocalDateTime.of(LocalDate.now(), LocalTime.of(position, 0))
-        holder.hourTV.text = positionAsHour.format(hourFormatter(holder.hourTV.context))
+        holder.hourTV.text = positionAsHour.format(hourFormatter(holder.hourTV.context, false))
         val typedValue = TypedValue()
         if ((today.isAfter(weekDays[0]) || today.isEqual(weekDays[0])) &&
             (today.isBefore(weekDays[6]) || today.isEqual(weekDays[6]))
         ) {
             if (positionAsHour.hour == today.hour) {
-                hourTVContext.theme.resolveAttribute(
+                holder.layout.context.theme.resolveAttribute(
                     com.google.android.material.R.attr.colorTertiaryContainer,
                     typedValue,
                     true
                 )
-                holder.hourTV.setBackgroundColor(typedValue.data)
+                holder.layout.setBackgroundColor(typedValue.data)
                 hourTVContext.theme.resolveAttribute(
                     com.google.android.material.R.attr.colorOnTertiaryContainer,
                     typedValue,
@@ -76,7 +78,7 @@ class WeekDayAdapter(
                 holder.hourTV.setTextColor(typedValue.data)
             }
         } else { // I don't know why this else is necessary, but otherwise it will highlight if (hour - 16) > 0
-            holder.hourTV.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
+            holder.layout.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorOnBackground,
                 typedValue,
@@ -162,7 +164,7 @@ class WeekDayAdapter(
             )
         textView.background = AppCompatResources.getDrawable(
             textView.context,
-            R.drawable.event_back
+            R.drawable.background_for_event
         )
         val backgroundColor: Int =
             Color.valueOf(event.colorR, event.colorG, event.colorB, event.colorA).toArgb()

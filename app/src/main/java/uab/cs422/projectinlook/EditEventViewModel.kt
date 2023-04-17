@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class AddEventViewModel : ViewModel() {
+class EditEventViewModel : ViewModel() {
 
     private val _startTimeText = MutableLiveData<String>().apply {
         value = ""

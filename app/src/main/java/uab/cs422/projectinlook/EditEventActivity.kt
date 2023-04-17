@@ -13,25 +13,26 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_CLOCK
 import com.google.android.material.timepicker.TimeFormat
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener
-import uab.cs422.projectinlook.databinding.ActivityAddEventBinding
+import uab.cs422.projectinlook.databinding.ActivityEditEventBinding
 import uab.cs422.projectinlook.entities.CalEvent
+import uab.cs422.projectinlook.util.hourFormatter
 import uab.cs422.projectinlook.util.runOnIO
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class AddEventActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityAddEventBinding
+class EditEventActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityEditEventBinding
     private lateinit var dao: EventDao
-    private lateinit var addEventViewModel: AddEventViewModel
+    private lateinit var editEventViewModel: EditEventViewModel
     private lateinit var longerFormat: DateTimeFormatter
     private val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
     private var startDateTime: LocalDateTime = LocalDateTime.now().withMinute(0).plusHours(1)
         set(value) {
             field = value
-            addEventViewModel.setStartTimeText(field.format(longerFormat))
-            addEventViewModel.setStartDateText(buildString {
+            editEventViewModel.setStartTimeText(field.format(longerFormat))
+            editEventViewModel.setStartDateText(buildString {
                 append(startDateTime.format(DateTimeFormatter.ofPattern("E, MMM dd")))
                 append("\n")
                 append(startDateTime.format(DateTimeFormatter.ofPattern("yyyy")))
@@ -40,8 +41,8 @@ class AddEventActivity : AppCompatActivity() {
     private var endDateTime: LocalDateTime = startDateTime.plusHours(1)
         set(value) {
             field = value
-            addEventViewModel.setEndTimeText(field.format(longerFormat))
-            addEventViewModel.setEndDateText(buildString {
+            editEventViewModel.setEndTimeText(field.format(longerFormat))
+            editEventViewModel.setEndDateText(buildString {
                 append(endDateTime.format(DateTimeFormatter.ofPattern("E, MMM dd")))
                 append("\n")
                 append(endDateTime.format(DateTimeFormatter.ofPattern("yyyy")))
@@ -50,45 +51,40 @@ class AddEventActivity : AppCompatActivity() {
     private var color: Int = 0
         set(value) {
             field = value
-            addEventViewModel.setEventColor(value)
+            editEventViewModel.setEventColor(value)
         }
     private var title: String = "Title"
         set(value) {
             field = value
-            addEventViewModel.setTitleText("  $value")
+            editEventViewModel.setTitleText(value)
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAddEventBinding.inflate(layoutInflater)
+        binding = ActivityEditEventBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        longerFormat = when (PreferenceManager.getDefaultSharedPreferences(this)
-            .getString("hour_format", "")) {
-            "clock_time_format" -> DateTimeFormatter.ofPattern("hh:mm a")
-            "day_time_format" -> DateTimeFormatter.ofPattern("HH:mm")
-            else -> DateTimeFormatter.ofPattern("hh:mm a")
-        }
+        longerFormat = hourFormatter(this, true)
 
-        addEventViewModel = ViewModelProvider(this)[AddEventViewModel::class.java]
-        addEventViewModel.startTimeText.observe(this) {
-            binding.addStartTimeTextView.text = it
+        editEventViewModel = ViewModelProvider(this)[EditEventViewModel::class.java]
+        editEventViewModel.startTimeText.observe(this) {
+            binding.editStartTimeTextView.text = it
         }
-        addEventViewModel.startDateText.observe(this) {
-            binding.addStartDateTextView.text = it
+        editEventViewModel.startDateText.observe(this) {
+            binding.editStartDateTextView.text = it
         }
-        addEventViewModel.endTimeText.observe(this) {
-            binding.addEndTimeTextView.text = it
+        editEventViewModel.endTimeText.observe(this) {
+            binding.editEndTimeTextView.text = it
         }
-        addEventViewModel.endDateText.observe(this) {
-            binding.addEndDateTextView.text = it
+        editEventViewModel.endDateText.observe(this) {
+            binding.editEndDateTextView.text = it
         }
-        addEventViewModel.titleText.observe(this) {
-            binding.addEventPreview.text = it
+        editEventViewModel.titleText.observe(this) {
+            binding.editEventPreview.text = it
         }
-        addEventViewModel.eventColor.observe(this) {
-            binding.addEventPreview.backgroundTintList = ColorStateList.valueOf(it)
-            binding.addEventPreview.setTextColor(
+        editEventViewModel.eventColor.observe(this) {
+            binding.editEventPreview.backgroundTintList = ColorStateList.valueOf(it)
+            binding.editEventPreview.setTextColor(
                 if (Color.luminance(it) > 0.5) Color.BLACK else Color.WHITE
             )
         }
@@ -97,7 +93,7 @@ class AddEventActivity : AppCompatActivity() {
 
         dao = EventDatabase.getInstance(this).eventDao
 
-        binding.addStartTimeTextView.setOnClickListener {
+        binding.editStartTimeTextView.setOnClickListener {
             val timePicker =
                 MaterialTimePicker.Builder()
                     .setTimeFormat(
@@ -105,6 +101,12 @@ class AddEventActivity : AppCompatActivity() {
                             .getString("hour_format", "")) {
                             "clock_time_format" -> TimeFormat.CLOCK_12H
                             "day_time_format" -> TimeFormat.CLOCK_24H
+                            "local_time_format" ->  {
+                            if (android.text.format.DateFormat.is24HourFormat(this))
+                                TimeFormat.CLOCK_24H
+                            else
+                                TimeFormat.CLOCK_12H
+                        }
                             else -> TimeFormat.CLOCK_12H
                         }
                     )
@@ -123,7 +125,7 @@ class AddEventActivity : AppCompatActivity() {
             timePicker.show(supportFragmentManager, "timePicker")
         }
 
-        binding.addStartDateTextView.setOnClickListener {
+        binding.editStartDateTextView.setOnClickListener {
             calendar.set(
                 startDateTime.year,
                 startDateTime.month.value - 1,
@@ -150,7 +152,7 @@ class AddEventActivity : AppCompatActivity() {
             datePicker.show(supportFragmentManager, "datePicker")
         }
 
-        binding.addEndTimeTextView.setOnClickListener {
+        binding.editEndTimeTextView.setOnClickListener {
             val timePicker =
                 MaterialTimePicker.Builder()
                     .setTimeFormat(
@@ -158,6 +160,12 @@ class AddEventActivity : AppCompatActivity() {
                             .getString("hour_format", "")) {
                             "clock_time_format" -> TimeFormat.CLOCK_12H
                             "day_time_format" -> TimeFormat.CLOCK_24H
+                            "local_time_format" ->  {
+                                if (android.text.format.DateFormat.is24HourFormat(this))
+                                    TimeFormat.CLOCK_24H
+                                else
+                                    TimeFormat.CLOCK_12H
+                            }
                             else -> TimeFormat.CLOCK_12H
                         }
                     )
@@ -175,7 +183,7 @@ class AddEventActivity : AppCompatActivity() {
             timePicker.show(supportFragmentManager, "timePicker")
         }
 
-        binding.addEndDateTextView.setOnClickListener {
+        binding.editEndDateTextView.setOnClickListener {
             calendar.set(
                 endDateTime.year,
                 endDateTime.month.value - 1,
@@ -202,8 +210,8 @@ class AddEventActivity : AppCompatActivity() {
             datePicker.show(supportFragmentManager, "datePicker")
         }
 
-        binding.addTitleEditText.setOnFocusChangeListener { _, _ ->
-            title = binding.addTitleEditText.text.toString()
+        binding.editTitleEditText.setOnFocusChangeListener { _, _ ->
+            title = binding.editTitleEditText.text.toString()
         }
 
         val typedValue = TypedValue()
@@ -213,18 +221,18 @@ class AddEventActivity : AppCompatActivity() {
             true
         )
         color = typedValue.data
-        binding.addHSLColorPicker.setColor(color)
+        binding.editHSLColorPicker.setColor(color)
 
-        binding.addHSLColorPicker.setColorSelectionListener(object :
+        binding.editHSLColorPicker.setColorSelectionListener(object :
             SimpleColorSelectionListener() {
             override fun onColorSelected(color: Int) {
-                this@AddEventActivity.color = color
+                this@EditEventActivity.color = color
             }
         })
 
 
-        binding.addBtnSave.setOnClickListener {
-            if (binding.addTitleEditText.text.toString().isEmpty()) {
+        binding.editBtnSave.setOnClickListener {
+            if (binding.editTitleEditText.text.toString().isEmpty()) {
                 val snackbar = Snackbar.make(it, "Event must have a title", Snackbar.LENGTH_SHORT)
                 snackbar.setAction("Ok") {
                     snackbar.dismiss()
@@ -236,8 +244,8 @@ class AddEventActivity : AppCompatActivity() {
                         CalEvent(
                             startDateTime,
                             endDateTime,
-                            binding.addTitleEditText.text.toString(),
-                            binding.addDescriptionEditText.text.toString(),
+                            binding.editTitleEditText.text.toString(),
+                            binding.editDescriptionEditText.text.toString(),
                             Color.valueOf(color)
                         )
                     )
@@ -246,13 +254,13 @@ class AddEventActivity : AppCompatActivity() {
             }
         }
 
-        binding.addBtnCancel.setOnClickListener {
+        binding.editBtnCancel.setOnClickListener {
             finish()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        binding.addTitleEditText.clearFocus()
+        binding.editTitleEditText.clearFocus()
     }
 }

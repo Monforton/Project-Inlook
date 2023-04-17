@@ -33,7 +33,7 @@ class SettingsActivity : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home -> {
                 NavUtils.navigateUpFromSameTask(this)
-                true
+                return true
             }
         }
         return super.onOptionsItemSelected(item)
@@ -41,7 +41,7 @@ class SettingsActivity : AppCompatActivity() {
 
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey)
+            setPreferencesFromResource(R.xml.settings_preferences, rootKey)
         }
     }
 }

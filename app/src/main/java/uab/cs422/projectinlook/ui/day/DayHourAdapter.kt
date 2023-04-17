@@ -16,6 +16,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
 import uab.cs422.projectinlook.R
@@ -31,6 +32,7 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val hourTextView: TextView = view.findViewById(R.id.hourText)
         val eventsLayout: LinearLayout = view.findViewById(R.id.eventsLayout)
+        val cellLayout: ConstraintLayout = view.findViewById(R.id.hour_cell_layout)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
@@ -43,22 +45,21 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
         val hourTVContext = holder.hourTextView.context
         val positionAsHour = day.withHour(position).withMinute(0)
         // Set the hour text
-        holder.hourTextView.text = positionAsHour.format(hourFormatter(hourTVContext))
+        holder.hourTextView.text = positionAsHour.format(hourFormatter(hourTVContext, false))
         holder.hourTextView.layoutParams = ViewGroup.LayoutParams(
             (hourTVContext.resources.displayMetrics.widthPixels / 5).toFloat()
                 .coerceAtLeast(Paint().measureText(holder.hourTextView.text.toString())).toInt(),
             ViewGroup.LayoutParams.MATCH_PARENT
         )
         // Set current hour as different color
-        // TODO set the whole cell's background not just the hour
         val typedValue = TypedValue()
         if (positionAsHour.hour == day.hour) {
-            hourTVContext.theme.resolveAttribute(
+            holder.cellLayout.context.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorTertiaryContainer,
                 typedValue,
                 true
             )
-            holder.hourTextView.setBackgroundColor(typedValue.data)
+            holder.cellLayout.setBackgroundColor(typedValue.data)
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorOnTertiaryContainer,
                 typedValue,
@@ -66,7 +67,7 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
             )
             holder.hourTextView.setTextColor(typedValue.data)
         } else { // I don't know why this else is necessary, but otherwise it may get weird
-            holder.hourTextView.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
+            holder.cellLayout.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorOnBackground,
                 typedValue,
@@ -154,7 +155,7 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
             LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1f)
         textView.background = AppCompatResources.getDrawable(
             textView.context,
-            R.drawable.event_back
+            R.drawable.background_for_event
         )
         val backgroundColor: Int = Color.valueOf(event.colorR, event.colorG, event.colorB, event.colorA).toArgb()
         textView.background.setTint(backgroundColor)

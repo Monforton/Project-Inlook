@@ -54,15 +54,37 @@ fun getCalEventAsLocalDateTime(endTime: Boolean = false, event: CalEvent): Local
 }
 
 /**
- * The correct hour formatter for the user's chosen timestyle, 12Hr or 24Hr
+ * The correct hour formatter for the user's chosen time format, 12Hr or 24Hr
  */
-fun hourFormatter(context: Context): DateTimeFormatter =
-    when (PreferenceManager.getDefaultSharedPreferences(context)
-        .getString("hour_format", "")) {
-        "clock_time_format" -> DateTimeFormatter.ofPattern("h a")
-        "day_time_format" -> DateTimeFormatter.ofPattern("H:mm")
-        else -> DateTimeFormatter.ofPattern("h a")
+fun hourFormatter(c: Context, longer: Boolean): DateTimeFormatter =
+    if (longer) {
+        when (PreferenceManager.getDefaultSharedPreferences(c)
+            .getString("hour_format", "")) {
+            "day_time_format" -> DateTimeFormatter.ofPattern("HH:mm")
+            "clock_time_format" -> DateTimeFormatter.ofPattern("hh:mm a")
+            "local_time_format" -> {
+                if (android.text.format.DateFormat.is24HourFormat(c))
+                    DateTimeFormatter.ofPattern("HH:mm")
+                else
+                    DateTimeFormatter.ofPattern("hh:mm a")
+            }
+            else -> DateTimeFormatter.ofPattern("hh:mm a")
+        }
+    } else {
+        when (PreferenceManager.getDefaultSharedPreferences(c)
+            .getString("hour_format", "")) {
+            "day_time_format" -> DateTimeFormatter.ofPattern("H:mm")
+            "clock_time_format" -> DateTimeFormatter.ofPattern("h a")
+            "local_time_format" -> {
+                if (android.text.format.DateFormat.is24HourFormat(c))
+                    DateTimeFormatter.ofPattern("H:mm")
+                else
+                    DateTimeFormatter.ofPattern("h a")
+            }
+            else -> DateTimeFormatter.ofPattern("h a")
+        }
     }
+
 
 /**
  * Returns an int as an hour of today

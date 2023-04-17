@@ -47,19 +47,20 @@ class TodayEventsAdapter(
                     )
                 )
             ) {
-                if (getCalEventAsLocalDateTime(event = event).isAfter(
-                        LocalDateTime.of(
-                            LocalDate.now(),
-                            LocalTime.MAX
-                        )
-                    )
-                ) "Thru Today"
-                "Until " + LocalDateTime.of(LocalDate.now(), LocalTime.of(event.endHour, 0))
-                    .format(hourFormatter(holder.timeframeTV.context))
+                if (getCalEventAsLocalDateTime(event = event)
+                        .isAfter(LocalDateTime.of(LocalDate.now(), LocalTime.MAX))
+                ) {
+                    "Thru Today"
+                } else {
+                    "Until " + LocalDateTime.of(LocalDate.now(), LocalTime.of(event.endHour, 0))
+                        .format(hourFormatter(holder.timeframeTV.context, false))
+                }
             } else {
                 intAsHour(hour = event.startHour)
-                    .format(hourFormatter(holder.timeframeTV.context)) + " - " + intAsHour(hour = event.endHour)
-                    .format(hourFormatter(holder.timeframeTV.context))
+                    .format(hourFormatter(holder.timeframeTV.context, false)) + " - " + intAsHour(
+                    hour = event.endHour
+                )
+                    .format(hourFormatter(holder.timeframeTV.context, false))
             }
         holder.eventTV.text = event.title
         // Finish setting color of everything
