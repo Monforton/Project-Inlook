@@ -35,6 +35,7 @@ class TodayEventsAdapter(
 
     override fun getItemCount() = eventData.size
 
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Get the timeframe of event
         val event = eventData[position]
@@ -61,6 +62,7 @@ class TodayEventsAdapter(
                     .format(hourFormatter(holder.timeframeTV.context))
             }
         holder.eventTV.text = event.title
+        // Finish setting color of everything
         holder.layout.backgroundTintList = ColorStateList.valueOf(
             Color.valueOf(
                 event.colorR,
@@ -85,6 +87,9 @@ class TodayEventsAdapter(
             ColorStateList.valueOf(if (Color.luminance(backgroundColor) > 0.5) Color.BLACK else Color.WHITE)
     }
 
+    /**
+     * Updates the RecyclerView's shown data with new
+     */
     fun updateDisplayedData(newData: List<CalEvent>) {
         eventData = newData
         notifyDataSetChanged()

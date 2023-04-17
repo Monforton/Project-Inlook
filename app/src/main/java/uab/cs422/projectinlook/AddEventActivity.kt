@@ -202,7 +202,7 @@ class AddEventActivity : AppCompatActivity() {
             datePicker.show(supportFragmentManager, "datePicker")
         }
 
-        binding.addTitleEditText.setOnFocusChangeListener { view, b ->
+        binding.addTitleEditText.setOnFocusChangeListener { _, _ ->
             title = binding.addTitleEditText.text.toString()
         }
 
@@ -251,5 +251,8 @@ class AddEventActivity : AppCompatActivity() {
         }
     }
 
-
+    override fun onPause() {
+        super.onPause()
+        binding.addTitleEditText.clearFocus()
+    }
 }

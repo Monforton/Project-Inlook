@@ -19,9 +19,6 @@ import java.time.LocalDateTime
 class TodayFragment : Fragment(), CalendarInterface {
 
     private var _binding: FragmentTodayBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
     lateinit var dao: EventDao
 
@@ -33,8 +30,8 @@ class TodayFragment : Fragment(), CalendarInterface {
         _binding = FragmentTodayBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
+        // Initialize the adapter
         val eventsRecyclerView = binding.eventsRecycler
-
         dao = EventDatabase.getInstance(this.requireContext()).eventDao
         var events: List<CalEvent>
         val today = LocalDateTime.now()
@@ -46,6 +43,8 @@ class TodayFragment : Fragment(), CalendarInterface {
         return root
     }
 
+    // Usually called after returning from AddEvent or from Settings,
+    // updates the data shown
     override fun onResume() {
         super.onResume()
         val today = LocalDateTime.now()
@@ -56,24 +55,19 @@ class TodayFragment : Fragment(), CalendarInterface {
         binding.eventsRecycler.adapter = TodayEventsAdapter(events)
     }
 
+    // Set the Toolbar's text
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         (context as AppCompatActivity).supportActionBar?.title = getString(R.string.title_today)
     }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         (context as AppCompatActivity).supportActionBar?.title = getString(R.string.title_today)
     }
 
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
+    // Updates shown events in the RecyclerView
     override fun updateEvents() {
         var events: List<CalEvent> = listOf()
         val today = LocalDateTime.now()
@@ -83,9 +77,13 @@ class TodayFragment : Fragment(), CalendarInterface {
         (binding.eventsRecycler.adapter as TodayEventsAdapter).updateDisplayedData(events)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    // Unused Interface functions
     override fun onTodayButtonClicked() {    }
-
     override fun onSwipeLeft() {    }
-
     override fun onSwipeRight() {    }
 }

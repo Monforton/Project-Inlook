@@ -19,6 +19,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Suppress("DEPRECATION")
+@SuppressLint("ClickableViewAccessibility")
 class DayFragment : Fragment(), CalendarInterface {
 
     private var _binding: FragmentDayBinding? = null
@@ -26,7 +27,6 @@ class DayFragment : Fragment(), CalendarInterface {
     private var day = LocalDateTime.now()
     lateinit var dao: EventDao
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,7 +38,6 @@ class DayFragment : Fragment(), CalendarInterface {
 
         // Set up adapter
         val hourRecyclerView = binding.hourRecycler
-
         dao = EventDatabase.getInstance(this.requireContext()).eventDao
         var events: List<CalEvent> = listOf()
         day = LocalDateTime.now()
@@ -47,7 +46,9 @@ class DayFragment : Fragment(), CalendarInterface {
         }
         hourRecyclerView.adapter = DayHourAdapter(this, events, day)
         hourRecyclerView.scrollToPosition(LocalDateTime.now().hour)
-        hourRecyclerView.setOnTouchListener(@SuppressLint("ClickableViewAccessibility")
+
+        // Set the gesture detection
+        hourRecyclerView.setOnTouchListener(
         object : SwipeListener(this@DayFragment.context) {
             override fun onSwipeLeft() {
                 super.onSwipeLeft()
@@ -69,13 +70,13 @@ class DayFragment : Fragment(), CalendarInterface {
         updateEvents()
     }
 
+    // Set the titlebar text to the day's date
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         (context as AppCompatActivity).supportActionBar?.title =
             day.format(DateTimeFormatter.ofPattern("LLLL d"))
     }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -83,11 +84,7 @@ class DayFragment : Fragment(), CalendarInterface {
             day.format(DateTimeFormatter.ofPattern("LLLL d"))
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
+    // Update the adapter, title, and event data
     override fun updateEvents() {
         var events: List<CalEvent> = listOf()
         runOnIO {
@@ -99,6 +96,7 @@ class DayFragment : Fragment(), CalendarInterface {
             day.format(DateTimeFormatter.ofPattern("LLLL d"))
     }
 
+    // Action bindings
     override fun onTodayButtonClicked() {
         day = LocalDateTime.now()
         updateEvents()
@@ -112,5 +110,10 @@ class DayFragment : Fragment(), CalendarInterface {
     override fun onSwipeRight() {
         day = day.minusDays(1)
         updateEvents()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

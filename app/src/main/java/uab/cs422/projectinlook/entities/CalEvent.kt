@@ -51,8 +51,8 @@ data class CalEvent(
         color.blue()
     )
 
-    fun getStartAsLocalDateTime() = LocalDateTime.of(startYear, startMonth, startDayOfMonth, startHour, startMinute)
+    fun getStartAsLocalDateTime(): LocalDateTime = LocalDateTime.of(startYear, startMonth, startDayOfMonth, startHour, startMinute)
 
-    fun getEndAsLocalDateTime() = LocalDateTime.of(endYear, endMonth, endDayOfMonth, endHour, endMinute)
+    fun getEndAsLocalDateTime(): LocalDateTime = LocalDateTime.of(endYear, endMonth, endDayOfMonth, endHour, endMinute)
 
 }

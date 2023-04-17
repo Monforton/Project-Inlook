@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.text.TextUtils
-import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -43,12 +42,15 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val hourTVContext = holder.hourTextView.context
         val positionAsHour = day.withHour(position).withMinute(0)
+        // Set the hour text
         holder.hourTextView.text = positionAsHour.format(hourFormatter(hourTVContext))
         holder.hourTextView.layoutParams = ViewGroup.LayoutParams(
             (hourTVContext.resources.displayMetrics.widthPixels / 5).toFloat()
                 .coerceAtLeast(Paint().measureText(holder.hourTextView.text.toString())).toInt(),
             ViewGroup.LayoutParams.MATCH_PARENT
         )
+        // Set current hour as different color
+        // TODO set the whole cell's background not just the hour
         val typedValue = TypedValue()
         if (positionAsHour.hour == day.hour) {
             hourTVContext.theme.resolveAttribute(
@@ -63,7 +65,7 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
                 true
             )
             holder.hourTextView.setTextColor(typedValue.data)
-        } else { // I don't know why this else is necessary, but otherwise it will highlight if (hour - 16) > 0
+        } else { // I don't know why this else is necessary, but otherwise it may get weird
             holder.hourTextView.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorOnBackground,
@@ -72,21 +74,22 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
             )
             holder.hourTextView.setTextColor(typedValue.data)
         }
+        // Clear and add events to the hour as TextViews
         holder.eventsLayout.removeAllViews()
         var eventTextView: TextView
         for ((count, event) in eventData.withIndex()) {
             val start = event.getStartAsLocalDateTime()
             val end = event.getEndAsLocalDateTime()
-            Log.d("time", "start: ${start.hour} now: ${positionAsHour.hour}")
             if ((start.isBefore(positionAsHour) || start.isEqual(positionAsHour)) &&
                 (end.isAfter(positionAsHour) || end.isEqual(positionAsHour))
             ) {
-                if (holder.eventsLayout.childCount > 2) { // Event box for more than 3 events
+                if (holder.eventsLayout.childCount > 2) { // TODO fix this - Event box for more than 3 events
                     (holder.eventsLayout.getChildAt(2) as TextView).text =
                         holder.eventsLayout.context.getString(R.string.excess_events, count - 2)
                 } else { // Event box for singular event
                     eventTextView = eventBox(event, holder.eventsLayout.context)
                     val eventTVContext = eventTextView.context
+                    // TODO make this just the AddEventActivity - Dialogue when clicked
                     eventTextView.setOnClickListener {
                         val builder = AlertDialog.Builder(eventTVContext)
                         builder.setTitle(event.title)
@@ -141,7 +144,9 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
         alert.show()
     }
 
-
+    /**
+     * Returns a TextView in the desired style for the Day view
+     */
     private fun eventBox(event: CalEvent, context: Context): TextView {
         val textView = TextView(context)
         textView.text = event.title
@@ -153,10 +158,9 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
         )
         val backgroundColor: Int = Color.valueOf(event.colorR, event.colorG, event.colorB, event.colorA).toArgb()
         textView.background.setTint(backgroundColor)
-        val typedValue = TypedValue()
         textView.setTextColor(
             ColorUtils.blendARGB(
-                typedValue.data,
+                backgroundColor,
                 if (Color.luminance(backgroundColor) > 0.5) Color.BLACK else Color.WHITE,
                 0.95f
             )
@@ -177,6 +181,9 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
         return textView
     }
 
+    /**
+     * Updates the RecyclerView with new data
+     */
     fun updateDisplayedData(newData: List<CalEvent>, day: LocalDateTime) {
         eventData = newData
         this.day = day

@@ -28,7 +28,7 @@ open class SwipeListener(c: Context?) :
             e2: MotionEvent,
             velocityX: Float,
             velocityY: Float
-        ): Boolean {
+        ): Boolean { //TODO this thing will randomly error given null, maybe fix?
             val diffY = e2?.y?.minus((e1?.y ?: 0f)) ?: 0f
             val diffX = e2?.x?.minus((e1?.x ?: 0f)) ?: 0f
             if (abs(diffX) > abs(diffY)) {

@@ -11,6 +11,9 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
+/**
+ * Used for functions dealing with the database
+ */
 fun runOnIO(lambda: suspend () -> Unit) {
     runBlocking {
         launch(Dispatchers.IO) {
@@ -19,11 +22,17 @@ fun runOnIO(lambda: suspend () -> Unit) {
     }
 }
 
+/**
+ * Converts dp to px
+ */
 fun dpToPx(context: Context, dp: Int): Int {
     val scale = context.resources.displayMetrics.density
     return (dp * scale + 0.5f).toInt()
 }
 
+/**
+ * Given CalEvent, returns it as a LocalDateTime variable
+ */
 fun getCalEventAsLocalDateTime(endTime: Boolean = false, event: CalEvent): LocalDateTime {
     return if (!endTime) {
         LocalDateTime.of(
@@ -44,6 +53,9 @@ fun getCalEventAsLocalDateTime(endTime: Boolean = false, event: CalEvent): Local
     }
 }
 
+/**
+ * The correct hour formatter for the user's chosen timestyle, 12Hr or 24Hr
+ */
 fun hourFormatter(context: Context): DateTimeFormatter =
     when (PreferenceManager.getDefaultSharedPreferences(context)
         .getString("hour_format", "")) {
@@ -52,4 +64,8 @@ fun hourFormatter(context: Context): DateTimeFormatter =
         else -> DateTimeFormatter.ofPattern("h a")
     }
 
-fun intAsHour(date: LocalDate = LocalDateTime.now().toLocalDate(), hour: Int) = LocalDateTime.of(date, LocalTime.of(hour, 0))
+/**
+ * Returns an int as an hour of today
+ */
+fun intAsHour(date: LocalDate = LocalDateTime.now().toLocalDate(), hour: Int) =
+    LocalDateTime.of(date, LocalTime.of(hour, 0))
