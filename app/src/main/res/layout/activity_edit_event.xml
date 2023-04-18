@@ -159,7 +159,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/edit_btnCancel"
+        app:layout_constraintBottom_toTopOf="@id/edit_ButtonsLayout"
         app:layout_constraintEnd_toStartOf="@id/edit_EventPreview"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edit_descriptionTextLayout" />
@@ -168,46 +168,64 @@
         android:id="@+id/edit_EventPreview"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="64dp"
-        android:layout_marginTop="64dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="16dp"
-        android:padding="16dp"
-        android:gravity="center|start"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        android:ellipsize="end"
+        android:layout_marginBottom="64dp"
         android:background="@drawable/background_for_event"
         android:backgroundTint="?attr/colorPrimaryContainer"
-        app:layout_constraintBottom_toTopOf="@id/edit_btnCancel"
+        android:ellipsize="end"
+        android:gravity="center|start"
+        android:padding="16dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/edit_ButtonsLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/edit_HSLColorPicker"
-        app:layout_constraintTop_toBottomOf="@id/edit_descriptionTextLayout"
-        />
+        app:layout_constraintTop_toBottomOf="@id/edit_descriptionTextLayout" />
 
-    <Button
-        android:id="@+id/edit_btnSave"
-        style="?attr/materialIconButtonFilledStyle"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/edit_ButtonsLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
         android:layout_marginBottom="24dp"
-        android:text="@string/save_button"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/edit_btnCancel" />
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_HSLColorPicker">
 
-    <Button
-        android:id="@+id/edit_btnCancel"
-        style="?attr/materialIconButtonOutlinedStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="24dp"
-        android:text="@android:string/cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/edit_btnSave"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/edit_btnCancel"
+            style="?attr/materialIconButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/edit_btnDelete"
+            style="?attr/materialIconButtonFilledStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="?attr/colorError"
+            android:text="@string/dialog_delete_button"
+            android:textColor="?attr/colorOnError" />
+
+        <Button
+            android:id="@+id/edit_btnSave"
+            style="?attr/materialIconButtonFilledStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:text="@string/save_button" />
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -110,8 +110,8 @@ class WeekDayAdapter(
                             fragment.updateEvents()
                             dialog.dismiss()
                         }
-                        builder.setNeutralButton(eventTVContext.getString(R.string.dialog_neutral_button)) { dialog, _ -> dialog.dismiss() }
-                        builder.setPositiveButton(eventTVContext.getString(R.string.dialog_positive_button)) { dialog, _ ->
+                        builder.setNeutralButton(eventTVContext.getString(R.string.dialog_ok_button)) { dialog, _ -> dialog.dismiss() }
+                        builder.setPositiveButton(eventTVContext.getString(R.string.dialog_edit_button)) { dialog, _ ->
                             showEditDialog(eventTVContext, event)
                             dialog.dismiss()
                         }

@@ -2,9 +2,9 @@ package uab.cs422.projectinlook
 
 import android.content.res.ColorStateList
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -15,6 +15,7 @@ import com.google.android.material.timepicker.TimeFormat
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener
 import uab.cs422.projectinlook.databinding.ActivityEditEventBinding
 import uab.cs422.projectinlook.entities.CalEvent
+import uab.cs422.projectinlook.ui.dialogs.DeletionBottomSheet
 import uab.cs422.projectinlook.util.hourFormatter
 import uab.cs422.projectinlook.util.runOnIO
 import java.time.LocalDateTime
@@ -58,6 +59,7 @@ class EditEventActivity : AppCompatActivity() {
             field = value
             editEventViewModel.setTitleText(value)
         }
+    private var event: CalEvent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,12 +103,12 @@ class EditEventActivity : AppCompatActivity() {
                             .getString("hour_format", "")) {
                             "clock_time_format" -> TimeFormat.CLOCK_12H
                             "day_time_format" -> TimeFormat.CLOCK_24H
-                            "local_time_format" ->  {
-                            if (android.text.format.DateFormat.is24HourFormat(this))
-                                TimeFormat.CLOCK_24H
-                            else
-                                TimeFormat.CLOCK_12H
-                        }
+                            "local_time_format" -> {
+                                if (android.text.format.DateFormat.is24HourFormat(this))
+                                    TimeFormat.CLOCK_24H
+                                else
+                                    TimeFormat.CLOCK_12H
+                            }
                             else -> TimeFormat.CLOCK_12H
                         }
                     )
@@ -160,7 +162,7 @@ class EditEventActivity : AppCompatActivity() {
                             .getString("hour_format", "")) {
                             "clock_time_format" -> TimeFormat.CLOCK_12H
                             "day_time_format" -> TimeFormat.CLOCK_24H
-                            "local_time_format" ->  {
+                            "local_time_format" -> {
                                 if (android.text.format.DateFormat.is24HourFormat(this))
                                     TimeFormat.CLOCK_24H
                                 else
@@ -229,6 +231,10 @@ class EditEventActivity : AppCompatActivity() {
                 this@EditEventActivity.color = color
             }
         })
+        binding.editEventPreview.backgroundTintList = ColorStateList.valueOf(color)
+        binding.editEventPreview.setTextColor(
+            if (Color.luminance(color) > 0.5) Color.BLACK else Color.WHITE
+        )
 
 
         binding.editBtnSave.setOnClickListener {
@@ -239,7 +245,18 @@ class EditEventActivity : AppCompatActivity() {
                 }
                 snackbar.show()
             } else {
-                runOnIO {
+                event?.let {
+                    runOnIO {
+                        it.reconstruct(
+                            startDateTime,
+                            endDateTime,
+                            binding.editTitleEditText.text.toString(),
+                            binding.editDescriptionEditText.text.toString(),
+                            Color.valueOf(color)
+                        )
+                        dao.updateEvent(it)
+                    }
+                } ?: runOnIO {
                     dao.insertEvent(
                         CalEvent(
                             startDateTime,
@@ -256,6 +273,33 @@ class EditEventActivity : AppCompatActivity() {
 
         binding.editBtnCancel.setOnClickListener {
             finish()
+        }
+
+        binding.editBtnDelete.setOnClickListener {
+            val deletionBottomSheet = DeletionBottomSheet()
+            deletionBottomSheet.neutralAction = {
+                deletionBottomSheet.dismiss()
+            }
+            deletionBottomSheet.deleteAction = {
+                runOnIO {
+                    dao.deleteEvent(event!!)
+                }
+                deletionBottomSheet.dismiss()
+                finish()
+            }
+            deletionBottomSheet.show(supportFragmentManager, DeletionBottomSheet.TAG)
+        }
+
+        if (intent.hasExtra("event_data")) {
+            event = intent.getParcelableExtra("event_data")
+            title = event?.title!!
+            binding.editTitleEditText.setText(event?.title)
+            startDateTime = event?.getStartAsLocalDateTime()!!
+            endDateTime = event?.getEndAsLocalDateTime()!!
+            binding.editHSLColorPicker.setColor(event?.getColorAsColor()!!.toArgb())
+            binding.editDescriptionEditText.setText(event?.desc)
+        } else {
+            binding.editButtonsLayout.removeView(binding.editBtnDelete)
         }
     }
 
