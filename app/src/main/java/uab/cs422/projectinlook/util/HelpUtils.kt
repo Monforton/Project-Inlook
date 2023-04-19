@@ -5,7 +5,6 @@ import androidx.preference.PreferenceManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import uab.cs422.projectinlook.entities.CalEvent
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -28,29 +27,6 @@ fun runOnIO(lambda: suspend () -> Unit) {
 fun dpToPx(context: Context, dp: Int): Int {
     val scale = context.resources.displayMetrics.density
     return (dp * scale + 0.5f).toInt()
-}
-
-/**
- * Given CalEvent, returns it as a LocalDateTime variable
- */
-fun getCalEventAsLocalDateTime(endTime: Boolean = false, event: CalEvent): LocalDateTime {
-    return if (!endTime) {
-        LocalDateTime.of(
-            event.startYear,
-            event.startMonth,
-            event.startDayOfMonth,
-            event.startHour,
-            event.startMinute
-        )
-    } else {
-        LocalDateTime.of(
-            event.endYear,
-            event.endMonth,
-            event.endDayOfMonth,
-            event.endHour,
-            event.endMinute
-        )
-    }
 }
 
 /**

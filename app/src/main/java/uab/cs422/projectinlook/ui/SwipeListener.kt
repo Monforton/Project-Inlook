@@ -1,19 +1,22 @@
 package uab.cs422.projectinlook.ui
-
+// IF CRASH BROUGHT YOU HERE: https://issuetracker.google.com/issues/206855618
 import android.content.Context
-import android.view.GestureDetector
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
+import androidx.core.view.GestureDetectorCompat
 import kotlin.math.abs
 
 // THIS CLASS COURTESY OF https://stackoverflow.com/a/65607462
-open class SwipeListener(c: Context?) :
-    OnTouchListener {
-    private val gestureDetector: GestureDetector
+open class SwipeListener(c: Context) : OnTouchListener {
+    private val gestureDetector: GestureDetectorCompat
     override fun onTouch(view: View, motionEvent: MotionEvent): Boolean {
-        return gestureDetector.onTouchEvent(motionEvent)
+        val out = gestureDetector.onTouchEvent(motionEvent)
+        if (out) {
+            view.performClick()
+        }
+        return out
     }
 
     private inner class GestureListener : SimpleOnGestureListener() {
@@ -23,30 +26,35 @@ open class SwipeListener(c: Context?) :
             return true
         }
 
+        // IF CRASH BROUGHT YOU HERE: https://issuetracker.google.com/issues/206855618
+        @Suppress("NOTHING_TO_OVERRIDE", "ACCIDENTAL_OVERRIDE")
         override fun onFling(
-            e1: MotionEvent,
-            e2: MotionEvent,
+            e1: MotionEvent?,
+            e2: MotionEvent?,
             velocityX: Float,
             velocityY: Float
-        ): Boolean { //TODO this thing will randomly error given null, maybe fix?
-            val diffY = e2?.y?.minus((e1?.y ?: 0f)) ?: 0f
-            val diffX = e2?.x?.minus((e1?.x ?: 0f)) ?: 0f
-            if (abs(diffX) > abs(diffY)) {
-                if (abs(diffX) > SWIPE_THRESHOLD && abs(velocityX ?: 0f) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (diffX > 0) {
-                        onSwipeRight()
-                    } else {
-                        onSwipeLeft()
+        ): Boolean {
+            if (e1 != null && e2 != null) {
+                val diffY = e2.y - e1.y
+                val diffX = e2.x - e1.x
+                if (abs(diffX) > abs(diffY)) {
+                    if (abs(diffX) > SWIPE_THRESHOLD && abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffX > 0) {
+                            onSwipeRight()
+                        } else {
+                            onSwipeLeft()
+                        }
                     }
                 }
             }
             return false
         }
     }
+
     open fun onSwipeRight() {}
     open fun onSwipeLeft() {}
 
     init {
-        gestureDetector = GestureDetector(c, GestureListener())
+        gestureDetector = GestureDetectorCompat(c, GestureListener())
     }
 }
