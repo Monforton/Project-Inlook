@@ -12,8 +12,13 @@
         android:theme="@style/Theme.ProjectInlook"
         tools:targetApi="31">
         <activity
-            android:name=".AddEventActivity"
-            android:exported="false" />
+            android:name=".EditEventActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -25,6 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".SettingsActivity"
             android:exported="false"

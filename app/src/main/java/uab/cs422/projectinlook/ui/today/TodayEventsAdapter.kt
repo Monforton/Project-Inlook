@@ -11,12 +11,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import uab.cs422.projectinlook.R
 import uab.cs422.projectinlook.entities.CalEvent
-import uab.cs422.projectinlook.util.getCalEventAsLocalDateTime
 import uab.cs422.projectinlook.util.hourFormatter
 import uab.cs422.projectinlook.util.intAsHour
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class TodayEventsAdapter(
     private var eventData: List<CalEvent>
@@ -40,26 +40,31 @@ class TodayEventsAdapter(
         // Get the timeframe of event
         val event = eventData[position]
         holder.timeframeTV.text =
-            if (getCalEventAsLocalDateTime(event = event).isBefore(
+            if (event.getStartAsLocalDateTime().isBefore(
                     LocalDateTime.of(
                         LocalDate.now(),
                         LocalTime.MIN
                     )
                 )
             ) {
-                if (getCalEventAsLocalDateTime(event = event).isAfter(
+                if (event.getEndAsLocalDateTime().isAfter(
                         LocalDateTime.of(
                             LocalDate.now(),
                             LocalTime.MAX
                         )
                     )
-                ) "Thru Today"
-                "Until " + LocalDateTime.of(LocalDate.now(), LocalTime.of(event.endHour, 0))
-                    .format(hourFormatter(holder.timeframeTV.context))
+                ) {
+                    "Until " + event.getEndAsLocalDateTime().format(DateTimeFormatter.ofPattern("MMM d"))
+                } else {
+                    "Until " + LocalDateTime.of(LocalDate.now(), LocalTime.of(event.endHour, 0))
+                        .format(hourFormatter(holder.timeframeTV.context, false))
+                }
             } else {
                 intAsHour(hour = event.startHour)
-                    .format(hourFormatter(holder.timeframeTV.context)) + " - " + intAsHour(hour = event.endHour)
-                    .format(hourFormatter(holder.timeframeTV.context))
+                    .format(hourFormatter(holder.timeframeTV.context, false)) + " - " + intAsHour(
+                    hour = event.endHour
+                )
+                    .format(hourFormatter(holder.timeframeTV.context, false))
             }
         holder.eventTV.text = event.title
         // Finish setting color of everything

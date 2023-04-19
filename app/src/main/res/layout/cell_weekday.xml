@@ -4,14 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:orientation="horizontal"
-    android:paddingBottom="2dp">
+    android:paddingBottom="2dp"
+    android:id="@+id/week_cell_layout">
 
     <TextView
         android:id="@+id/week_timeText"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:gravity="center"
-        android:text="12 PM"
+        android:text="@string/example_time_short"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/week_frame1"
