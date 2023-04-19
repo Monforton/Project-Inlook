@@ -31,14 +31,16 @@ class TodayFragment : Fragment(), CalendarInterface {
         val root: View = binding.root
 
         // Initialize the adapter
-        val eventsRecyclerView = binding.eventsRecycler
+        val eventsRecyclerView = binding.todayEventsRecycler
         dao = EventDatabase.getInstance(this.requireContext()).eventDao
-        var events: List<CalEvent>
+        var events: List<CalEvent> = listOf()
         val today = LocalDateTime.now()
         runOnIO {
             events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
-            eventsRecyclerView.adapter = TodayEventsAdapter(events)
         }
+        eventsRecyclerView.adapter = TodayEventsAdapter(this, events)
+
+        binding.noEventsTV.alpha = if (events.isNotEmpty()) 0f else 1f
 
         return root
     }
@@ -52,7 +54,7 @@ class TodayFragment : Fragment(), CalendarInterface {
         runOnIO {
             events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
         }
-        binding.eventsRecycler.adapter = TodayEventsAdapter(events)
+        binding.todayEventsRecycler.adapter = TodayEventsAdapter(this, events)
     }
 
     // Set the Toolbar's text
@@ -74,7 +76,9 @@ class TodayFragment : Fragment(), CalendarInterface {
         runOnIO {
             events = dao.getEventsOfDay(today.dayOfMonth, today.monthValue, today.year)
         }
-        (binding.eventsRecycler.adapter as TodayEventsAdapter).updateDisplayedData(events)
+        (binding.todayEventsRecycler.adapter as TodayEventsAdapter).updateDisplayedData(events)
+        binding.noEventsTV.alpha = if (events.isNotEmpty()) 0f else 1f
+
     }
 
     override fun onDestroyView() {

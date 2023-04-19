@@ -1,8 +1,8 @@
 package uab.cs422.projectinlook.ui.day
 
 import android.app.ActionBar.LayoutParams
-import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
@@ -12,18 +12,18 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
+import uab.cs422.projectinlook.EditEventActivity
 import uab.cs422.projectinlook.R
 import uab.cs422.projectinlook.entities.CalEvent
+import uab.cs422.projectinlook.ui.dialogs.EventsViewDialogFragment
 import uab.cs422.projectinlook.util.dpToPx
 import uab.cs422.projectinlook.util.hourFormatter
-import uab.cs422.projectinlook.util.runOnIO
 import java.time.LocalDateTime
 
 
@@ -34,6 +34,7 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
         val eventsLayout: LinearLayout = view.findViewById(R.id.eventsLayout)
         val cellLayout: ConstraintLayout = view.findViewById(R.id.hour_cell_layout)
     }
+    private val MAX_EVENTS = 4 - 1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.cell_hour, parent, false)
@@ -66,7 +67,7 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
                 true
             )
             holder.hourTextView.setTextColor(typedValue.data)
-        } else { // I don't know why this else is necessary, but otherwise it may get weird
+        } else { // I don't know why this else is necessary, but otherwise it will might highlight
             holder.cellLayout.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorOnBackground,
@@ -84,29 +85,45 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
             if ((start.isBefore(positionAsHour) || start.isEqual(positionAsHour)) &&
                 (end.isAfter(positionAsHour) || end.isEqual(positionAsHour))
             ) {
-                if (holder.eventsLayout.childCount > 2) { // TODO fix this - Event box for more than 3 events
-                    (holder.eventsLayout.getChildAt(2) as TextView).text =
-                        holder.eventsLayout.context.getString(R.string.excess_events, count - 2)
+                if (holder.eventsLayout.childCount > MAX_EVENTS) {
+                    val compressedEvent = holder.eventsLayout.getChildAt(MAX_EVENTS) as TextView
+                    compressedEvent.text = holder.eventsLayout.context.getString(R.string.excess_events, count - MAX_EVENTS)
+                    compressedEvent.setOnClickListener {
+                        val dialog = EventsViewDialogFragment(day.withHour(position))
+                        dialog.show(fragment.childFragmentManager, "CustomDialog")
+                    }
+                    compressedEvent.context.theme.resolveAttribute(
+                        com.google.android.material.R.attr.colorSecondaryContainer,
+                        typedValue, true
+                    )
+                    compressedEvent.background.setTint(typedValue.data)
+                    compressedEvent.context.theme.resolveAttribute(
+                        com.google.android.material.R.attr.colorOnSecondaryContainer,
+                        typedValue, true
+                    )
+                    compressedEvent.setTextColor(typedValue.data)
                 } else { // Event box for singular event
                     eventTextView = eventBox(event, holder.eventsLayout.context)
                     val eventTVContext = eventTextView.context
-                    // TODO make this just the AddEventActivity - Dialogue when clicked
                     eventTextView.setOnClickListener {
-                        val builder = AlertDialog.Builder(eventTVContext)
-                        builder.setTitle(event.title)
-                        builder.setMessage("" + event.startHour + " - " + event.endHour + ": " + event.desc)
-                        builder.setNegativeButton(eventTVContext.getString(R.string.dialog_delete_button)) { dialog, _ ->
-                            runOnIO {
-                                fragment.dao.deleteEvent(event)
-                            }
-                            fragment.updateEvents()
-                            dialog.dismiss()
-                        }
-                        builder.setNeutralButton(eventTVContext.getString(R.string.dialog_neutral_button)) { dialog, _ -> dialog.dismiss() }
-                        builder.setPositiveButton(eventTVContext.getString(R.string.dialog_positive_button)) { dialog, _ ->
-                            showEditDialog(eventTVContext, event)
-                            dialog.dismiss() }
-                        builder.show()
+                        val intent = Intent(fragment.requireContext(), EditEventActivity::class.java)
+                        intent.putExtra("event_data", event)
+                        fragment.startActivity(intent)
+//                        val builder = AlertDialog.Builder(eventTVContext)
+//                        builder.setTitle(event.title)
+//                        builder.setMessage("" + event.startHour + " - " + event.endHour + ": " + event.desc)
+//                        builder.setNegativeButton(eventTVContext.getString(R.string.dialog_delete_button)) { dialog, _ ->
+//                            runOnIO {
+//                                fragment.dao.deleteEvent(event)
+//                            }
+//                            fragment.updateEvents()
+//                            dialog.dismiss()
+//                        }
+//                        builder.setNeutralButton(eventTVContext.getString(R.string.dialog_ok_button)) { dialog, _ -> dialog.dismiss() }
+//                        builder.setPositiveButton(eventTVContext.getString(R.string.dialog_edit_button)) { dialog, _ ->
+//                            showEditDialog(eventTVContext, event)
+//                            dialog.dismiss() }
+//                        builder.show()
                     }
                     holder.eventsLayout.addView(eventTextView)
                 }
@@ -114,36 +131,36 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
         }
     }
 
-    //2nd dialog opens when user selects edit
-    private fun showEditDialog(context: Context, position: CalEvent) {
-        val editTitle = EditText(context)
-        val editDesc = EditText(context)
-        //need to implement option for user to edit time of event
-        //val editStartHour = EditText(context)
-        //val editEndHour = EditText(context)
-        editTitle.setText(position.title)
-        editDesc.setText(position.desc)
-
-        val alert = AlertDialog.Builder(context)
-            .setCustomTitle(editTitle)
-            .setView(editDesc)
-
-            .setNeutralButton("Cancel") { dialog,_ ->
-                dialog.dismiss()
-            }
-            .setPositiveButton("Done") { dialog,_ ->
-                position.title = editTitle.text.toString()
-                position.desc = editDesc.text.toString()
-                //notifyItemChanged()
-                runOnIO {
-                    fragment.dao.updateEvent(position)
-                }
-                fragment.updateEvents()
-                dialog.dismiss()
-            }
-            .create()
-        alert.show()
-    }
+//    //2nd dialog opens when user selects edit
+//    private fun showEditDialog(context: Context, position: CalEvent) {
+//        val editTitle = EditText(context)
+//        val editDesc = EditText(context)
+//        //need to implement option for user to edit time of event
+//        //val editStartHour = EditText(context)
+//        //val editEndHour = EditText(context)
+//        editTitle.setText(position.title)
+//        editDesc.setText(position.desc)
+//
+//        val alert = AlertDialog.Builder(context)
+//            .setCustomTitle(editTitle)
+//            .setView(editDesc)
+//
+//            .setNeutralButton("Cancel") { dialog,_ ->
+//                dialog.dismiss()
+//            }
+//            .setPositiveButton("Done") { dialog,_ ->
+//                position.title = editTitle.text.toString()
+//                position.desc = editDesc.text.toString()
+//                //notifyItemChanged()
+//                runOnIO {
+//                    fragment.dao.updateEvent(position)
+//                }
+//                fragment.updateEvents()
+//                dialog.dismiss()
+//            }
+//            .create()
+//        alert.show()
+//    }
 
     /**
      * Returns a TextView in the desired style for the Day view

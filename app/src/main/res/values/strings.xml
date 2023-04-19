@@ -8,9 +8,10 @@
     <string name="title_month">Month</string>
 
     <!--  Buttons   -->
-    <string name="dialog_neutral_button">OK</string>
+    <string name="dialog_ok_button">OK</string>
     <string name="dialog_delete_button">Delete</string>
-    <string name="dialog_positive_button">Edit</string>
+    <string name="dialog_edit_button">Edit</string>
+    <string name="dialog_cancel_button">Cancel</string>
     <string name="next_button">Next</string>
     <string name="previous_button">Previous</string>
 
@@ -55,5 +56,6 @@
     <string name="example_time">12:00 AM</string>
     <string name="example_time_short">12 PM</string>
     <string name="example_date_number">1</string>
+    <string name="dialog_confirm_delete_event">Delete event?</string>
 
 </resources>

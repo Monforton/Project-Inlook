@@ -70,7 +70,7 @@ class DayFragment : Fragment(), CalendarInterface {
         updateEvents()
     }
 
-    // Set the titlebar text to the day's date
+    // Set the toolbar text to the day's date
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
