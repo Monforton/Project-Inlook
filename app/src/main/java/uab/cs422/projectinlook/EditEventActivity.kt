@@ -293,11 +293,12 @@ class EditEventActivity : AppCompatActivity() {
         if (intent.hasExtra("event_data")) {
             event = intent.getParcelableExtra("event_data")
             title = event?.title!!
+            event?.getColorAsColor()!!.toArgb()
             binding.editTitleEditText.setText(event?.title)
             startDateTime = event?.getStartAsLocalDateTime()!!
             endDateTime = event?.getEndAsLocalDateTime()!!
+            color = event?.getColorAsColor()!!.toArgb()
             binding.editHSLColorPicker.setColor(event?.getColorAsColor()!!.toArgb())
-            binding.editDescriptionEditText.setText(event?.desc)
         } else {
             binding.editButtonsLayout.removeView(binding.editBtnDelete)
         }

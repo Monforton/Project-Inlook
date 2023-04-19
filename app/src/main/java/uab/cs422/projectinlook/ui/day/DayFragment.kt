@@ -49,7 +49,7 @@ class DayFragment : Fragment(), CalendarInterface {
 
         // Set the gesture detection
         hourRecyclerView.setOnTouchListener(
-        object : SwipeListener(this@DayFragment.context) {
+        object : SwipeListener(this@DayFragment.requireContext()) {
             override fun onSwipeLeft() {
                 super.onSwipeLeft()
                 this@DayFragment.onSwipeLeft()

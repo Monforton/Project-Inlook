@@ -79,7 +79,7 @@ class WeekFragment : Fragment(), CalendarInterface {
         weekRecyclerView.scrollToPosition(LocalDateTime.now().hour)
 
         weekRecyclerView.setOnTouchListener(@SuppressLint("ClickableViewAccessibility")
-        object : SwipeListener(this@WeekFragment.context) {
+        object : SwipeListener(this@WeekFragment.requireContext()) {
             override fun onSwipeLeft() {
                 super.onSwipeLeft()
                 this@WeekFragment.onSwipeLeft()

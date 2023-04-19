@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import uab.cs422.projectinlook.EditEventActivity
 import uab.cs422.projectinlook.R
 import uab.cs422.projectinlook.entities.CalEvent
-import uab.cs422.projectinlook.util.getCalEventAsLocalDateTime
 import uab.cs422.projectinlook.util.hourFormatter
 import uab.cs422.projectinlook.util.intAsHour
 import java.time.LocalDate
@@ -44,12 +43,11 @@ class TodayEventsAdapter(
         // Get the timeframe of event
         val event = eventData[position]
         holder.timeframeTV.text =
-            if (getCalEventAsLocalDateTime(event = event).isBefore(
-                    LocalDateTime.now().withHour(0).withMinute(0)
-                )
+            if (event.getStartAsLocalDateTime().isBefore(
+                    LocalDateTime.of(LocalDate.now(), LocalTime.MIN))
             ) {
-                if (getCalEventAsLocalDateTime(event = event)
-                        .isAfter(LocalDateTime.of(LocalDate.now(), LocalTime.MAX))
+                if (event.getEndAsLocalDateTime().isAfter(
+                        LocalDateTime.of(LocalDate.now(), LocalTime.MAX))
                 ) {
                     "Until " + event.getEndAsLocalDateTime()
                         .format(DateTimeFormatter.ofPattern("MMM d"))
