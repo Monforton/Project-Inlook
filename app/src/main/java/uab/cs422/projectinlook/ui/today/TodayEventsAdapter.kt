@@ -1,5 +1,6 @@
 package uab.cs422.projectinlook.ui.today
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import uab.cs422.projectinlook.EditEventActivity
 import uab.cs422.projectinlook.R
 import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.util.getCalEventAsLocalDateTime
@@ -17,8 +19,10 @@ import uab.cs422.projectinlook.util.intAsHour
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class TodayEventsAdapter(
+    private val fragment: TodayFragment,
     private var eventData: List<CalEvent>
 ) :
     RecyclerView.Adapter<TodayEventsAdapter.ViewHolder>() {
@@ -41,26 +45,28 @@ class TodayEventsAdapter(
         val event = eventData[position]
         holder.timeframeTV.text =
             if (getCalEventAsLocalDateTime(event = event).isBefore(
-                    LocalDateTime.of(
-                        LocalDate.now(),
-                        LocalTime.MIN
-                    )
+                    LocalDateTime.now().withHour(0).withMinute(0)
                 )
             ) {
                 if (getCalEventAsLocalDateTime(event = event)
                         .isAfter(LocalDateTime.of(LocalDate.now(), LocalTime.MAX))
                 ) {
-                    "Thru Today"
+                    "Until " + event.getEndAsLocalDateTime()
+                        .format(DateTimeFormatter.ofPattern("MMM d"))
                 } else {
                     "Until " + LocalDateTime.of(LocalDate.now(), LocalTime.of(event.endHour, 0))
                         .format(hourFormatter(holder.timeframeTV.context, false))
                 }
             } else {
                 intAsHour(hour = event.startHour)
-                    .format(hourFormatter(holder.timeframeTV.context, false)) + " - " + intAsHour(
-                    hour = event.endHour
-                )
-                    .format(hourFormatter(holder.timeframeTV.context, false))
+                    .format(hourFormatter(holder.timeframeTV.context, false)) + " - " +
+                        if (event.getEndAsLocalDateTime().isBefore(LocalDateTime.of(LocalDate.now(), LocalTime.MAX))) {
+                            intAsHour(hour = event.endHour).format(hourFormatter(holder.timeframeTV.context, false))
+                        } else {
+                            event.getEndAsLocalDateTime()
+                                .format(DateTimeFormatter.ofPattern("MMM d"))
+                        }
+
             }
         holder.eventTV.text = event.title
         // Finish setting color of everything
@@ -86,6 +92,12 @@ class TodayEventsAdapter(
         )
         holder.dot.imageTintList =
             ColorStateList.valueOf(if (Color.luminance(backgroundColor) > 0.5) Color.BLACK else Color.WHITE)
+        holder.layout.setOnClickListener {
+            val intent = Intent(fragment.requireContext(), EditEventActivity::class.java)
+            intent.putExtra("event_data", event)
+            fragment.startActivity(intent)
+        }
+
     }
 
     /**

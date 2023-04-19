@@ -12,17 +12,17 @@ import androidx.recyclerview.widget.RecyclerView
 import uab.cs422.projectinlook.EditEventActivity
 import uab.cs422.projectinlook.R
 import uab.cs422.projectinlook.entities.CalEvent
-import uab.cs422.projectinlook.util.getCalEventAsLocalDateTime
 import uab.cs422.projectinlook.util.hourFormatter
 import uab.cs422.projectinlook.util.intAsHour
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class EventsViewEventsAdapter(
     private val dialog: EventsViewDialogFragment,
     private var eventData: List<CalEvent>,
-    private var time :LocalDateTime
+    private var time: LocalDateTime
 ) :
     RecyclerView.Adapter<EventsViewEventsAdapter.ViewHolder>() {
 
@@ -42,17 +42,12 @@ class EventsViewEventsAdapter(
         // Get the timeframe of event
         val event = eventData[position]
         holder.timeframeTV.text =
-            if (getCalEventAsLocalDateTime(event = event).isBefore(
-                    LocalDateTime.of(
-                        LocalDate.now(),
-                        LocalTime.MIN
-                    )
-                )
-            ) {
-                if (getCalEventAsLocalDateTime(event = event)
+            if (event.getStartAsLocalDateTime().isBefore(time.withMinute(0))) {
+                if (event.getEndAsLocalDateTime()
                         .isAfter(LocalDateTime.of(LocalDate.now(), LocalTime.MAX))
                 ) {
-                    "Thru Today"
+                    "Until " + event.getEndAsLocalDateTime()
+                        .format(DateTimeFormatter.ofPattern("MMM d"))
                 } else {
                     "Until " + LocalDateTime.of(LocalDate.now(), LocalTime.of(event.endHour, 0))
                         .format(hourFormatter(holder.timeframeTV.context, false))
@@ -87,7 +82,10 @@ class EventsViewEventsAdapter(
             if (Color.luminance(backgroundColor) > 0.5) Color.BLACK else Color.WHITE
         )
         holder.layout.setOnClickListener {
-            val intent = Intent(dialog.requireParentFragment().requireContext(), EditEventActivity::class.java)
+            val intent = Intent(
+                dialog.requireParentFragment().requireContext(),
+                EditEventActivity::class.java
+            )
             intent.putExtra("event_data", event)
             dialog.requireParentFragment().startActivity(intent)
             dialog.dismiss()

@@ -1,7 +1,6 @@
 package uab.cs422.projectinlook.ui.day
 
 import android.app.ActionBar.LayoutParams
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -13,7 +12,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
@@ -26,7 +24,6 @@ import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.ui.dialogs.EventsViewDialogFragment
 import uab.cs422.projectinlook.util.dpToPx
 import uab.cs422.projectinlook.util.hourFormatter
-import uab.cs422.projectinlook.util.runOnIO
 import java.time.LocalDateTime
 
 
@@ -37,6 +34,7 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
         val eventsLayout: LinearLayout = view.findViewById(R.id.eventsLayout)
         val cellLayout: ConstraintLayout = view.findViewById(R.id.hour_cell_layout)
     }
+    private val MAX_EVENTS = 4 - 1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.cell_hour, parent, false)
@@ -69,7 +67,7 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
                 true
             )
             holder.hourTextView.setTextColor(typedValue.data)
-        } else { // I don't know why this else is necessary, but otherwise it may get weird
+        } else { // I don't know why this else is necessary, but otherwise it will might highlight
             holder.cellLayout.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorOnBackground,
@@ -87,9 +85,9 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
             if ((start.isBefore(positionAsHour) || start.isEqual(positionAsHour)) &&
                 (end.isAfter(positionAsHour) || end.isEqual(positionAsHour))
             ) {
-                if (holder.eventsLayout.childCount > 2) { // TODO fix this - Event box for more than 3 events
-                    val compressedEvent = holder.eventsLayout.getChildAt(2) as TextView
-                    compressedEvent.text = holder.eventsLayout.context.getString(R.string.excess_events, count - 2)
+                if (holder.eventsLayout.childCount > MAX_EVENTS) {
+                    val compressedEvent = holder.eventsLayout.getChildAt(MAX_EVENTS) as TextView
+                    compressedEvent.text = holder.eventsLayout.context.getString(R.string.excess_events, count - MAX_EVENTS)
                     compressedEvent.setOnClickListener {
                         val dialog = EventsViewDialogFragment(day.withHour(position))
                         dialog.show(fragment.childFragmentManager, "CustomDialog")
@@ -107,7 +105,6 @@ class DayHourAdapter(private val fragment: DayFragment, private var eventData: L
                 } else { // Event box for singular event
                     eventTextView = eventBox(event, holder.eventsLayout.context)
                     val eventTVContext = eventTextView.context
-                    // TODO make this just the AddEventActivity - Dialogue when clicked
                     eventTextView.setOnClickListener {
                         val intent = Intent(fragment.requireContext(), EditEventActivity::class.java)
                         intent.putExtra("event_data", event)
