@@ -8,9 +8,10 @@
     <string name="title_month">Month</string>
 
     <!--  Buttons   -->
-    <string name="dialog_neutral_button">OK</string>
+    <string name="dialog_ok_button">OK</string>
     <string name="dialog_delete_button">Delete</string>
-    <string name="dialog_positive_button">Edit</string>
+    <string name="dialog_edit_button">Edit</string>
+    <string name="dialog_cancel_button">Cancel</string>
     <string name="next_button">Next</string>
     <string name="previous_button">Previous</string>
 
@@ -27,11 +28,19 @@
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Settings -->
+    <string name="first_day_title">First day of the week</string>
     <string name="localities_header">Locality</string>
     <string name="theme_header">Theme</string>
     <string name="interface_header">Interface</string>
     <string name="hour_format_title">Hour Format</string>
     <string name="default_view_title">Default View</string>
+
+    <string name="clock_time_format">12Hr (AM/PM)</string>
+    <string name="day_time_format">24 Hr</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="monday">Monday</string>
+    <string name="local_default">Local default</string>
 
     <!--  Add Event  -->
     <string name="today_button">Today Button</string>
@@ -42,12 +51,12 @@
     <string name="add_arrow">Arrow pointing to end date</string>
 
     <!--  Day names  -->
-    <string name="short_sunday">Sun</string>
-    <string name="short_monday">Mon</string>
-    <string name="short_tuesday">Tue</string>
-    <string name="short_wednesday">Wed</string>
-    <string name="short_thursday">Thu</string>
-    <string name="short_friday">Fri</string>
-    <string name="short_saturday">Sat</string>
+    <string name="example_day">Day</string>
+    <string name="example_text">Example Text</string>
+    <string name="example_time">12:00 AM</string>
+    <string name="example_time_short">12 PM</string>
+    <string name="example_date_number">1</string>
+    <string name="dialog_confirm_delete_event">Delete event?</string>
+    <string name="today_nothing_planned">Nothing planned for today!</string>
 
 </resources>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.GestureDetector
 import android.view.Menu
 import android.view.MotionEvent
+import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.forEach
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.fabAdd.setOnClickListener {
-            val intent = Intent(this@MainActivity, AddEventActivity::class.java)
+            val intent = Intent(this@MainActivity, EditEventActivity::class.java)
             startActivity(intent)
         }
 
@@ -96,12 +97,16 @@ class MainActivity : AppCompatActivity() {
             ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
                 .childFragmentManager.fragments[0] as CalendarInterface).onSwipeLeft()
         }
+
+        setAccessibilityButtons()
     }
 
     override fun onResume() {
         super.onResume()
         ((supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment)
                 .childFragmentManager.fragments[0] as CalendarInterface).updateEvents()
+
+        setAccessibilityButtons()
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -142,6 +147,29 @@ class MainActivity : AppCompatActivity() {
             menuItem.subMenu?.forEach {
                 it.isChecked = it.title == currentDest?.label
             }
+        }
+    }
+
+    /**
+     * Check and add accessibility buttons to navigate views
+     */
+    private fun setAccessibilityButtons() {
+        if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean("acc_buttons", false)) {
+            binding.fabLeft.focusable = ImageView.NOT_FOCUSABLE
+            binding.fabLeft.isClickable = false
+            binding.fabLeft.alpha = 0f
+
+            binding.fabRight.focusable = ImageView.NOT_FOCUSABLE
+            binding.fabRight.isClickable = false
+            binding.fabRight.alpha = 0f
+        } else {
+            binding.fabLeft.focusable = ImageView.FOCUSABLE
+            binding.fabLeft.isClickable = true
+            binding.fabLeft.alpha = 0.5f
+
+            binding.fabRight.focusable = ImageView.FOCUSABLE
+            binding.fabRight.isClickable = true
+            binding.fabRight.alpha = 0.5f
         }
     }
 

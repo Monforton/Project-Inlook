@@ -5,24 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".AddEventActivity">
+    tools:context=".EditEventActivity">
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/add_TitleTextLayout"
+        android:id="@+id/edit_TitleTextLayout"
         style="?attr/textInputFilledStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="56dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toTopOf="@id/add_ArrowImageView"
+        app:layout_constraintBottom_toTopOf="@id/edit_ArrowImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/add_TitleEditText"
+            android:id="@+id/edit_TitleEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="top"
@@ -34,7 +34,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/add_EndTimeTextView"
+        android:id="@+id/edit_EndTimeTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -44,16 +44,16 @@
         android:backgroundTint="?attr/colorSurfaceVariant"
         android:clickable="true"
         android:gravity="center"
-        android:text="TextView"
+        android:text="@string/example_text"
         android:textAlignment="center"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@id/add_EndDateTextView"
+        app:layout_constraintBottom_toTopOf="@id/edit_EndDateTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/add_ArrowImageView"
-        app:layout_constraintTop_toBottomOf="@id/add_TitleTextLayout" />
+        app:layout_constraintStart_toEndOf="@id/edit_ArrowImageView"
+        app:layout_constraintTop_toBottomOf="@id/edit_TitleTextLayout" />
 
     <TextView
-        android:id="@+id/add_EndDateTextView"
+        android:id="@+id/edit_EndDateTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -63,16 +63,16 @@
         android:clickable="true"
         android:gravity="center"
         android:lineSpacingExtra="5dp"
-        android:text="TextView"
+        android:text="@string/example_text"
         android:textAlignment="center"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@id/add_descriptionTextLayout"
+        app:layout_constraintBottom_toTopOf="@id/edit_descriptionTextLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/add_ArrowImageView"
-        app:layout_constraintTop_toBottomOf="@id/add_EndTimeTextView" />
+        app:layout_constraintStart_toEndOf="@id/edit_ArrowImageView"
+        app:layout_constraintTop_toBottomOf="@id/edit_EndTimeTextView" />
 
     <TextView
-        android:id="@+id/add_StartTimeTextView"
+        android:id="@+id/edit_StartTimeTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -82,16 +82,16 @@
         android:backgroundTint="?attr/colorSurfaceVariant"
         android:clickable="true"
         android:gravity="center"
-        android:text="TextView"
+        android:text="@string/example_text"
         android:textAlignment="center"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@id/add_StartDateTextView"
-        app:layout_constraintEnd_toStartOf="@id/add_ArrowImageView"
+        app:layout_constraintBottom_toTopOf="@id/edit_StartDateTextView"
+        app:layout_constraintEnd_toStartOf="@id/edit_ArrowImageView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_TitleTextLayout" />
+        app:layout_constraintTop_toBottomOf="@id/edit_TitleTextLayout" />
 
     <TextView
-        android:id="@+id/add_StartDateTextView"
+        android:id="@+id/edit_StartDateTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -102,16 +102,16 @@
         android:clickable="true"
         android:gravity="center"
         android:lineSpacingExtra="5dp"
-        android:text="TextView"
+        android:text="@string/example_text"
         android:textAlignment="center"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@id/add_descriptionTextLayout"
-        app:layout_constraintEnd_toStartOf="@id/add_ArrowImageView"
+        app:layout_constraintBottom_toTopOf="@id/edit_descriptionTextLayout"
+        app:layout_constraintEnd_toStartOf="@id/edit_ArrowImageView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_StartTimeTextView" />
+        app:layout_constraintTop_toBottomOf="@id/edit_StartTimeTextView" />
 
     <ImageView
-        android:id="@+id/add_ArrowImageView"
+        android:id="@+id/edit_ArrowImageView"
         android:layout_width="46dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -120,15 +120,15 @@
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/add_arrow"
         android:rotation="180"
-        app:layout_constraintBottom_toTopOf="@id/add_descriptionTextLayout"
-        app:layout_constraintEnd_toStartOf="@id/add_EndDateTextView"
-        app:layout_constraintStart_toEndOf="@id/add_StartDateTextView"
-        app:layout_constraintTop_toBottomOf="@id/add_TitleTextLayout"
+        app:layout_constraintBottom_toTopOf="@id/edit_descriptionTextLayout"
+        app:layout_constraintEnd_toStartOf="@id/edit_EndDateTextView"
+        app:layout_constraintStart_toEndOf="@id/edit_StartDateTextView"
+        app:layout_constraintTop_toBottomOf="@id/edit_TitleTextLayout"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_arrow_back_24" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/add_descriptionTextLayout"
+        android:id="@+id/edit_descriptionTextLayout"
         style="?attr/textInputOutlinedStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -136,13 +136,13 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@id/add_HSLColorPicker"
+        app:layout_constraintBottom_toTopOf="@id/edit_HSLColorPicker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_EndDateTextView">
+        app:layout_constraintTop_toBottomOf="@id/edit_EndDateTextView">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/add_descriptionEditText"
+            android:id="@+id/edit_descriptionEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="top"
@@ -154,59 +154,78 @@
 
 
     <com.madrapps.pikolo.HSLColorPicker
-        android:id="@+id/add_HSLColorPicker"
+        android:id="@+id/edit_HSLColorPicker"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/add_btnCancel"
-        app:layout_constraintEnd_toStartOf="@id/add_EventPreview"
+        app:layout_constraintBottom_toTopOf="@id/edit_ButtonsLayout"
+        app:layout_constraintEnd_toStartOf="@id/edit_EventPreview"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/add_descriptionTextLayout" />
+        app:layout_constraintTop_toBottomOf="@id/edit_descriptionTextLayout" />
 
     <TextView
-        android:id="@+id/add_EventPreview"
+        android:id="@+id/edit_EventPreview"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="64dp"
-        android:layout_marginTop="64dp"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="64dp"
+        android:background="@drawable/background_for_event"
+        android:backgroundTint="?attr/colorPrimaryContainer"
+        android:ellipsize="end"
         android:gravity="center|start"
+        android:padding="16dp"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:ellipsize="end"
-        android:background="@drawable/event_back"
-        android:backgroundTint="?attr/colorPrimaryContainer"
-        app:layout_constraintBottom_toTopOf="@id/add_btnCancel"
+        app:layout_constraintBottom_toTopOf="@id/edit_ButtonsLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/add_HSLColorPicker"
-        app:layout_constraintTop_toBottomOf="@id/add_descriptionTextLayout"
-        />
+        app:layout_constraintStart_toEndOf="@id/edit_HSLColorPicker"
+        app:layout_constraintTop_toBottomOf="@id/edit_descriptionTextLayout" />
 
-    <Button
-        android:id="@+id/add_btnSave"
-        style="?attr/materialIconButtonFilledStyle"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/edit_ButtonsLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
         android:layout_marginBottom="24dp"
-        android:text="@string/save_button"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/add_btnCancel" />
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_HSLColorPicker">
 
-    <Button
-        android:id="@+id/add_btnCancel"
-        style="?attr/materialIconButtonOutlinedStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="24dp"
-        android:text="@android:string/cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/add_btnSave"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/edit_btnCancel"
+            style="?attr/materialIconButtonOutlinedStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/edit_btnDelete"
+            style="?attr/materialIconButtonFilledStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:backgroundTint="?attr/colorError"
+            android:text="@string/dialog_delete_button"
+            android:textColor="?attr/colorOnError" />
+
+        <Button
+            android:id="@+id/edit_btnSave"
+            style="?attr/materialIconButtonFilledStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:text="@string/save_button" />
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

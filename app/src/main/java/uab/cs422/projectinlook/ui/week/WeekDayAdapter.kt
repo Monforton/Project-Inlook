@@ -1,8 +1,8 @@
 package uab.cs422.projectinlook.ui.week
 
 import android.app.ActionBar
-import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.text.TextUtils
@@ -11,17 +11,18 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.RecyclerView
+import uab.cs422.projectinlook.EditEventActivity
 import uab.cs422.projectinlook.R
 import uab.cs422.projectinlook.entities.CalEvent
+import uab.cs422.projectinlook.ui.dialogs.EventsViewDialogFragment
 import uab.cs422.projectinlook.util.dpToPx
 import uab.cs422.projectinlook.util.hourFormatter
-import uab.cs422.projectinlook.util.runOnIO
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -44,7 +45,9 @@ class WeekDayAdapter(
             view.findViewById(R.id.week_frame6),
             view.findViewById(R.id.week_frame7)
         )
+        val layout: ConstraintLayout = view.findViewById(R.id.week_cell_layout)
     }
+    private val MAX_EVENTS = 2 - 1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.cell_weekday, parent, false)
@@ -56,18 +59,18 @@ class WeekDayAdapter(
         val today = LocalDateTime.now()
         val hourTVContext = holder.hourTV.context
         val positionAsHour = LocalDateTime.of(LocalDate.now(), LocalTime.of(position, 0))
-        holder.hourTV.text = positionAsHour.format(hourFormatter(holder.hourTV.context))
+        holder.hourTV.text = positionAsHour.format(hourFormatter(holder.hourTV.context, false))
         val typedValue = TypedValue()
         if ((today.isAfter(weekDays[0]) || today.isEqual(weekDays[0])) &&
             (today.isBefore(weekDays[6]) || today.isEqual(weekDays[6]))
         ) {
             if (positionAsHour.hour == today.hour) {
-                hourTVContext.theme.resolveAttribute(
+                holder.layout.context.theme.resolveAttribute(
                     com.google.android.material.R.attr.colorTertiaryContainer,
                     typedValue,
                     true
                 )
-                holder.hourTV.setBackgroundColor(typedValue.data)
+                holder.layout.setBackgroundColor(typedValue.data)
                 hourTVContext.theme.resolveAttribute(
                     com.google.android.material.R.attr.colorOnTertiaryContainer,
                     typedValue,
@@ -75,8 +78,8 @@ class WeekDayAdapter(
                 )
                 holder.hourTV.setTextColor(typedValue.data)
             }
-        } else { // I don't know why this else is necessary, but otherwise it will highlight if (hour - 16) > 0
-            holder.hourTV.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
+        } else { // I don't know why this else is necessary, but otherwise it will might highlight
+            holder.layout.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
             hourTVContext.theme.resolveAttribute(
                 com.google.android.material.R.attr.colorOnBackground,
                 typedValue,
@@ -88,68 +91,90 @@ class WeekDayAdapter(
 
         for ((i, day) in eventData.withIndex()) { // This is the count for each day's data
             holder.frames[i].removeAllViews()
-            for (event in day) {// This is the count for each event of the current day
+            for ((j, event) in day.withIndex()) {// This is the count for each event of the current day
                 val start = event.getStartAsLocalDateTime()
                 val end = event.getEndAsLocalDateTime()
                 val posHourRealTime = weekDays[i].withHour(position)
                 if ((start.isBefore(posHourRealTime) || start.isEqual(posHourRealTime)) &&
                     (end.isAfter(posHourRealTime) || end.isEqual(posHourRealTime))
                 ) {
-                    eventTextView = eventBox(event, holder.frames[i].context)
-                    val eventTVContext = eventTextView.context
-                    eventTextView.setOnClickListener {
-                        val builder = AlertDialog.Builder(eventTVContext)
-                        builder.setTitle(event.title)
-                        builder.setMessage("" + event.startHour + " - " + event.endHour + ": " + event.desc)
-                        builder.setNegativeButton(eventTVContext.getString(R.string.dialog_delete_button)) { dialog, _ ->
-                            runOnIO {
-                                fragment.dao.deleteEvent(event)
-                            }
-                            fragment.updateEvents()
-                            dialog.dismiss()
+                    if (holder.frames[i].childCount > MAX_EVENTS) {
+                        val compressedEvent = holder.frames[i].getChildAt(MAX_EVENTS) as TextView
+                        compressedEvent.text = holder.frames[i].context.getString(R.string.excess_events, j - MAX_EVENTS)
+                        compressedEvent.setOnClickListener {
+                            val dialog = EventsViewDialogFragment(posHourRealTime)
+                            dialog.show(fragment.childFragmentManager, "CustomDialog")
                         }
-                        builder.setNeutralButton(eventTVContext.getString(R.string.dialog_neutral_button)) { dialog, _ -> dialog.dismiss() }
-                        builder.setPositiveButton(eventTVContext.getString(R.string.dialog_positive_button)) { dialog, _ ->
-                            showEditDialog(eventTVContext, event)
-                            dialog.dismiss()
+                        compressedEvent.context.theme.resolveAttribute(
+                            com.google.android.material.R.attr.colorSecondaryContainer,
+                            typedValue, true
+                        )
+                        compressedEvent.background.setTint(typedValue.data)
+                        compressedEvent.context.theme.resolveAttribute(
+                            com.google.android.material.R.attr.colorOnSecondaryContainer,
+                            typedValue, true
+                        )
+                        compressedEvent.setTextColor(typedValue.data)
+                    } else {
+                        eventTextView = eventBox(event, holder.frames[i].context)
+                        val eventTVContext = eventTextView.context
+                        eventTextView.setOnClickListener {
+                            val intent = Intent(fragment.requireContext(), EditEventActivity::class.java)
+                            intent.putExtra("event_data", event)
+                            fragment.startActivity(intent)
+//                            val builder = AlertDialog.Builder(eventTVContext)
+//                            builder.setTitle(event.title)
+//                            builder.setMessage("" + event.startHour + " - " + event.endHour + ": " + event.desc)
+//                            builder.setNegativeButton(eventTVContext.getString(R.string.dialog_delete_button)) { dialog, _ ->
+//                                runOnIO {
+//                                    fragment.dao.deleteEvent(event)
+//                                }
+//                                fragment.updateEvents()
+//                                dialog.dismiss()
+//                            }
+//                            builder.setNeutralButton(eventTVContext.getString(R.string.dialog_ok_button)) { dialog, _ -> dialog.dismiss() }
+//                            builder.setPositiveButton(eventTVContext.getString(R.string.dialog_edit_button)) { dialog, _ ->
+//                                showEditDialog(eventTVContext, event)
+//                                dialog.dismiss()
+//                            }
+//                            builder.show()
                         }
-                        builder.show()
+                        holder.frames[i].addView(eventTextView)
                     }
-                    holder.frames[i].addView(eventTextView)
                 }
             }
         }
     }
 
-    //2nd dialog opens when user selects edit
-    private fun showEditDialog(context: Context, position: CalEvent) {
-        val editTitle = EditText(context)
-        val editDesc = EditText(context)
-        //need to implement option for user to edit time of event
-        //val editStartHour = EditText(context)
-        //val editEndHour = EditText(context)
-        editTitle.setText(position.title)
-        editDesc.setText(position.desc)
-
-        val alert = AlertDialog.Builder(context)
-            .setCustomTitle(editTitle)
-            .setView(editDesc)
-
-            .setNeutralButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setPositiveButton("Done") { dialog, _ ->
-                position.title = editTitle.text.toString()
-                position.desc = editDesc.text.toString()
-                runOnIO {
-                    fragment.dao.updateEvent(position)
-                }
-                fragment.updateEvents()
-                dialog.dismiss()
-            }
-            .create()
-        alert.show()
-    }
+//    //2nd dialog opens when user selects edit
+//    private fun showEditDialog(context: Context, position: CalEvent) {
+//        val editTitle = EditText(context)
+//        val editDesc = EditText(context)
+//        //need to implement option for user to edit time of event
+//        //val editStartHour = EditText(context)
+//        //val editEndHour = EditText(context)
+//        editTitle.setText(position.title)
+//        editDesc.setText(position.desc)
+//
+//        val alert = AlertDialog.Builder(context)
+//            .setCustomTitle(editTitle)
+//            .setView(editDesc)
+//
+//            .setNeutralButton("Cancel") { dialog, _ ->
+//                dialog.dismiss()
+//            }
+//            .setPositiveButton("Done") { dialog, _ ->
+//                position.title = editTitle.text.toString()
+//                position.desc = editDesc.text.toString()
+//                runOnIO {
+//                    fragment.dao.updateEvent(position)
+//                }
+//                fragment.updateEvents()
+//                dialog.dismiss()
+//            }
+//            .create()
+//        alert.show()
+//    }
 
     private fun eventBox(event: CalEvent, context: Context): TextView {
         val textView = TextView(context)
@@ -162,7 +187,7 @@ class WeekDayAdapter(
             )
         textView.background = AppCompatResources.getDrawable(
             textView.context,
-            R.drawable.event_back
+            R.drawable.background_for_event
         )
         val backgroundColor: Int =
             Color.valueOf(event.colorR, event.colorG, event.colorB, event.colorA).toArgb()

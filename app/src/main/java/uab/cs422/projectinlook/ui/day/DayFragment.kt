@@ -49,7 +49,7 @@ class DayFragment : Fragment(), CalendarInterface {
 
         // Set the gesture detection
         hourRecyclerView.setOnTouchListener(
-        object : SwipeListener(this@DayFragment.context) {
+        object : SwipeListener(this@DayFragment.requireContext()) {
             override fun onSwipeLeft() {
                 super.onSwipeLeft()
                 this@DayFragment.onSwipeLeft()
@@ -70,7 +70,7 @@ class DayFragment : Fragment(), CalendarInterface {
         updateEvents()
     }
 
-    // Set the titlebar text to the day's date
+    // Set the toolbar text to the day's date
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

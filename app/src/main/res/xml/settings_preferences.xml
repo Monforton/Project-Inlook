@@ -1,0 +1,44 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/interface_header">
+        <ListPreference
+            app:defaultValue="today"
+            app:entries="@array/view_start_destination_entries"
+            app:entryValues="@array/view_start_destination_values"
+            app:key="start_destination"
+            app:title="@string/default_view_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <uab.cs422.projectinlook.ui.MaterialSwitchPreference
+            app:defaultValue="false"
+            app:key="acc_buttons"
+            app:summary="Include buttons that act like swipe gestures"
+            app:title="Accessibility buttons" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/localities_header">
+
+        <ListPreference
+            app:defaultValue="clock_time_format"
+            app:entries="@array/hour_format_entries"
+            app:entryValues="@array/hour_format_values"
+            app:key="hour_format"
+            app:title="@string/hour_format_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="local"
+            app:entries="@array/first_day_entries"
+            app:entryValues="@array/first_day_values"
+            app:key="first_day"
+            app:title="@string/first_day_title"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/theme_header">
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
