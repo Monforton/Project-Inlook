@@ -20,7 +20,7 @@
     <LinearLayout
         android:id="@+id/text_month"
         android:layout_width="0dp"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/monthRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
