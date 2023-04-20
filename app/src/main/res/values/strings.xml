@@ -57,5 +57,6 @@
     <string name="example_time_short">12 PM</string>
     <string name="example_date_number">1</string>
     <string name="dialog_confirm_delete_event">Delete event?</string>
+    <string name="today_nothing_planned">Nothing planned for today!</string>
 
 </resources>
