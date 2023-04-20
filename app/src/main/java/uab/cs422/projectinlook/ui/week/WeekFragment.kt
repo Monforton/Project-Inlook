@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import uab.cs422.projectinlook.EventDao
 import uab.cs422.projectinlook.EventDatabase
+import uab.cs422.projectinlook.MainActivity
 import uab.cs422.projectinlook.databinding.FragmentWeekBinding
 import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.ui.CalendarInterface
@@ -34,7 +35,7 @@ class WeekFragment : Fragment(), CalendarInterface {
     // onDestroyView.
     private val binding get() = _binding!!
     lateinit var dao: EventDao
-    private val today = LocalDateTime.now()
+    private var today = LocalDateTime.now()
     private var weekDays = (Array(7) { today }).toMutableList()
     private var dateViews: List<TextView> = listOf()
     private var dayViews: List<TextView> = listOf()
@@ -66,6 +67,8 @@ class WeekFragment : Fragment(), CalendarInterface {
             binding.day6,
             binding.day7
         )
+
+        today = (activity as MainActivity).selectedDay
 
         dao = EventDatabase.getInstance(this.requireContext()).eventDao
         setWeekDays()
@@ -161,6 +164,8 @@ class WeekFragment : Fragment(), CalendarInterface {
         for (i in 1..6) {
             weekDays[i] = weekDays[0].plusDays(i.toLong())
         }
+        (activity as MainActivity).selectedDay =
+            weekDays[(activity as MainActivity).selectedDay.dayOfWeek.value - 1]
     }
 
 
@@ -168,6 +173,8 @@ class WeekFragment : Fragment(), CalendarInterface {
         for (i in 0..6) {
             weekDays[i] = weekDays[i].minusDays(7)
         }
+        (activity as MainActivity).selectedDay = (activity as MainActivity).selectedDay.minusDays(7)
+
         updateDisplayedDates()
     }
 
@@ -175,6 +182,8 @@ class WeekFragment : Fragment(), CalendarInterface {
         for (i in 0..6) {
             weekDays[i] = weekDays[i].plusDays(7)
         }
+        (activity as MainActivity).selectedDay = (activity as MainActivity).selectedDay.plusDays(7)
+
         updateDisplayedDates()
     }
 
@@ -231,11 +240,13 @@ class WeekFragment : Fragment(), CalendarInterface {
             date.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
             date.setTextColor(typedValue.data)
         }
+        for (day in dayViews) {
+            day.setBackgroundColor(Color.valueOf(0f, 0f, 0f, 0f).toArgb())
+            day.setTextColor(typedValue.data)
+        }
     }
 
     private fun determineMonth() {
-        print(today.dayOfWeek.value)
-
         (context as AppCompatActivity).supportActionBar?.title =
             weekDays[today.dayOfWeek.value].format(DateTimeFormatter.ofPattern("LLLL"))
     }

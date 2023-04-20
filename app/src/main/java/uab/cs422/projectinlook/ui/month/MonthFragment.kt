@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import uab.cs422.projectinlook.databinding.FragmentMonthBinding
 import uab.cs422.projectinlook.ui.CalendarInterface
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
@@ -21,7 +20,7 @@ class MonthFragment : Fragment(), CalendarInterface {
     private var _binding: FragmentMonthBinding? = null
     private val binding get() = _binding!!
     private lateinit var monthRecyclerView: RecyclerView
-    private var selectedDate: LocalDate = LocalDateTime.now().toLocalDate()
+    private var selectedDate: LocalDate = LocalDate.now()
     private val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
 
     override fun onCreateView(
@@ -70,14 +69,14 @@ class MonthFragment : Fragment(), CalendarInterface {
         super.onActivityCreated(savedInstanceState)
 
         (context as AppCompatActivity).supportActionBar?.title =
-            LocalDateTime.now().format(formatter)
+            LocalDate.now().format(formatter)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         (context as AppCompatActivity).supportActionBar?.title =
-            LocalDateTime.now().format(formatter)
+            LocalDate.now().format(formatter)
     }
 
     override fun onDestroyView() {
@@ -90,6 +89,7 @@ class MonthFragment : Fragment(), CalendarInterface {
     }
 
     override fun onTodayButtonClicked() {
+        selectedDate = LocalDate.now()
     }
 
     override fun onSwipeLeft() {

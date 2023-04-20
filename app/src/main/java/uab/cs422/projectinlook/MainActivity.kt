@@ -15,12 +15,14 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.navigation.NavigationView
 import uab.cs422.projectinlook.databinding.ActivityMainBinding
 import uab.cs422.projectinlook.ui.CalendarInterface
+import java.time.LocalDateTime
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var gestureDetector: GestureDetector
     private lateinit var dao: EventDao
+    var selectedDay: LocalDateTime = LocalDateTime.now()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
