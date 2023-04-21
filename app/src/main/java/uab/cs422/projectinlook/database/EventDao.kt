@@ -1,7 +1,7 @@
-package uab.cs422.projectinlook
+package uab.cs422.projectinlook.database
 
 import androidx.room.*
-import uab.cs422.projectinlook.entities.CalEvent
+import uab.cs422.projectinlook.database.entities.CalEvent
 
 @Dao
 interface EventDao {

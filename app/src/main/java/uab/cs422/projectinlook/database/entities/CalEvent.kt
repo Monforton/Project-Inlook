@@ -1,4 +1,4 @@
-package uab.cs422.projectinlook.entities
+package uab.cs422.projectinlook.database.entities
 
 import android.graphics.Color
 import android.os.Parcel

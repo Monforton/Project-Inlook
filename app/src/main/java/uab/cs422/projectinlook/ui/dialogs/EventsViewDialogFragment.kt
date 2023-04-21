@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
-import uab.cs422.projectinlook.EventDao
-import uab.cs422.projectinlook.EventDatabase
+import uab.cs422.projectinlook.database.EventDao
+import uab.cs422.projectinlook.database.EventDatabase
 import uab.cs422.projectinlook.R
-import uab.cs422.projectinlook.entities.CalEvent
+import uab.cs422.projectinlook.database.entities.CalEvent
 import uab.cs422.projectinlook.util.runOnIO
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

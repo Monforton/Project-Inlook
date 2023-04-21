@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import uab.cs422.projectinlook.EditEventActivity
 import uab.cs422.projectinlook.MainActivity
 import uab.cs422.projectinlook.R
-import uab.cs422.projectinlook.entities.CalEvent
+import uab.cs422.projectinlook.database.entities.CalEvent
 import uab.cs422.projectinlook.ui.dialogs.EventsViewDialogFragment
 import uab.cs422.projectinlook.util.dpToPx
 import uab.cs422.projectinlook.util.hourFormatter

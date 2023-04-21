@@ -13,6 +13,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.preference.PreferenceManager
 import com.google.android.material.navigation.NavigationView
+import uab.cs422.projectinlook.database.EventDao
+import uab.cs422.projectinlook.database.EventDatabase
 import uab.cs422.projectinlook.databinding.ActivityMainBinding
 import uab.cs422.projectinlook.ui.CalendarInterface
 import java.time.LocalDateTime

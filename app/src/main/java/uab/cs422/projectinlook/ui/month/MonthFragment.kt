@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import uab.cs422.projectinlook.EventDao
-import uab.cs422.projectinlook.EventDatabase
+import uab.cs422.projectinlook.database.EventDao
+import uab.cs422.projectinlook.database.EventDatabase
 import uab.cs422.projectinlook.databinding.FragmentMonthBinding
 import uab.cs422.projectinlook.ui.CalendarInterface
 import uab.cs422.projectinlook.ui.SwipeListener

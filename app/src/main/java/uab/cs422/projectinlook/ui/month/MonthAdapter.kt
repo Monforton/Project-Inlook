@@ -14,9 +14,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.get
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
-import uab.cs422.projectinlook.EventDao
+import uab.cs422.projectinlook.database.EventDao
 import uab.cs422.projectinlook.R
-import uab.cs422.projectinlook.entities.CalEvent
+import uab.cs422.projectinlook.database.entities.CalEvent
 import uab.cs422.projectinlook.ui.dialogs.EventsViewDialogFragment
 import uab.cs422.projectinlook.util.runOnIO
 import java.time.DayOfWeek

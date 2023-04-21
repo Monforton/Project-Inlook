@@ -1,10 +1,10 @@
-package uab.cs422.projectinlook
+package uab.cs422.projectinlook.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import uab.cs422.projectinlook.entities.CalEvent
+import uab.cs422.projectinlook.database.entities.CalEvent
 
 @Database(
     entities = [

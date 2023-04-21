@@ -13,8 +13,10 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_CLOCK
 import com.google.android.material.timepicker.TimeFormat
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener
+import uab.cs422.projectinlook.database.EventDao
+import uab.cs422.projectinlook.database.EventDatabase
 import uab.cs422.projectinlook.databinding.ActivityEditEventBinding
-import uab.cs422.projectinlook.entities.CalEvent
+import uab.cs422.projectinlook.database.entities.CalEvent
 import uab.cs422.projectinlook.ui.dialogs.DeletionBottomSheet
 import uab.cs422.projectinlook.util.hourFormatter
 import uab.cs422.projectinlook.util.runOnIO

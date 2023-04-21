@@ -12,7 +12,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import uab.cs422.projectinlook.EditEventActivity
 import uab.cs422.projectinlook.R
-import uab.cs422.projectinlook.entities.CalEvent
+import uab.cs422.projectinlook.database.entities.CalEvent
 import uab.cs422.projectinlook.util.hourFormatter
 import uab.cs422.projectinlook.util.intAsHour
 import java.time.LocalDate
