@@ -5,15 +5,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import uab.cs422.projectinlook.databinding.FragmentMonthBinding
 import uab.cs422.projectinlook.ui.CalendarInterface
+import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.time.temporal.WeekFields
+import java.util.Locale
 
 class MonthFragment : Fragment(), CalendarInterface {
 
@@ -22,6 +27,7 @@ class MonthFragment : Fragment(), CalendarInterface {
     private lateinit var monthRecyclerView: RecyclerView
     private var selectedDate: LocalDate = LocalDate.now()
     private val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
+    private var dayViews: List<TextView> = listOf()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,8 +37,15 @@ class MonthFragment : Fragment(), CalendarInterface {
         _binding = FragmentMonthBinding.inflate(inflater, container, false)
         val root: View = binding.root
         monthRecyclerView = binding.monthRecyclerView
-
-        monthRecyclerView = binding.monthRecyclerView
+        dayViews = listOf(
+            binding.monthWeekday1,
+            binding.monthWeekday2,
+            binding.monthWeekday3,
+            binding.monthWeekday4,
+            binding.monthWeekday5,
+            binding.monthWeekday6,
+            binding.monthWeekday7,
+        )
 
         setMonthView()
         return root
@@ -41,28 +54,32 @@ class MonthFragment : Fragment(), CalendarInterface {
     private fun setMonthView() {
         (context as AppCompatActivity).supportActionBar?.title =
             selectedDate.format(formatter)
-        val daysInMonth = daysInMonthArray(selectedDate)
-        val monthAdapter = MonthAdapter(daysInMonth)
+        val monthAdapter = MonthAdapter(this, selectedDate)
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(this.requireContext(), 7)
         monthRecyclerView.layoutManager = layoutManager
         monthRecyclerView.adapter = monthAdapter
+
+        val prefFirstDay = when (PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .getString("first_day", "")) {
+            "local" -> WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
+            "sat" -> DayOfWeek.SATURDAY.value
+            "sun" -> DayOfWeek.SUNDAY.value
+            "mon" -> DayOfWeek.MONDAY.value
+            else -> WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
+        }
+
+        for ((count, day) in dayViews.withIndex()) {
+            day.text =
+                DayOfWeek.of(((prefFirstDay + count - 1) % 7) + 1)
+                    .getDisplayName(TextStyle.SHORT, Locale.getDefault())
+        }
+
         updateEvents()
     }
 
-    private fun daysInMonthArray(date: LocalDate?): ArrayList<String> {
-        val daysInMonthArray = ArrayList<String>()
-        val yearMonth = YearMonth.from(date)
-        val daysInMonth = yearMonth.lengthOfMonth()
-        val firstOfMonth = selectedDate.withDayOfMonth(1)
-        val dayOfWeek = firstOfMonth.dayOfWeek.value
-        for (i in 1..42) {
-            if (i <= dayOfWeek || i > daysInMonth + dayOfWeek) {
-                daysInMonthArray.add("")
-            } else {
-                daysInMonthArray.add((i - dayOfWeek).toString())
-            }
-        }
-        return daysInMonthArray
+    override fun onResume() {
+        super.onResume()
+        setMonthView()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -85,7 +102,7 @@ class MonthFragment : Fragment(), CalendarInterface {
     }
 
     override fun updateEvents() {
-
+        (binding.monthRecyclerView.adapter as MonthAdapter).updateEventRecycler()
     }
 
     override fun onTodayButtonClicked() {

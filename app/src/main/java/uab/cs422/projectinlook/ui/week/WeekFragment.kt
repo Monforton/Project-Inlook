@@ -116,6 +116,7 @@ class WeekFragment : Fragment(), CalendarInterface {
 
     override fun onResume() {
         super.onResume()
+        setWeekDays()
         updateDisplayedDates()
         updateEvents()
     }

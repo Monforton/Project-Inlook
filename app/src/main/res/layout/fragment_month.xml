@@ -6,6 +6,111 @@
     android:layout_height="match_parent"
     tools:context=".ui.month.MonthFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/month_weekDayNames"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/monthRecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/month_weekday1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/month_weekday2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/month_weekday2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/month_weekday3"
+            app:layout_constraintStart_toEndOf="@id/month_weekday1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/month_weekday3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/month_weekday4"
+            app:layout_constraintStart_toEndOf="@id/month_weekday2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/month_weekday4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/month_weekday5"
+            app:layout_constraintStart_toEndOf="@id/month_weekday3"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/month_weekday5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/month_weekday6"
+            app:layout_constraintStart_toEndOf="@id/month_weekday4"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/month_weekday6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/month_weekday7"
+            app:layout_constraintStart_toEndOf="@id/month_weekday5"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/month_weekday7"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/month_weekday6"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/month_divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/monthRecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/month_weekDayNames" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/monthRecyclerView"
         android:layout_width="0dp"
@@ -15,130 +120,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_month" />
-
-    <LinearLayout
-        android:id="@+id/text_month"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/monthRecyclerView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/weekDayNames"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Space
-                android:id="@+id/space_start_days"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/sunday"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.06" />
-
-            <TextView
-                android:id="@+id/sunday"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/example_day"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/monday"
-                app:layout_constraintStart_toEndOf="@id/space_start_days"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/monday"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/example_day"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tuesday"
-                app:layout_constraintStart_toEndOf="@id/sunday"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tuesday"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/example_day"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/wednesday"
-                app:layout_constraintStart_toEndOf="@id/monday"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/wednesday"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/example_day"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/thursday"
-                app:layout_constraintStart_toEndOf="@id/tuesday"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/thursday"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/example_day"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/friday"
-                app:layout_constraintStart_toEndOf="@id/wednesday"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/friday"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/example_day"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/saturday"
-                app:layout_constraintStart_toEndOf="@id/thursday"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/saturday"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/example_day"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/space_end_days"
-                app:layout_constraintStart_toEndOf="@id/friday"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Space
-                android:id="@+id/space_end_days"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/saturday"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.06" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@id/month_divider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
