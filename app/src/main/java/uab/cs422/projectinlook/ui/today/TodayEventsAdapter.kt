@@ -44,10 +44,12 @@ class TodayEventsAdapter(
         val event = eventData[position]
         holder.timeframeTV.text =
             if (event.getStartAsLocalDateTime().isBefore(
-                    LocalDateTime.of(LocalDate.now(), LocalTime.MIN))
+                    LocalDateTime.of(LocalDate.now(), LocalTime.MIN)
+                )
             ) {
                 if (event.getEndAsLocalDateTime().isAfter(
-                        LocalDateTime.of(LocalDate.now(), LocalTime.MAX))
+                        LocalDateTime.of(LocalDate.now(), LocalTime.MAX)
+                    )
                 ) {
                     "Until " + event.getEndAsLocalDateTime()
                         .format(DateTimeFormatter.ofPattern("MMM d"))
@@ -58,13 +60,19 @@ class TodayEventsAdapter(
             } else {
                 intAsHour(hour = event.startHour)
                     .format(hourFormatter(holder.timeframeTV.context, false)) + " - " +
-                        if (event.getEndAsLocalDateTime().isBefore(LocalDateTime.of(LocalDate.now(), LocalTime.MAX))) {
-                            intAsHour(hour = event.endHour).format(hourFormatter(holder.timeframeTV.context, false))
+                        if (event.getEndAsLocalDateTime()
+                                .isBefore(LocalDateTime.of(LocalDate.now(), LocalTime.MAX))
+                        ) {
+                            intAsHour(hour = event.endHour).format(
+                                hourFormatter(
+                                    holder.timeframeTV.context,
+                                    false
+                                )
+                            )
                         } else {
                             event.getEndAsLocalDateTime()
                                 .format(DateTimeFormatter.ofPattern("MMM d"))
                         }
-
             }
         holder.eventTV.text = event.title
         // Finish setting color of everything

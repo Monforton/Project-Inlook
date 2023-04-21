@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_dot_24" />
+            app:srcCompat="@drawable/ic_empty_dot_24" />
 
         <TextView
             android:id="@+id/today_timeTV"

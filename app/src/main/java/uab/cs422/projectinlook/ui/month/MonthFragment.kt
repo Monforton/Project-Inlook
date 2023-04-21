@@ -1,5 +1,6 @@
 package uab.cs422.projectinlook.ui.month
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,50 +9,112 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.preference.PreferenceManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import uab.cs422.projectinlook.EventDao
+import uab.cs422.projectinlook.EventDatabase
 import uab.cs422.projectinlook.databinding.FragmentMonthBinding
 import uab.cs422.projectinlook.ui.CalendarInterface
-import java.time.LocalDateTime
+import uab.cs422.projectinlook.ui.SwipeListener
+import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
+import java.time.temporal.WeekFields
+import java.util.Locale
 
 class MonthFragment : Fragment(), CalendarInterface {
 
     private var _binding: FragmentMonthBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var monthRecyclerView: RecyclerView
+    private var selectedDate: LocalDate = LocalDate.now()
+    private val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
+    private var dayViews: List<TextView> = listOf()
+    lateinit var dao: EventDao
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val monthViewModel =
-            ViewModelProvider(this).get(MonthViewModel::class.java)
-
         _binding = FragmentMonthBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        monthRecyclerView = binding.monthRecyclerView
+        dayViews = listOf(
+            binding.monthWeekday1,
+            binding.monthWeekday2,
+            binding.monthWeekday3,
+            binding.monthWeekday4,
+            binding.monthWeekday5,
+            binding.monthWeekday6,
+            binding.monthWeekday7,
+        )
 
-        val textView: TextView = binding.textMonth
-        monthViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        dao = EventDatabase.getInstance(this.requireContext()).eventDao
+
+        setMonthView()
+
+        monthRecyclerView.setOnTouchListener(
+        object : SwipeListener(this@MonthFragment.requireContext()) {
+            override fun onSwipeLeft() {
+                super.onSwipeLeft()
+                this@MonthFragment.onSwipeLeft()
+            }
+
+            override fun onSwipeRight() {
+                super.onSwipeRight()
+                this@MonthFragment.onSwipeRight()
+            }
+        })
         return root
+    }
+
+    private fun setMonthView() {
+        (context as AppCompatActivity).supportActionBar?.title =
+            selectedDate.format(formatter)
+        val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(this.requireContext(), 7)
+        monthRecyclerView.layoutManager = layoutManager
+
+        val prefFirstDay = when (PreferenceManager.getDefaultSharedPreferences(requireContext())
+            .getString("first_day", "")) {
+            "local" -> WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
+            "sat" -> DayOfWeek.SATURDAY.value
+            "sun" -> DayOfWeek.SUNDAY.value
+            "mon" -> DayOfWeek.MONDAY.value
+            else -> WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
+        }
+
+        for ((count, day) in dayViews.withIndex()) {
+            day.text =
+                DayOfWeek.of(((prefFirstDay + count - 1) % 7) + 1)
+                    .getDisplayName(TextStyle.SHORT, Locale.getDefault())
+        }
+
+        val monthAdapter = MonthAdapter(this, selectedDate, dao)
+        monthRecyclerView.adapter = monthAdapter
+        updateEvents()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setMonthView()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         (context as AppCompatActivity).supportActionBar?.title =
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern("LLLL"))
+            LocalDate.now().format(formatter)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         (context as AppCompatActivity).supportActionBar?.title =
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern("LLLL"))
+            LocalDate.now().format(formatter)
     }
 
     override fun onDestroyView() {
@@ -60,14 +123,20 @@ class MonthFragment : Fragment(), CalendarInterface {
     }
 
     override fun updateEvents() {
+        (binding.monthRecyclerView.adapter as MonthAdapter).updateEventRecycler()
     }
 
     override fun onTodayButtonClicked() {
+        selectedDate = LocalDate.now()
     }
 
     override fun onSwipeLeft() {
+        selectedDate = selectedDate.plusMonths(1)
+        setMonthView()
     }
 
     override fun onSwipeRight() {
+        selectedDate = selectedDate.minusMonths(1)
+        setMonthView()
     }
 }

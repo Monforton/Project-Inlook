@@ -6,17 +6,111 @@
     android:layout_height="match_parent"
     tools:context=".ui.month.MonthFragment">
 
-    <TextView
-        android:id="@+id/text_month"
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/month_weekDayNames"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/monthRecyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/month_weekday1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/month_weekday2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/month_weekday2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/month_weekday3"
+            app:layout_constraintStart_toEndOf="@id/month_weekday1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/month_weekday3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/month_weekday4"
+            app:layout_constraintStart_toEndOf="@id/month_weekday2"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/month_weekday4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/month_weekday5"
+            app:layout_constraintStart_toEndOf="@id/month_weekday3"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/month_weekday5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/month_weekday6"
+            app:layout_constraintStart_toEndOf="@id/month_weekday4"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/month_weekday6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/month_weekday7"
+            app:layout_constraintStart_toEndOf="@id/month_weekday5"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/month_weekday7"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/example_day"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/month_weekday6"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/monthRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:nestedScrollingEnabled="false"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/month_weekDayNames" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

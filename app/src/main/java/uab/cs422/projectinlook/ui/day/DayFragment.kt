@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import uab.cs422.projectinlook.EventDao
 import uab.cs422.projectinlook.EventDatabase
+import uab.cs422.projectinlook.MainActivity
 import uab.cs422.projectinlook.databinding.FragmentDayBinding
 import uab.cs422.projectinlook.entities.CalEvent
 import uab.cs422.projectinlook.ui.CalendarInterface
@@ -24,7 +25,6 @@ class DayFragment : Fragment(), CalendarInterface {
 
     private var _binding: FragmentDayBinding? = null
     private val binding get() = _binding!!
-    private var day = LocalDateTime.now()
     lateinit var dao: EventDao
 
     override fun onCreateView(
@@ -40,7 +40,7 @@ class DayFragment : Fragment(), CalendarInterface {
         val hourRecyclerView = binding.hourRecycler
         dao = EventDatabase.getInstance(this.requireContext()).eventDao
         var events: List<CalEvent> = listOf()
-        day = LocalDateTime.now()
+        val day = (activity as MainActivity).selectedDay
         runOnIO {
             events = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
         }
@@ -49,17 +49,17 @@ class DayFragment : Fragment(), CalendarInterface {
 
         // Set the gesture detection
         hourRecyclerView.setOnTouchListener(
-        object : SwipeListener(this@DayFragment.requireContext()) {
-            override fun onSwipeLeft() {
-                super.onSwipeLeft()
-                this@DayFragment.onSwipeLeft()
-            }
+            object : SwipeListener(this@DayFragment.requireContext()) {
+                override fun onSwipeLeft() {
+                    super.onSwipeLeft()
+                    this@DayFragment.onSwipeLeft()
+                }
 
-            override fun onSwipeRight() {
-                super.onSwipeRight()
-                this@DayFragment.onSwipeRight()
-            }
-        })
+                override fun onSwipeRight() {
+                    super.onSwipeRight()
+                    this@DayFragment.onSwipeRight()
+                }
+            })
         return root
     }
 
@@ -75,18 +75,20 @@ class DayFragment : Fragment(), CalendarInterface {
         super.onActivityCreated(savedInstanceState)
 
         (context as AppCompatActivity).supportActionBar?.title =
-            day.format(DateTimeFormatter.ofPattern("LLLL d"))
+            (activity as MainActivity).selectedDay.format(DateTimeFormatter.ofPattern("LLLL d"))
     }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
         (context as AppCompatActivity).supportActionBar?.title =
-            day.format(DateTimeFormatter.ofPattern("LLLL d"))
+            (activity as MainActivity).selectedDay.format(DateTimeFormatter.ofPattern("LLLL d"))
     }
 
     // Update the adapter, title, and event data
     override fun updateEvents() {
         var events: List<CalEvent> = listOf()
+        val day = (activity as MainActivity).selectedDay
         runOnIO {
             events = dao.getEventsOfDay(day.dayOfMonth, day.monthValue, day.year)
         }
@@ -98,17 +100,19 @@ class DayFragment : Fragment(), CalendarInterface {
 
     // Action bindings
     override fun onTodayButtonClicked() {
-        day = LocalDateTime.now()
+        (activity as MainActivity).selectedDay = LocalDateTime.now()
         updateEvents()
     }
 
     override fun onSwipeLeft() {
-        day = day.plusDays(1)
+        (activity as MainActivity).selectedDay =
+            (activity as MainActivity).selectedDay.plusDays(1)
         updateEvents()
     }
 
     override fun onSwipeRight() {
-        day = day.minusDays(1)
+        (activity as MainActivity).selectedDay =
+            (activity as MainActivity).selectedDay.minusDays(1)
         updateEvents()
     }
 
