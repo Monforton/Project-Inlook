@@ -1,5 +1,6 @@
 package uab.cs422.projectinlook.ui.month
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,8 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import uab.cs422.projectinlook.EventDao
+import uab.cs422.projectinlook.EventDatabase
 import uab.cs422.projectinlook.databinding.FragmentMonthBinding
 import uab.cs422.projectinlook.ui.CalendarInterface
+import uab.cs422.projectinlook.ui.SwipeListener
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -28,7 +32,9 @@ class MonthFragment : Fragment(), CalendarInterface {
     private var selectedDate: LocalDate = LocalDate.now()
     private val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
     private var dayViews: List<TextView> = listOf()
+    lateinit var dao: EventDao
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,17 +53,30 @@ class MonthFragment : Fragment(), CalendarInterface {
             binding.monthWeekday7,
         )
 
+        dao = EventDatabase.getInstance(this.requireContext()).eventDao
+
         setMonthView()
+
+        monthRecyclerView.setOnTouchListener(
+        object : SwipeListener(this@MonthFragment.requireContext()) {
+            override fun onSwipeLeft() {
+                super.onSwipeLeft()
+                this@MonthFragment.onSwipeLeft()
+            }
+
+            override fun onSwipeRight() {
+                super.onSwipeRight()
+                this@MonthFragment.onSwipeRight()
+            }
+        })
         return root
     }
 
     private fun setMonthView() {
         (context as AppCompatActivity).supportActionBar?.title =
             selectedDate.format(formatter)
-        val monthAdapter = MonthAdapter(this, selectedDate)
         val layoutManager: RecyclerView.LayoutManager = GridLayoutManager(this.requireContext(), 7)
         monthRecyclerView.layoutManager = layoutManager
-        monthRecyclerView.adapter = monthAdapter
 
         val prefFirstDay = when (PreferenceManager.getDefaultSharedPreferences(requireContext())
             .getString("first_day", "")) {
@@ -74,6 +93,8 @@ class MonthFragment : Fragment(), CalendarInterface {
                     .getDisplayName(TextStyle.SHORT, Locale.getDefault())
         }
 
+        val monthAdapter = MonthAdapter(this, selectedDate, dao)
+        monthRecyclerView.adapter = monthAdapter
         updateEvents()
     }
 

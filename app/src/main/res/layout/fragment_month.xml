@@ -102,24 +102,15 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/month_divider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/monthRecyclerView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/month_weekDayNames" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/monthRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="5dp"
+        android:nestedScrollingEnabled="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/month_divider" />
+        app:layout_constraintTop_toBottomOf="@id/month_weekDayNames" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

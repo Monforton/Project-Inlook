@@ -1,6 +1,5 @@
 package uab.cs422.projectinlook.ui.week
 
-import android.app.ActionBar
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -103,7 +102,7 @@ class WeekDayAdapter(
                         val compressedEvent = holder.frames[i].getChildAt(MAX_EVENTS) as TextView
                         compressedEvent.text = holder.frames[i].context.getString(R.string.excess_events, j - MAX_EVENTS)
                         compressedEvent.setOnClickListener {
-                            val dialog = EventsViewDialogFragment(posHourRealTime)
+                            val dialog = EventsViewDialogFragment(posHourRealTime, EventsViewDialogFragment.HOUR_DISPLAY)
                             dialog.show(fragment.childFragmentManager, "CustomDialog")
                         }
                         compressedEvent.context.theme.resolveAttribute(
@@ -118,28 +117,11 @@ class WeekDayAdapter(
                         compressedEvent.setTextColor(typedValue.data)
                     } else {
                         eventTextView = eventBox(event, holder.frames[i].context)
-//                        val eventTVContext = eventTextView.context
                         eventTextView.setOnClickListener {
                             val intent = Intent(fragment.requireContext(), EditEventActivity::class.java)
                             intent.putExtra("event_data", event)
                             fragment.startActivity(intent)
                             (fragment.activity as MainActivity).selectedDay = weekDays[i]
-//                            val builder = AlertDialog.Builder(eventTVContext)
-//                            builder.setTitle(event.title)
-//                            builder.setMessage("" + event.startHour + " - " + event.endHour + ": " + event.desc)
-//                            builder.setNegativeButton(eventTVContext.getString(R.string.dialog_delete_button)) { dialog, _ ->
-//                                runOnIO {
-//                                    fragment.dao.deleteEvent(event)
-//                                }
-//                                fragment.updateEvents()
-//                                dialog.dismiss()
-//                            }
-//                            builder.setNeutralButton(eventTVContext.getString(R.string.dialog_ok_button)) { dialog, _ -> dialog.dismiss() }
-//                            builder.setPositiveButton(eventTVContext.getString(R.string.dialog_edit_button)) { dialog, _ ->
-//                                showEditDialog(eventTVContext, event)
-//                                dialog.dismiss()
-//                            }
-//                            builder.show()
                         }
                         holder.frames[i].addView(eventTextView)
                     }
@@ -148,43 +130,13 @@ class WeekDayAdapter(
         }
     }
 
-//    //2nd dialog opens when user selects edit
-//    private fun showEditDialog(context: Context, position: CalEvent) {
-//        val editTitle = EditText(context)
-//        val editDesc = EditText(context)
-//        //need to implement option for user to edit time of event
-//        //val editStartHour = EditText(context)
-//        //val editEndHour = EditText(context)
-//        editTitle.setText(position.title)
-//        editDesc.setText(position.desc)
-//
-//        val alert = AlertDialog.Builder(context)
-//            .setCustomTitle(editTitle)
-//            .setView(editDesc)
-//
-//            .setNeutralButton("Cancel") { dialog, _ ->
-//                dialog.dismiss()
-//            }
-//            .setPositiveButton("Done") { dialog, _ ->
-//                position.title = editTitle.text.toString()
-//                position.desc = editDesc.text.toString()
-//                runOnIO {
-//                    fragment.dao.updateEvent(position)
-//                }
-//                fragment.updateEvents()
-//                dialog.dismiss()
-//            }
-//            .create()
-//        alert.show()
-//    }
-
     private fun eventBox(event: CalEvent, context: Context): TextView {
         val textView = TextView(context)
         textView.text = event.title
         textView.layoutParams =
             LinearLayout.LayoutParams(
-                ActionBar.LayoutParams.MATCH_PARENT,
-                ActionBar.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
                 1f
             )
         textView.background = AppCompatResources.getDrawable(
